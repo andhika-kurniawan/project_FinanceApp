@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detail Transaksi — Personal Wallet</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    /* ── Detail Page Specific ── */
+    .detail-page { background: var(--gradient-page); min-height: 100vh; }
+
+    .detail-topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 20px; position: sticky; top: 0; z-index: 40;
+      background: rgba(248,250,252,0.92); backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+    .detail-topbar__back {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--neutral-100); border: none;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--neutral-700); cursor: pointer; transition: all var(--tr);
+    }
+    .detail-topbar__back:hover { background: var(--neutral-200); }
+    .detail-topbar__title { font-size: 17px; font-weight: 800; color: var(--neutral-900); }
+    .detail-topbar__action {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--neutral-100); border: none;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--color-expense); cursor: pointer; transition: all var(--tr);
+    }
+    .detail-topbar__action:hover { background: var(--color-expense-light); }
+
+    /* Hero amount card */
+    .detail-hero {
+      margin: 8px 20px 0; padding: 32px 24px 28px;
+      border-radius: 28px; text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .detail-hero--expense {
+      background: linear-gradient(135deg, #0f2557 0%, #1e3a6e 55%, #1d4ed8 100%);
+      box-shadow: 0 16px 48px rgba(15,37,87,0.35);
+    }
+    .detail-hero--income {
+      background: linear-gradient(135deg, #065f46 0%, #047857 55%, #059669 100%);
+      box-shadow: 0 16px 48px rgba(5,96,50,0.35);
+    }
+    .detail-hero::before {
+      content: ''; position: absolute; width: 260px; height: 260px;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 65%);
+      top: -80px; right: -80px; border-radius: 50%; pointer-events: none;
+    }
+    .detail-hero::after {
+      content: ''; position: absolute; width: 160px; height: 160px;
+      background: radial-gradient(circle, rgba(255,255,255,0.07) 0%, transparent 70%);
+      bottom: -40px; left: -20px; border-radius: 50%; pointer-events: none;
+    }
+
+    .detail-hero__icon-wrap {
+      width: 64px; height: 64px; border-radius: 20px;
+      background: rgba(255,255,255,0.15); backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px; position: relative; z-index: 1;
+      color: rgba(255,255,255,0.9);
+    }
+    .detail-hero__label {
+      font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.55);
+      margin-bottom: 8px; position: relative; z-index: 1;
+    }
+    .detail-hero__amount {
+      font-size: 36px; font-weight: 800; color: #fff;
+      letter-spacing: -0.04em; font-variant-numeric: tabular-nums;
+      line-height: 1; position: relative; z-index: 1;
+    }
+    .detail-hero__badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      margin-top: 14px; padding: 5px 14px; border-radius: 999px;
+      font-size: 12px; font-weight: 700; position: relative; z-index: 1;
+    }
+    .detail-hero__badge--expense {
+      background: rgba(239,68,68,0.2); color: #fca5a5;
+    }
+    .detail-hero__badge--income {
+      background: rgba(34,197,94,0.2); color: #86efac;
+    }
+
+    /* Info card */
+    .detail-card {
+      margin: 20px 20px 0; background: var(--white);
+      border-radius: 24px; box-shadow: var(--shadow-card);
+      overflow: hidden;
+    }
+    .detail-card__header {
+      padding: 18px 20px 12px; font-size: 14px; font-weight: 700;
+      color: var(--neutral-500); text-transform: uppercase;
+      letter-spacing: 0.05em; border-bottom: 1px solid var(--neutral-100);
+    }
+    .detail-row {
+      display: flex; align-items: center; gap: 14px;
+      padding: 16px 20px; border-bottom: 1px solid var(--neutral-50);
+    }
+    .detail-row:last-child { border-bottom: none; }
+    .detail-row__icon {
+      width: 40px; height: 40px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .detail-row__icon--blue   { background: var(--primary-50); color: var(--primary-600); }
+    .detail-row__icon--green  { background: var(--color-income-light); color: #166534; }
+    .detail-row__icon--orange { background: #fff7ed; color: #c2410c; }
+    .detail-row__icon--purple { background: #fdf4ff; color: #7e22ce; }
+    .detail-row__icon--red    { background: var(--color-expense-light); color: #991b1b; }
+    .detail-row__icon--gray   { background: var(--neutral-100); color: var(--neutral-600); }
+    .detail-row__content { flex: 1; min-width: 0; }
+    .detail-row__label { font-size: 12px; font-weight: 500; color: var(--neutral-400); margin-bottom: 2px; }
+    .detail-row__value { font-size: 15px; font-weight: 700; color: var(--neutral-900); }
+
+    /* Notes card */
+    .detail-notes {
+      margin: 16px 20px 0; padding: 20px;
+      background: var(--neutral-50); border-radius: 20px;
+      border: 1px dashed var(--neutral-200);
+    }
+    .detail-notes__label { font-size: 12px; font-weight: 600; color: var(--neutral-400); margin-bottom: 6px; }
+    .detail-notes__text { font-size: 14px; font-weight: 500; color: var(--neutral-700); line-height: 1.6; }
+
+    /* Action buttons */
+    .detail-actions {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+      padding: 24px 20px 40px;
+    }
+    .detail-btn {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 16px; border-radius: 16px; border: none;
+      font-size: 15px; font-weight: 700; font-family: var(--font);
+      cursor: pointer; transition: all var(--tr);
+    }
+    .detail-btn--edit {
+      background: var(--primary-50); color: var(--primary-600);
+    }
+    .detail-btn--edit:hover { background: var(--primary-100); }
+    .detail-btn--delete {
+      background: var(--color-expense-light); color: var(--color-expense);
+    }
+    .detail-btn--delete:hover { background: #fecaca; }
+
+    /* Created-at timestamp */
+    .detail-timestamp {
+      text-align: center; padding: 0 20px 32px;
+      font-size: 11px; color: var(--neutral-300); font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+<div class="app detail-page">
+  <div class="app-scroll">
+
+    <!-- TOP BAR -->
+    <div class="detail-topbar">
+      <button class="detail-topbar__back" id="backBtn" title="Kembali">
+        <i data-lucide="chevron-left" style="width:22px;height:22px"></i>
+      </button>
+      <span class="detail-topbar__title">Detail Transaksi</span>
+      <button class="detail-topbar__action" id="deleteTopBtn" title="Hapus Transaksi">
+        <i data-lucide="trash-2" style="width:18px;height:18px"></i>
+      </button>
+    </div>
+
+    <!-- HERO AMOUNT -->
+    <div class="detail-hero" id="heroCard">
+      <div class="detail-hero__icon-wrap" id="heroIcon"></div>
+      <div class="detail-hero__label" id="heroLabel">Pengeluaran</div>
+      <div class="detail-hero__amount" id="heroAmount">-Rp0</div>
+      <div class="detail-hero__badge" id="heroBadge"></div>
+    </div>
+
+    <!-- INFO CARD -->
+    <div class="detail-card">
+      <div class="detail-card__header">Informasi Transaksi</div>
+
+      <div class="detail-row">
+        <div class="detail-row__icon detail-row__icon--blue">
+          <i data-lucide="tag" style="width:18px;height:18px"></i>
+        </div>
+        <div class="detail-row__content">
+          <div class="detail-row__label">Kategori</div>
+          <div class="detail-row__value" id="detailCategory">—</div>
+        </div>
+      </div>
+
+      <div class="detail-row">
+        <div class="detail-row__icon detail-row__icon--green">
+          <i data-lucide="wallet" style="width:18px;height:18px"></i>
+        </div>
+        <div class="detail-row__content">
+          <div class="detail-row__label">Wallet</div>
+          <div class="detail-row__value" id="detailWallet">—</div>
+        </div>
+      </div>
+
+      <div class="detail-row">
+        <div class="detail-row__icon detail-row__icon--orange">
+          <i data-lucide="calendar" style="width:18px;height:18px"></i>
+        </div>
+        <div class="detail-row__content">
+          <div class="detail-row__label">Tanggal</div>
+          <div class="detail-row__value" id="detailDate">—</div>
+        </div>
+      </div>
+
+      <div class="detail-row">
+        <div class="detail-row__icon detail-row__icon--purple">
+          <i data-lucide="clock" style="width:18px;height:18px"></i>
+        </div>
+        <div class="detail-row__content">
+          <div class="detail-row__label">Waktu Dibuat</div>
+          <div class="detail-row__value" id="detailTime">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOTES -->
+    <div class="detail-notes" id="notesSection">
+      <div class="detail-notes__label">
+        <i data-lucide="file-text" style="width:12px;height:12px;vertical-align:-1px;margin-right:4px"></i> Catatan
+      </div>
+      <div class="detail-notes__text" id="detailNotes">—</div>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="detail-actions">
+      <button class="detail-btn detail-btn--edit" id="editBtn">
+        <i data-lucide="pencil" style="width:18px;height:18px"></i> Edit
+      </button>
+      <button class="detail-btn detail-btn--delete" id="deleteBtnBottom">
+        <i data-lucide="trash-2" style="width:18px;height:18px"></i> Hapus
+      </button>
+    </div>
+
+    <!-- TIMESTAMP -->
+    <div class="detail-timestamp" id="detailTimestamp">—</div>
+
+  </div><!-- /app-scroll -->
+</div><!-- /app -->
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/transaction-detail.js"></script>
+</body>
+</html>

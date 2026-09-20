@@ -1,0 +1,1976 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Design System v2 — Personal Wallet (Lucide + Unsplash)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <style>
+    :root {
+      --primary-900: #0c1a3d;
+      --primary-800: #0f2557;
+      --primary-700: #1e3a6e;
+      --primary-600: #1d4ed8;
+      --primary-500: #3b82f6;
+      --primary-400: #60a5fa;
+      --primary-300: #93c5fd;
+      --primary-200: #bfdbfe;
+      --primary-100: #dbeafe;
+      --primary-50:  #eff6ff;
+      --accent-500:  #06b6d4;
+      --accent-400:  #22d3ee;
+      --accent-300:  #67e8f9;
+      --accent-200:  #a5f3fc;
+      --color-income:        #22c55e;
+      --color-income-light:  #dcfce7;
+      --color-expense:       #ef4444;
+      --color-expense-light: #fee2e2;
+      --color-warning:       #f59e0b;
+      --color-warning-light: #fef3c7;
+      --color-success:       #10b981;
+      --neutral-900: #0f172a;
+      --neutral-800: #1e293b;
+      --neutral-700: #334155;
+      --neutral-600: #475569;
+      --neutral-500: #64748b;
+      --neutral-400: #94a3b8;
+      --neutral-300: #cbd5e1;
+      --neutral-200: #e2e8f0;
+      --neutral-100: #f1f5f9;
+      --neutral-50:  #f8fafc;
+      --white:       #ffffff;
+      --gradient-wallet:   linear-gradient(135deg, #0f2557 0%, #1e3a6e 50%, #1d4ed8 100%);
+      --gradient-dark:     linear-gradient(180deg, #0c1a3d 0%, #0f2557 60%, #1e3a6e 100%);
+      --gradient-nav:      linear-gradient(135deg, #0f2557 0%, #142244 100%);
+      --gradient-accent:   linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+      --gradient-chart-bg: linear-gradient(180deg, #0f2557 0%, #1a2d54 100%);
+      --gradient-page-bg:  linear-gradient(180deg, #eff6ff 0%, #f8fafc 100%);
+      --shadow-card:          0 2px 8px rgba(15,23,42,0.06), 0 1px 3px rgba(15,23,42,0.04);
+      --shadow-card-elevated: 0 4px 16px rgba(15,23,42,0.08), 0 2px 6px rgba(15,23,42,0.04);
+      --shadow-nav:           0 -4px 20px rgba(15,23,42,0.10);
+      --shadow-fab:           0 4px 16px rgba(59,130,246,0.35), 0 2px 8px rgba(59,130,246,0.20);
+      --shadow-container:     0 0 60px rgba(15,23,42,0.12);
+      --radius-full: 9999px;
+      --radius-2xl:  24px;
+      --radius-xl:   20px;
+      --radius-lg:   16px;
+      --radius-md:   12px;
+      --radius-sm:   8px;
+      --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --transition-fast: 150ms ease;
+      --transition-base: 200ms ease;
+      --transition-slow: 300ms ease;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-primary);
+      background: linear-gradient(160deg, #c7d9ff 0%, #e0ecff 30%, #f1f5f9 100%);
+      min-height: 100vh;
+      color: var(--neutral-900);
+    }
+
+    /* Lucide icon size helpers */
+    .icon-xs  { width: 14px; height: 14px; }
+    .icon-sm  { width: 16px; height: 16px; }
+    .icon-md  { width: 20px; height: 20px; }
+    .icon-lg  { width: 24px; height: 24px; }
+    .icon-xl  { width: 32px; height: 32px; }
+    .icon-2xl { width: 40px; height: 40px; }
+
+    /* ============================
+       CATALOG LAYOUT
+    ============================== */
+    .catalog {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 48px 24px 100px;
+    }
+    .catalog-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--primary-100);
+      color: var(--primary-700);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      margin-bottom: 16px;
+    }
+    .catalog-title {
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--primary-800);
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+    }
+    .catalog-title span { color: var(--primary-500); }
+    .catalog-subtitle {
+      font-size: 16px;
+      color: var(--neutral-500);
+      margin-top: 10px;
+      margin-bottom: 56px;
+      max-width: 560px;
+      line-height: 1.6;
+    }
+
+    .section { margin-bottom: 64px; }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+    .section-icon-wrap {
+      width: 36px; height: 36px;
+      background: var(--primary-100);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--primary-600);
+    }
+    .section-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--neutral-900);
+    }
+    .section-desc {
+      font-size: 14px;
+      color: var(--neutral-400);
+      margin-bottom: 28px;
+      padding-left: 46px;
+    }
+    .subsection-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--neutral-400);
+      margin-bottom: 12px;
+      margin-top: 28px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--neutral-200);
+      margin: 48px 0;
+    }
+
+    /* ============================
+       COMPONENT BOX WRAPPER
+    ============================== */
+    .component-box {
+      background: white;
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: var(--shadow-card);
+      margin-bottom: 16px;
+      position: relative;
+    }
+    .component-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--primary-400);
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1.5px dashed var(--neutral-100);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ============================
+       COLOR SWATCHES
+    ============================== */
+    .swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+      gap: 10px;
+    }
+    .swatch {
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      background: white;
+    }
+    .swatch-color { height: 60px; width: 100%; }
+    .swatch-info  { padding: 8px 10px; }
+    .swatch-name  { font-size: 11px; font-weight: 600; color: var(--neutral-700); }
+    .swatch-hex   { font-size: 10px; color: var(--neutral-400); font-family: monospace; }
+
+    /* ============================
+       GRADIENT BARS
+    ============================== */
+    .gradient-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 10px;
+    }
+    .gradient-bar {
+      flex: 1;
+      height: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      padding: 0 18px;
+    }
+    .gradient-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: white;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    }
+    .gradient-token {
+      font-size: 11px;
+      color: var(--neutral-400);
+      font-family: monospace;
+      width: 200px;
+      flex-shrink: 0;
+    }
+
+    /* ============================
+       PHONE FRAME
+    ============================== */
+    .phone-frame {
+      width: 375px;
+      background: var(--neutral-50);
+      border-radius: 44px;
+      box-shadow: var(--shadow-container), 0 0 0 10px var(--neutral-200), 0 0 0 11px var(--neutral-300);
+      overflow: hidden;
+      position: relative;
+      margin: 0 auto;
+    }
+    .phone-notch {
+      width: 120px;
+      height: 28px;
+      background: var(--neutral-200);
+      border-radius: 0 0 18px 18px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .phone-notch-cam {
+      width: 10px; height: 10px;
+      background: var(--neutral-300);
+      border-radius: 50%;
+    }
+    .phone-status {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 24px 4px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--neutral-700);
+    }
+    .phone-status-icons {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--neutral-700);
+    }
+    .phone-content {
+      padding: 0 16px 100px;
+    }
+
+    /* ============================
+       ACTUAL COMPONENTS
+    ============================== */
+
+    /* --- Wallet Card --- */
+    .wallet-card {
+      background: var(--gradient-wallet);
+      border-radius: 24px;
+      padding: 24px;
+      color: #fff;
+      box-shadow: 0 12px 40px rgba(15,37,87,0.45);
+      position: relative;
+      overflow: hidden;
+    }
+    .wallet-card::before {
+      content: '';
+      position: absolute;
+      width: 220px; height: 220px;
+      background: radial-gradient(circle, rgba(96,165,250,0.18) 0%, transparent 70%);
+      top: -60px; right: -60px;
+      border-radius: 50%;
+    }
+    .wallet-card::after {
+      content: '';
+      position: absolute;
+      width: 140px; height: 140px;
+      background: radial-gradient(circle, rgba(6,182,212,0.12) 0%, transparent 70%);
+      bottom: -30px; left: -20px;
+      border-radius: 50%;
+    }
+    .wallet-card__top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .wallet-card__label {
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.65);
+    }
+    .wallet-card__badge {
+      background: rgba(255,255,255,0.14);
+      backdrop-filter: blur(8px);
+      border-radius: 9999px;
+      padding: 3px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #67e8f9;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .wallet-card__balance {
+      font-size: 34px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.03em;
+      font-variant-numeric: tabular-nums;
+      position: relative;
+      z-index: 1;
+      margin-bottom: 4px;
+    }
+    .wallet-card__subtitle {
+      font-size: 12px;
+      color: rgba(255,255,255,0.45);
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .wallet-card__actions {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 24px;
+      position: relative;
+      z-index: 1;
+    }
+    .wallet-card__action {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+    .wallet-card__action-circle {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      transition: all var(--transition-base);
+    }
+    .wallet-card__action-circle:hover {
+      background: rgba(255,255,255,0.2);
+    }
+    .wallet-card__action-label {
+      font-size: 11px;
+      color: rgba(255,255,255,0.65);
+      font-weight: 500;
+    }
+
+    /* --- Wallet Mini --- */
+    .wallet-mini {
+      background: var(--gradient-wallet);
+      border-radius: 18px;
+      padding: 16px;
+      color: white;
+      min-width: 148px;
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .wallet-mini::before {
+      content: '';
+      position: absolute;
+      width: 80px; height: 80px;
+      background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
+      top: -20px; right: -20px;
+      border-radius: 50%;
+    }
+    .wallet-mini__top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .wallet-mini__icon-wrap {
+      width: 36px; height: 36px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+    .wallet-mini__name {
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.7);
+      margin-top: 14px;
+    }
+    .wallet-mini__balance {
+      font-size: 17px;
+      font-weight: 700;
+      margin-top: 2px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* --- Action Icons (standalone, light bg) --- */
+    .action-icon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+    .action-icon__circle {
+      width: 52px; height: 52px;
+      border-radius: 16px;
+      background: var(--primary-50);
+      border: 1.5px solid var(--primary-200);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary-600);
+      transition: all var(--transition-base);
+    }
+    .action-icon__circle:hover {
+      background: var(--primary-100);
+      border-color: var(--primary-300);
+      transform: translateY(-2px);
+    }
+    .action-icon__label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--neutral-600);
+    }
+
+    /* --- Bottom Nav --- */
+    .bottom-nav {
+      background: var(--gradient-nav);
+      border-radius: 28px 28px 0 0;
+      padding: 10px 8px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      height: 68px;
+      box-shadow: var(--shadow-nav);
+    }
+    .bottom-nav__item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      padding: 8px 14px;
+      border-radius: 14px;
+      color: rgba(255,255,255,0.4);
+      font-size: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition-base);
+      min-width: 48px;
+    }
+    .bottom-nav__item:hover { color: rgba(255,255,255,0.7); }
+    .bottom-nav__item--active {
+      background: var(--primary-500);
+      color: #fff;
+      box-shadow: 0 2px 12px rgba(59,130,246,0.4);
+      padding: 8px 18px;
+      border-radius: 9999px;
+      flex-direction: row;
+      gap: 6px;
+    }
+
+    /* --- Transaction Item --- */
+    .txn-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--neutral-100);
+      transition: background var(--transition-fast);
+    }
+    .txn-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .txn-item__icon {
+      width: 44px; height: 44px;
+      border-radius: 14px;
+      background: var(--primary-50);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary-600);
+      flex-shrink: 0;
+    }
+    .txn-item__icon--income {
+      background: var(--color-income-light);
+      color: #166534;
+    }
+    .txn-item__icon--expense {
+      background: var(--color-expense-light);
+      color: #991b1b;
+    }
+    .txn-item__info { flex: 1; min-width: 0; }
+    .txn-item__name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--neutral-900);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .txn-item__meta {
+      font-size: 12px;
+      color: var(--neutral-400);
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .txn-item__amount {
+      font-size: 14px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      flex-shrink: 0;
+    }
+    .txn-item__amount--income { color: var(--color-income); }
+    .txn-item__amount--expense { color: var(--neutral-800); }
+
+    /* --- Toggle Tabs --- */
+    .toggle-tabs {
+      display: flex;
+      background: var(--neutral-100);
+      border-radius: 9999px;
+      padding: 4px;
+      gap: 4px;
+    }
+    .toggle-tabs__item {
+      flex: 1;
+      padding: 10px 16px;
+      border-radius: 9999px;
+      font-size: 14px;
+      font-weight: 600;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      color: var(--neutral-500);
+      background: transparent;
+      border: none;
+      font-family: var(--font-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .toggle-tabs__item--active {
+      background: var(--primary-500);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(59,130,246,0.3);
+    }
+
+    /* --- Summary Card --- */
+    .summary-card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: var(--shadow-card);
+    }
+    .summary-card__icon-wrap {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+    .summary-card__label {
+      font-size: 12px;
+      color: var(--neutral-400);
+      font-weight: 500;
+    }
+    .summary-card__amount {
+      font-size: 20px;
+      font-weight: 800;
+      margin-top: 4px;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.02em;
+    }
+    .summary-card__trend {
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 6px;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    /* --- Stats Chart Card --- */
+    .stats-card {
+      background: var(--gradient-chart-bg);
+      border-radius: 20px;
+      padding: 20px;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+    .stats-card::before {
+      content: '';
+      position: absolute;
+      width: 160px; height: 160px;
+      background: radial-gradient(circle, rgba(59,130,246,0.2) 0%, transparent 70%);
+      top: -40px; right: -40px;
+      border-radius: 50%;
+    }
+    .chart-bar {
+      border-radius: 6px 6px 3px 3px;
+      transition: height 0.6s cubic-bezier(.23,1,.32,1);
+    }
+    .chart-bar--primary  { background: linear-gradient(180deg, #60a5fa 0%, #3b82f6 100%); }
+    .chart-bar--secondary{ background: rgba(96,165,250,0.22); }
+    .chart-bar--highlight{ background: linear-gradient(180deg, #22d3ee 0%, #06b6d4 100%); box-shadow: 0 4px 16px rgba(6,182,212,0.4); }
+    .chart-label { font-size: 10px; color: rgba(255,255,255,0.45); font-weight: 500; }
+    .chart-tooltip {
+      background: #fff;
+      color: var(--neutral-900);
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+      white-space: nowrap;
+      position: absolute;
+      bottom: calc(100% + 6px);
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .chart-tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 5px solid transparent;
+      border-top-color: #fff;
+    }
+
+    /* --- Category Breakdown Row --- */
+    .cat-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--neutral-100);
+    }
+    .cat-row:last-child { border-bottom: none; }
+    .cat-row__icon {
+      width: 38px; height: 38px;
+      border-radius: 12px;
+      background: var(--primary-50);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary-600);
+      flex-shrink: 0;
+    }
+    .cat-row__info { flex: 1; }
+    .cat-row__name { font-size: 13px; font-weight: 600; color: var(--neutral-800); }
+    .cat-row__bar-wrap {
+      height: 4px;
+      background: var(--neutral-100);
+      border-radius: 9999px;
+      margin-top: 5px;
+      overflow: hidden;
+    }
+    .cat-row__bar { height: 100%; border-radius: 9999px; background: var(--gradient-accent); }
+    .cat-row__amount { font-size: 13px; font-weight: 700; color: var(--neutral-800); font-variant-numeric: tabular-nums; }
+    .cat-row__pct { font-size: 11px; color: var(--neutral-400); font-weight: 500; }
+
+    /* --- Form --- */
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--neutral-700);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .form-input-wrap { position: relative; }
+    .form-input-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--neutral-400);
+      pointer-events: none;
+    }
+    .form-input {
+      width: 100%;
+      padding: 13px 16px;
+      border: 1.5px solid var(--neutral-200);
+      border-radius: 12px;
+      font-size: 14px;
+      font-family: var(--font-primary);
+      color: var(--neutral-900);
+      background: var(--white);
+      outline: none;
+      transition: border-color var(--transition-base), box-shadow var(--transition-base);
+    }
+    .form-input--with-icon { padding-left: 42px; }
+    .form-input:focus {
+      border-color: var(--primary-500);
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.14);
+    }
+    .form-input::placeholder { color: var(--neutral-300); }
+    .form-input--amount {
+      font-size: 30px;
+      font-weight: 800;
+      text-align: center;
+      padding: 20px 16px;
+      letter-spacing: -0.03em;
+      font-variant-numeric: tabular-nums;
+      border: none;
+      background: transparent;
+      color: var(--primary-800);
+    }
+    .form-input--amount:focus { box-shadow: none; border: none; }
+    .form-select {
+      width: 100%;
+      padding: 13px 42px 13px 42px;
+      border: 1.5px solid var(--neutral-200);
+      border-radius: 12px;
+      font-size: 14px;
+      font-family: var(--font-primary);
+      color: var(--neutral-900);
+      background: var(--white);
+      appearance: none;
+      outline: none;
+      cursor: pointer;
+      transition: border-color var(--transition-base);
+    }
+    .form-select:focus { border-color: var(--primary-500); box-shadow: 0 0 0 3px rgba(59,130,246,0.14); }
+    .form-select-arrow {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--neutral-400);
+      pointer-events: none;
+    }
+
+    /* --- Buttons --- */
+    .btn-primary {
+      width: 100%;
+      padding: 15px 24px;
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all var(--transition-base);
+      box-shadow: 0 4px 16px rgba(59,130,246,0.3);
+      font-family: var(--font-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      letter-spacing: -0.01em;
+    }
+    .btn-primary:hover { box-shadow: 0 6px 24px rgba(59,130,246,0.42); transform: translateY(-1px); }
+    .btn-primary:active { transform: scale(0.98); box-shadow: 0 2px 8px rgba(59,130,246,0.2); }
+
+    .btn-secondary {
+      padding: 13px 24px;
+      background: transparent;
+      color: var(--primary-600);
+      font-size: 14px;
+      font-weight: 600;
+      border: 1.5px solid var(--primary-200);
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all var(--transition-base);
+      font-family: var(--font-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn-secondary:hover { background: var(--primary-50); border-color: var(--primary-300); }
+
+    .btn-danger {
+      padding: 13px 24px;
+      background: transparent;
+      color: var(--color-expense);
+      font-size: 14px;
+      font-weight: 600;
+      border: 1.5px solid #fecaca;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all var(--transition-base);
+      font-family: var(--font-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn-danger:hover { background: var(--color-expense-light); }
+
+    .fab {
+      width: 58px; height: 58px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-fab);
+      transition: all var(--transition-base);
+      flex-shrink: 0;
+    }
+    .fab:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 8px 28px rgba(59,130,246,0.45); }
+    .fab:active { transform: scale(0.93); }
+
+    .btn-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      background: var(--neutral-100);
+      border: 1px solid var(--neutral-200);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--neutral-600);
+      cursor: pointer;
+      transition: all var(--transition-base);
+      flex-shrink: 0;
+    }
+    .btn-icon:hover { background: var(--neutral-200); color: var(--neutral-800); }
+
+    /* --- Badge --- */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .badge--income  { background: var(--color-income-light); color: #166534; }
+    .badge--expense { background: var(--color-expense-light); color: #991b1b; }
+    .badge--primary { background: var(--primary-100); color: var(--primary-700); }
+    .badge--warning { background: var(--color-warning-light); color: #92400e; }
+    .badge--neutral { background: var(--neutral-100); color: var(--neutral-600); }
+
+    /* --- Chip --- */
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 8px 14px;
+      border-radius: 9999px;
+      font-size: 13px;
+      font-weight: 500;
+      border: 1.5px solid var(--neutral-200);
+      background: white;
+      color: var(--neutral-600);
+      cursor: pointer;
+      transition: all var(--transition-base);
+    }
+    .chip:hover { border-color: var(--primary-300); color: var(--primary-600); background: var(--primary-50); }
+    .chip--active { background: var(--primary-500); color: white; border-color: var(--primary-500); box-shadow: 0 2px 8px rgba(59,130,246,0.25); }
+
+    /* --- Toast --- */
+    .toast {
+      padding: 14px 18px;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 20px rgba(15,23,42,0.10);
+    }
+    .toast--success { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+    .toast--error   { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+    .toast--info    { background: var(--primary-50); color: var(--primary-800); border: 1px solid var(--primary-200); }
+
+    /* --- Card --- */
+    .card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: var(--shadow-card);
+    }
+    .card__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .card__title { font-size: 16px; font-weight: 700; color: var(--neutral-900); }
+    .card__link {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--primary-500);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      transition: gap var(--transition-fast);
+    }
+    .card__link:hover { gap: 6px; }
+
+    /* --- Avatar --- */
+    .avatar {
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    .avatar--sm  { width: 32px;  height: 32px;  }
+    .avatar--md  { width: 40px;  height: 40px;  }
+    .avatar--lg  { width: 52px;  height: 52px;  }
+    .avatar--xl  { width: 64px;  height: 64px;  }
+
+    .avatar-fallback {
+      border-radius: 50%;
+      background: var(--gradient-accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* --- Date Header --- */
+    .date-header {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--neutral-400);
+      padding: 14px 0 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* --- Modal --- */
+    .modal-overlay {
+      background: rgba(15,23,42,0.45);
+      border-radius: 20px;
+      padding: 48px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .modal {
+      background: white;
+      border-radius: 24px;
+      padding: 28px;
+      width: 100%;
+      max-width: 340px;
+      box-shadow: 0 24px 60px rgba(15,23,42,0.25);
+    }
+    .modal__icon { margin-bottom: 16px; }
+    .modal__title { font-size: 19px; font-weight: 700; color: var(--neutral-900); margin-bottom: 8px; }
+    .modal__text  { font-size: 14px; color: var(--neutral-500); margin-bottom: 24px; line-height: 1.6; }
+
+    /* --- Empty state --- */
+    .empty-state { text-align: center; padding: 48px 20px; }
+    .empty-state__icon-wrap {
+      width: 72px; height: 72px;
+      background: var(--primary-50);
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      color: var(--primary-400);
+    }
+    .empty-state__title { font-size: 16px; font-weight: 700; color: var(--neutral-700); margin-bottom: 6px; }
+    .empty-state__desc  { font-size: 13px; color: var(--neutral-400); line-height: 1.5; }
+
+    /* --- Glassmorphism --- */
+    .glass {
+      background: rgba(255,255,255,0.09);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 20px;
+    }
+
+    /* --- Progress bar --- */
+    .progress-bar-wrap { height: 6px; background: var(--neutral-100); border-radius: 9999px; overflow: hidden; }
+    .progress-bar { height: 100%; border-radius: 9999px; background: var(--gradient-accent); }
+
+    /* --- Tag / Pill label --- */
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 10px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    /* --- Animations --- */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .anim { animation: fadeInUp 0.4s ease both; }
+    .anim-d1 { animation-delay: 0.06s; }
+    .anim-d2 { animation-delay: 0.12s; }
+    .anim-d3 { animation-delay: 0.18s; }
+    .anim-d4 { animation-delay: 0.24s; }
+    .anim-d5 { animation-delay: 0.30s; }
+
+    /* --- Scroll hide --- */
+    .scroll-x { display:flex; overflow-x:auto; gap:10px; padding-bottom:4px; scroll-snap-type:x mandatory; }
+    .scroll-x::-webkit-scrollbar { display: none; }
+    .scroll-snap { scroll-snap-align: start; }
+
+    /* --- Separator --- */
+    .sep { height:1px; background:var(--neutral-100); margin: 4px 0; }
+  </style>
+</head>
+<body>
+<div class="catalog">
+
+  <!-- HEADER -->
+  <div class="catalog-badge">
+    <i data-lucide="palette" class="icon-xs"></i>
+    Design System v2 — Lucide Icons
+  </div>
+  <h1 class="catalog-title">Personal <span>Wallet</span><br>Design System</h1>
+  <p class="catalog-subtitle">Panduan visual & komponen UI lengkap untuk membangun aplikasi. Menggunakan <strong>Lucide Icons</strong> dan <strong>Unsplash</strong> untuk foto. Nuansa biru, mobile-first 480px.</p>
+
+  <!-- ============================================================ -->
+  <!-- 1. COLOR PALETTE                                              -->
+  <!-- ============================================================ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon-wrap"><i data-lucide="droplets" class="icon-md"></i></div>
+      <h2 class="section-title">Color Palette</h2>
+    </div>
+    <p class="section-desc">Skala warna yang digunakan di seluruh aplikasi.</p>
+
+    <p class="subsection-title">Primary — Blue</p>
+    <div class="swatch-grid">
+      <div class="swatch"><div class="swatch-color" style="background:#0c1a3d"></div><div class="swatch-info"><div class="swatch-name">900</div><div class="swatch-hex">#0c1a3d</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#0f2557"></div><div class="swatch-info"><div class="swatch-name">800</div><div class="swatch-hex">#0f2557</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#1e3a6e"></div><div class="swatch-info"><div class="swatch-name">700</div><div class="swatch-hex">#1e3a6e</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#1d4ed8"></div><div class="swatch-info"><div class="swatch-name">600</div><div class="swatch-hex">#1d4ed8</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#3b82f6"></div><div class="swatch-info"><div class="swatch-name">500</div><div class="swatch-hex">#3b82f6</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#60a5fa"></div><div class="swatch-info"><div class="swatch-name">400</div><div class="swatch-hex">#60a5fa</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#93c5fd"></div><div class="swatch-info"><div class="swatch-name">300</div><div class="swatch-hex">#93c5fd</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#bfdbfe"></div><div class="swatch-info"><div class="swatch-name">200</div><div class="swatch-hex">#bfdbfe</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#dbeafe"></div><div class="swatch-info"><div class="swatch-name">100</div><div class="swatch-hex">#dbeafe</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#eff6ff"></div><div class="swatch-info"><div class="swatch-name">50</div><div class="swatch-hex">#eff6ff</div></div></div>
+    </div>
+
+    <p class="subsection-title">Accent — Cyan</p>
+    <div class="swatch-grid">
+      <div class="swatch"><div class="swatch-color" style="background:#06b6d4"></div><div class="swatch-info"><div class="swatch-name">500</div><div class="swatch-hex">#06b6d4</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#22d3ee"></div><div class="swatch-info"><div class="swatch-name">400</div><div class="swatch-hex">#22d3ee</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#67e8f9"></div><div class="swatch-info"><div class="swatch-name">300</div><div class="swatch-hex">#67e8f9</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#a5f3fc"></div><div class="swatch-info"><div class="swatch-name">200</div><div class="swatch-hex">#a5f3fc</div></div></div>
+    </div>
+
+    <p class="subsection-title">Semantic</p>
+    <div class="swatch-grid">
+      <div class="swatch"><div class="swatch-color" style="background:#22c55e"></div><div class="swatch-info"><div class="swatch-name">Income</div><div class="swatch-hex">#22c55e</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#dcfce7"></div><div class="swatch-info"><div class="swatch-name">Income Lt</div><div class="swatch-hex">#dcfce7</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#ef4444"></div><div class="swatch-info"><div class="swatch-name">Expense</div><div class="swatch-hex">#ef4444</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#fee2e2"></div><div class="swatch-info"><div class="swatch-name">Expense Lt</div><div class="swatch-hex">#fee2e2</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#f59e0b"></div><div class="swatch-info"><div class="swatch-name">Warning</div><div class="swatch-hex">#f59e0b</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#10b981"></div><div class="swatch-info"><div class="swatch-name">Success</div><div class="swatch-hex">#10b981</div></div></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ============================================================ -->
+  <!-- 2. GRADIENTS                                                  -->
+  <!-- ============================================================ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon-wrap"><i data-lucide="layers" class="icon-md"></i></div>
+      <h2 class="section-title">Gradients</h2>
+    </div>
+    <p class="section-desc">Gradient digunakan pada wallet card, nav, tombol CTA, dan chart.</p>
+
+    <div style="display:flex; flex-direction:column; gap:8px">
+      <div class="gradient-row"><div class="gradient-bar" style="background:linear-gradient(135deg,#0f2557,#1e3a6e,#1d4ed8)"><span class="gradient-label">Wallet Card</span></div><span class="gradient-token">--gradient-wallet</span></div>
+      <div class="gradient-row"><div class="gradient-bar" style="background:linear-gradient(180deg,#0c1a3d,#0f2557,#1e3a6e)"><span class="gradient-label">Onboarding / Dark</span></div><span class="gradient-token">--gradient-dark</span></div>
+      <div class="gradient-row"><div class="gradient-bar" style="background:linear-gradient(135deg,#0f2557,#142244)"><span class="gradient-label">Bottom Navigation</span></div><span class="gradient-token">--gradient-nav</span></div>
+      <div class="gradient-row"><div class="gradient-bar" style="background:linear-gradient(135deg,#3b82f6,#06b6d4)"><span class="gradient-label">Accent / CTA / FAB</span></div><span class="gradient-token">--gradient-accent</span></div>
+      <div class="gradient-row"><div class="gradient-bar" style="background:linear-gradient(180deg,#0f2557,#1a2d54)"><span class="gradient-label">Chart Background</span></div><span class="gradient-token">--gradient-chart-bg</span></div>
+      <div class="gradient-row"><div class="gradient-bar" style="background:linear-gradient(180deg,#eff6ff,#f8fafc); border:1px solid #e2e8f0"><span class="gradient-label" style="color:var(--neutral-500)">Page Background</span></div><span class="gradient-token">--gradient-page-bg</span></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ============================================================ -->
+  <!-- 3. LUCIDE ICON LIBRARY                                        -->
+  <!-- ============================================================ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon-wrap"><i data-lucide="grid-3x3" class="icon-md"></i></div>
+      <h2 class="section-title">Lucide Icons</h2>
+    </div>
+    <p class="section-desc">Semua ikon menggunakan Lucide dengan 3 ukuran: 16px (sm), 20px (md), 24px (lg).</p>
+
+    <div class="component-box">
+      <div class="component-label"><i data-lucide="navigation" class="icon-xs"></i> Navigation & Actions</div>
+      <div style="display:flex; flex-wrap:wrap; gap:20px; align-items:center">
+        <!-- icon + label -->
+        <div style="display:flex; flex-direction:column; align-items:center; gap:6px">
+          <div style="width:44px;height:44px;background:var(--primary-50);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--primary-600)"><i data-lucide="home" class="icon-md"></i></div>
+          <span style="font-size:10px;color:var(--neutral-500)">home</span>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:6px">
+          <div style="width:44px;height:44px;background:var(--primary-50);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--primary-600)"><i data-lucide="bar-chart-3" class="icon-md"></i></div>
+          <span style="font-size:10px;color:var(--neutral-500)">bar-chart-3</span>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:6px">
+          <div style="width:44px;height:44px;background:var(--primary-50);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--primary-600)"><i data-lucide="plus" class="icon-md"></i></div>
+          <span style="font-size:10px;color:var(--neutral-500)">plus</span>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:6px">
+          <div style="width:44px;height:44px;background:var(--primary-50);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--primary-600)"><i data-lucide="clock" class="icon-md"></i></div>
+          <span style="font-size:10px;color:var(--neutral-500)">clock</span>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:6px">
+          <div style="width:44px;height:44px;background:var(--primary-50);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--primary-600)"><i data-lucide="settings-2" class="icon-md"></i></div>
+          <span style="font-size:10px;color:var(--neutral-500)">settings-2</span>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:6px">
+          <div style="width:44px;height:44px;background:var(--primary-50);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--primary-600)"><i data-lucide="search" class="icon-md"></i></div>
+          <span style="font-size:10px;color:var(--neutral-500)">search</span>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:6px">
+          <div style="width:44px;height:44px;background:var(--primary-50);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--primary-600)"><i data-lucide="bell" class="icon-md"></i></div>
+          <span style="font-size:10px;color:var(--neutral-500)">bell</span>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:6px">
+          <div style="width:44px;height:44px;background:var(--primary-50);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--primary-600)"><i data-lucide="chevron-left" class="icon-md"></i></div>
+          <span style="font-size:10px;color:var(--neutral-500)">chevron-left</span>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:6px">
+          <div style="width:44px;height:44px;background:var(--primary-50);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--primary-600)"><i data-lucide="more-horizontal" class="icon-md"></i></div>
+          <span style="font-size:10px;color:var(--neutral-500)">more-horizontal</span>
+        </div>
+      </div>
+
+      <div class="component-label" style="margin-top:24px"><i data-lucide="credit-card" class="icon-xs"></i> Finance & Wallet</div>
+      <div style="display:flex; flex-wrap:wrap; gap:20px; align-items:center">
+        <div style="display:flex; flex-direction:column; align-items:center; gap:6px">
+          <div style="width:44px;height:44px;background:var(--color-income-light);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#166534"><i data-lucide="trending-up" class="icon-md"></i></div>
+          <span style="font-size:10px;color:var(--neutral-500)">trending-up</span>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:6px">
+          <div style="width:44px;height:44px;background:var(--color-expense-light);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#991b1b"><i data-lucide="trending-down" class="icon-md"></i></div>
+          <span style="font-size:10px;color:var(--neutral-500)">trending-down</span>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:6px">
+          <div style="width:44px;height:44px;background:var(--primary-50);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--primary-600)"><i data-lucide="wallet" class="icon-md"></i></div>
+          <span style="font-size:10px;color:var(--neutral-500)">wallet</span>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:6px">
+          <div style="width:44px;height:44px;background:var(--primary-50);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--primary-600)"><i data-lucide="credit-card" class="icon-md"></i></div>
+          <span style="font-size:10px;color:var(--neutral-500)">credit-card</span>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:6px">
+          <div style="width:44px;height:44px;background:var(--primary-50);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--primary-600)"><i data-lucide="arrow-up-right" class="icon-md"></i></div>
+          <span style="font-size:10px;color:var(--neutral-500)">arrow-up-right</span>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:6px">
+          <div style="width:44px;height:44px;background:var(--primary-50);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--primary-600)"><i data-lucide="arrow-down-left" class="icon-md"></i></div>
+          <span style="font-size:10px;color:var(--neutral-500)">arrow-down-left</span>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:6px">
+          <div style="width:44px;height:44px;background:var(--primary-50);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--primary-600)"><i data-lucide="repeat-2" class="icon-md"></i></div>
+          <span style="font-size:10px;color:var(--neutral-500)">repeat-2</span>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:6px">
+          <div style="width:44px;height:44px;background:var(--primary-50);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--primary-600)"><i data-lucide="banknote" class="icon-md"></i></div>
+          <span style="font-size:10px;color:var(--neutral-500)">banknote</span>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:6px">
+          <div style="width:44px;height:44px;background:var(--primary-50);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--primary-600)"><i data-lucide="receipt" class="icon-md"></i></div>
+          <span style="font-size:10px;color:var(--neutral-500)">receipt</span>
+        </div>
+      </div>
+
+      <div class="component-label" style="margin-top:24px"><i data-lucide="tag" class="icon-xs"></i> Categories</div>
+      <div style="display:flex; flex-wrap:wrap; gap:20px; align-items:center">
+        <div style="display:flex; flex-direction:column; align-items:center; gap:6px">
+          <div style="width:44px;height:44px;background:var(--primary-50);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--primary-600)"><i data-lucide="utensils" class="icon-md"></i></div>
+          <span style="font-size:10px;color:var(--neutral-500)">utensils</span>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:6px">
+          <div style="width:44px;height:44px;background:var(--primary-50);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--primary-600)"><i data-lucide="car" class="icon-md"></i></div>
+          <span style="font-size:10px;color:var(--neutral-500)">car</span>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:6px">
+          <div style="width:44px;height:44px;background:var(--primary-50);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--primary-600)"><i data-lucide="shopping-bag" class="icon-md"></i></div>
+          <span style="font-size:10px;color:var(--neutral-500)">shopping-bag</span>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:6px">
+          <div style="width:44px;height:44px;background:var(--primary-50);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--primary-600)"><i data-lucide="home" class="icon-md"></i></div>
+          <span style="font-size:10px;color:var(--neutral-500)">home</span>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:6px">
+          <div style="width:44px;height:44px;background:var(--primary-50);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--primary-600)"><i data-lucide="gamepad-2" class="icon-md"></i></div>
+          <span style="font-size:10px;color:var(--neutral-500)">gamepad-2</span>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:6px">
+          <div style="width:44px;height:44px;background:var(--primary-50);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--primary-600)"><i data-lucide="heart-pulse" class="icon-md"></i></div>
+          <span style="font-size:10px;color:var(--neutral-500)">heart-pulse</span>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:6px">
+          <div style="width:44px;height:44px;background:var(--primary-50);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--primary-600)"><i data-lucide="book-open" class="icon-md"></i></div>
+          <span style="font-size:10px;color:var(--neutral-500)">book-open</span>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:6px">
+          <div style="width:44px;height:44px;background:var(--primary-50);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--primary-600)"><i data-lucide="briefcase" class="icon-md"></i></div>
+          <span style="font-size:10px;color:var(--neutral-500)">briefcase</span>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:6px">
+          <div style="width:44px;height:44px;background:var(--primary-50);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--primary-600)"><i data-lucide="zap" class="icon-md"></i></div>
+          <span style="font-size:10px;color:var(--neutral-500)">zap</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ============================================================ -->
+  <!-- 4. TYPOGRAPHY                                                 -->
+  <!-- ============================================================ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon-wrap"><i data-lucide="type" class="icon-md"></i></div>
+      <h2 class="section-title">Typography</h2>
+    </div>
+    <p class="section-desc">Font: Inter. Nominal uang selalu bold + tabular-nums.</p>
+    <div class="component-box">
+      <div style="display:flex; flex-direction:column; gap:22px">
+        <div><span style="font-size:10px;color:var(--neutral-400);font-weight:600;text-transform:uppercase;letter-spacing:.06em">Display — 34px / 800</span><div style="font-size:34px;font-weight:800;color:var(--neutral-900);letter-spacing:-0.03em;font-variant-numeric:tabular-nums;margin-top:4px">Rp 12.500.000</div></div>
+        <div><span style="font-size:10px;color:var(--neutral-400);font-weight:600;text-transform:uppercase;letter-spacing:.06em">H1 — 28px / 700</span><div style="font-size:28px;font-weight:700;color:var(--neutral-900);letter-spacing:-0.02em;margin-top:4px">Selamat Datang, Andika!</div></div>
+        <div><span style="font-size:10px;color:var(--neutral-400);font-weight:600;text-transform:uppercase;letter-spacing:.06em">H2 — 22px / 700</span><div style="font-size:22px;font-weight:700;color:var(--neutral-900);font-variant-numeric:tabular-nums;margin-top:4px">Rp 2.455.000</div></div>
+        <div><span style="font-size:10px;color:var(--neutral-400);font-weight:600;text-transform:uppercase;letter-spacing:.06em">H3 — 18px / 600</span><div style="font-size:18px;font-weight:600;color:var(--neutral-900);margin-top:4px">Quick Transfer</div></div>
+        <div><span style="font-size:10px;color:var(--neutral-400);font-weight:600;text-transform:uppercase;letter-spacing:.06em">H4 — 16px / 700</span><div style="font-size:16px;font-weight:700;color:var(--neutral-900);margin-top:4px">Manage Expenses</div></div>
+        <div><span style="font-size:10px;color:var(--neutral-400);font-weight:600;text-transform:uppercase;letter-spacing:.06em">Body — 14px / 400</span><div style="font-size:14px;color:var(--neutral-600);line-height:1.6;margin-top:4px">Kelola anggaran dan pengeluaranmu dengan mudah. Semua transaksi tercatat rapi di satu tempat.</div></div>
+        <div><span style="font-size:10px;color:var(--neutral-400);font-weight:600;text-transform:uppercase;letter-spacing:.06em">Caption — 12px / 500</span><div style="font-size:12px;font-weight:500;color:var(--neutral-400);margin-top:4px">Updated: 07 September 2026</div></div>
+        <div><span style="font-size:10px;color:var(--neutral-400);font-weight:600;text-transform:uppercase;letter-spacing:.06em">Label — 10px / 700 uppercase</span><div style="font-size:10px;font-weight:700;color:var(--neutral-400);text-transform:uppercase;letter-spacing:.08em;margin-top:4px">TRANSAKSI TERAKHIR</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ============================================================ -->
+  <!-- 5. COMPONENTS                                                 -->
+  <!-- ============================================================ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon-wrap"><i data-lucide="component" class="icon-md"></i></div>
+      <h2 class="section-title">Components</h2>
+    </div>
+    <p class="section-desc">Semua komponen ditampilkan dengan Lucide Icons dan Unsplash photo.</p>
+
+    <!-- 5.1 Wallet Balance Card -->
+    <p class="subsection-title">5.1 Wallet Balance Card</p>
+    <div style="max-width:375px; margin:0 auto">
+      <div class="component-box" style="background:var(--neutral-100); padding:16px">
+        <div class="component-label"><i data-lucide="credit-card" class="icon-xs"></i> Wallet Card — Primary</div>
+        <div class="wallet-card anim">
+          <div class="wallet-card__top">
+            <div>
+              <div class="wallet-card__label">Wallet Balance</div>
+            </div>
+            <div class="wallet-card__badge">
+              <i data-lucide="trending-up" class="icon-xs"></i> 4%
+            </div>
+          </div>
+          <div class="wallet-card__balance">Rp 12.455.000</div>
+          <div class="wallet-card__subtitle">
+            <i data-lucide="refresh-cw" class="icon-xs"></i>
+            Updated 07/09/2026
+          </div>
+          <div class="wallet-card__actions">
+            <div class="wallet-card__action">
+              <div class="wallet-card__action-circle"><i data-lucide="send" class="icon-sm"></i></div>
+              <span class="wallet-card__action-label">Send</span>
+            </div>
+            <div class="wallet-card__action">
+              <div class="wallet-card__action-circle"><i data-lucide="download" class="icon-sm"></i></div>
+              <span class="wallet-card__action-label">Receive</span>
+            </div>
+            <div class="wallet-card__action">
+              <div class="wallet-card__action-circle"><i data-lucide="plus-circle" class="icon-sm"></i></div>
+              <span class="wallet-card__action-label">Top-Up</span>
+            </div>
+            <div class="wallet-card__action">
+              <div class="wallet-card__action-circle"><i data-lucide="more-horizontal" class="icon-sm"></i></div>
+              <span class="wallet-card__action-label">More</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5.2 Wallet Mini Cards -->
+    <p class="subsection-title">5.2 Wallet Mini Cards</p>
+    <div style="max-width:375px; margin:0 auto">
+      <div class="component-box" style="background:var(--neutral-100); padding:16px">
+        <div class="component-label"><i data-lucide="wallet" class="icon-xs"></i> Wallet Cards — Horizontal Scroll</div>
+        <div class="scroll-x">
+          <div class="wallet-mini scroll-snap">
+            <div class="wallet-mini__top">
+              <div class="wallet-mini__icon-wrap"><i data-lucide="building-2" class="icon-sm"></i></div>
+              <i data-lucide="more-horizontal" class="icon-xs" style="color:rgba(255,255,255,0.4)"></i>
+            </div>
+            <div class="wallet-mini__name">BCA</div>
+            <div class="wallet-mini__balance">Rp 5.200.000</div>
+          </div>
+          <div class="wallet-mini scroll-snap" style="background:linear-gradient(135deg,#1e3a6e,#3b82f6)">
+            <div class="wallet-mini__top">
+              <div class="wallet-mini__icon-wrap"><i data-lucide="banknote" class="icon-sm"></i></div>
+              <i data-lucide="more-horizontal" class="icon-xs" style="color:rgba(255,255,255,0.4)"></i>
+            </div>
+            <div class="wallet-mini__name">Cash</div>
+            <div class="wallet-mini__balance">Rp 800.000</div>
+          </div>
+          <div class="wallet-mini scroll-snap" style="background:linear-gradient(135deg,#142244,#1d4ed8)">
+            <div class="wallet-mini__top">
+              <div class="wallet-mini__icon-wrap"><i data-lucide="smartphone" class="icon-sm"></i></div>
+              <i data-lucide="more-horizontal" class="icon-xs" style="color:rgba(255,255,255,0.4)"></i>
+            </div>
+            <div class="wallet-mini__name">OVO</div>
+            <div class="wallet-mini__balance">Rp 500.000</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5.3 Transaction List -->
+    <p class="subsection-title">5.3 Transaction List</p>
+    <div style="max-width:375px; margin:0 auto">
+      <div class="component-box">
+        <div class="component-label"><i data-lucide="list" class="icon-xs"></i> Transaction List — Grouped by Date</div>
+        <div class="date-header"><i data-lucide="calendar" class="icon-xs"></i> Hari Ini — 7 Sep 2026</div>
+        <div class="txn-item anim">
+          <div class="txn-item__icon txn-item__icon--expense"><i data-lucide="utensils" class="icon-md"></i></div>
+          <div class="txn-item__info">
+            <div class="txn-item__name">Makan Siang</div>
+            <div class="txn-item__meta"><i data-lucide="building-2" class="icon-xs"></i> BCA · 12:30</div>
+          </div>
+          <div class="txn-item__amount txn-item__amount--expense">-Rp 75.000</div>
+        </div>
+        <div class="txn-item anim anim-d1">
+          <div class="txn-item__icon" style="background:var(--primary-50);color:var(--primary-600)"><i data-lucide="car" class="icon-md"></i></div>
+          <div class="txn-item__info">
+            <div class="txn-item__name">Grab ke Kantor</div>
+            <div class="txn-item__meta"><i data-lucide="smartphone" class="icon-xs"></i> OVO · 08:15</div>
+          </div>
+          <div class="txn-item__amount txn-item__amount--expense">-Rp 25.000</div>
+        </div>
+        <div class="txn-item anim anim-d2">
+          <div class="txn-item__icon txn-item__icon--income"><i data-lucide="banknote" class="icon-md"></i></div>
+          <div class="txn-item__info">
+            <div class="txn-item__name">Gaji September</div>
+            <div class="txn-item__meta"><i data-lucide="building-2" class="icon-xs"></i> BCA · 09:00</div>
+          </div>
+          <div class="txn-item__amount txn-item__amount--income">+Rp 8.000.000</div>
+        </div>
+        <div class="txn-item anim anim-d3">
+          <div class="txn-item__icon" style="background:var(--primary-50);color:var(--primary-600)"><i data-lucide="shopping-bag" class="icon-md"></i></div>
+          <div class="txn-item__info">
+            <div class="txn-item__name">Belanja Bulanan</div>
+            <div class="txn-item__meta"><i data-lucide="banknote" class="icon-xs"></i> Cash · 14:00</div>
+          </div>
+          <div class="txn-item__amount txn-item__amount--expense">-Rp 450.000</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5.4 Toggle Tabs -->
+    <p class="subsection-title">5.4 Toggle Tabs</p>
+    <div style="max-width:375px; margin:0 auto">
+      <div class="component-box">
+        <div class="component-label"><i data-lucide="toggle-left" class="icon-xs"></i> Toggle Tabs</div>
+        <div class="toggle-tabs" style="margin-bottom:14px">
+          <button class="toggle-tabs__item toggle-tabs__item--active"><i data-lucide="trending-up" class="icon-sm"></i> Income</button>
+          <button class="toggle-tabs__item"><i data-lucide="trending-down" class="icon-sm"></i> Expense</button>
+        </div>
+        <div class="toggle-tabs">
+          <button class="toggle-tabs__item"><i data-lucide="calendar" class="icon-sm"></i> Weekly</button>
+          <button class="toggle-tabs__item toggle-tabs__item--active"><i data-lucide="calendar-range" class="icon-sm"></i> Monthly</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5.5 Summary Cards -->
+    <p class="subsection-title">5.5 Summary Cards</p>
+    <div style="max-width:375px; margin:0 auto">
+      <div class="component-box" style="background:var(--neutral-50)">
+        <div class="component-label"><i data-lucide="layout-grid" class="icon-xs"></i> Summary Cards</div>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px">
+          <div class="summary-card anim">
+            <div class="summary-card__icon-wrap" style="background:var(--color-income-light)"><i data-lucide="trending-up" class="icon-sm" style="color:#166534"></i></div>
+            <div class="summary-card__label">Income</div>
+            <div class="summary-card__amount" style="color:var(--color-income); font-size:16px">+2.5jt</div>
+            <div class="summary-card__trend" style="color:var(--color-income)"><i data-lucide="arrow-up" class="icon-xs"></i> 12%</div>
+          </div>
+          <div class="summary-card anim anim-d1">
+            <div class="summary-card__icon-wrap" style="background:var(--color-expense-light)"><i data-lucide="trending-down" class="icon-sm" style="color:#991b1b"></i></div>
+            <div class="summary-card__label">Expense</div>
+            <div class="summary-card__amount" style="color:var(--color-expense); font-size:16px">-1.8jt</div>
+            <div class="summary-card__trend" style="color:var(--color-expense)"><i data-lucide="arrow-up" class="icon-xs"></i> 5%</div>
+          </div>
+          <div class="summary-card anim anim-d2">
+            <div class="summary-card__icon-wrap" style="background:var(--primary-100)"><i data-lucide="wallet" class="icon-sm" style="color:var(--primary-600)"></i></div>
+            <div class="summary-card__label">Net</div>
+            <div class="summary-card__amount" style="color:var(--primary-600); font-size:16px">+700rb</div>
+            <div class="summary-card__trend" style="color:var(--color-income)"><i data-lucide="arrow-up" class="icon-xs"></i> 8%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5.6 Bar Chart -->
+    <p class="subsection-title">5.6 Stats Chart Card</p>
+    <div style="max-width:375px; margin:0 auto">
+      <div class="component-box" style="background:var(--neutral-100); padding:16px">
+        <div class="component-label"><i data-lucide="bar-chart-3" class="icon-xs"></i> Chart Card — Weekly</div>
+        <div class="stats-card">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px; position:relative; z-index:1">
+            <div>
+              <div style="font-size:12px;color:rgba(255,255,255,0.55);font-weight:500">Total pengeluaran</div>
+              <div style="font-size:24px;font-weight:800;color:#fff;font-variant-numeric:tabular-nums;letter-spacing:-0.02em;margin-top:2px">Rp 6.282.000</div>
+            </div>
+            <button class="btn-icon" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:white;width:36px;height:36px;border-radius:10px"><i data-lucide="arrow-up-right" class="icon-sm"></i></button>
+          </div>
+          <!-- chart -->
+          <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:6px; height:110px; margin:20px 0 8px; position:relative; z-index:1">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1"><div class="chart-bar chart-bar--secondary" style="width:100%;height:38px"></div><span class="chart-label">Sen</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1"><div class="chart-bar chart-bar--secondary" style="width:100%;height:52px"></div><span class="chart-label">Sel</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1"><div class="chart-bar chart-bar--primary" style="width:100%;height:68px"></div><span class="chart-label">Rab</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1"><div class="chart-bar chart-bar--secondary" style="width:100%;height:46px"></div><span class="chart-label">Kam</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;position:relative">
+              <div class="chart-tooltip">Rp 2.135k</div>
+              <div class="chart-bar chart-bar--highlight" style="width:100%;height:96px"></div>
+              <span class="chart-label">Jum</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1"><div class="chart-bar chart-bar--primary" style="width:100%;height:60px"></div><span class="chart-label">Sab</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1"><div class="chart-bar chart-bar--secondary" style="width:100%;height:32px"></div><span class="chart-label">Min</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5.7 Category Breakdown -->
+    <p class="subsection-title">5.7 Category Breakdown</p>
+    <div style="max-width:375px; margin:0 auto">
+      <div class="component-box">
+        <div class="component-label"><i data-lucide="pie-chart" class="icon-xs"></i> Category Breakdown — Monthly</div>
+        <div class="cat-row">
+          <div class="cat-row__icon"><i data-lucide="utensils" class="icon-md"></i></div>
+          <div class="cat-row__info">
+            <div class="cat-row__name">Makanan & Minuman</div>
+            <div class="cat-row__bar-wrap"><div class="cat-row__bar" style="width:62%"></div></div>
+          </div>
+          <div style="text-align:right">
+            <div class="cat-row__amount">Rp 635k</div>
+            <div class="cat-row__pct">35%</div>
+          </div>
+        </div>
+        <div class="cat-row">
+          <div class="cat-row__icon"><i data-lucide="car" class="icon-md"></i></div>
+          <div class="cat-row__info">
+            <div class="cat-row__name">Transportasi</div>
+            <div class="cat-row__bar-wrap"><div class="cat-row__bar" style="width:36%"></div></div>
+          </div>
+          <div style="text-align:right">
+            <div class="cat-row__amount">Rp 360k</div>
+            <div class="cat-row__pct">20%</div>
+          </div>
+        </div>
+        <div class="cat-row">
+          <div class="cat-row__icon"><i data-lucide="shopping-bag" class="icon-md"></i></div>
+          <div class="cat-row__info">
+            <div class="cat-row__name">Belanja</div>
+            <div class="cat-row__bar-wrap"><div class="cat-row__bar" style="width:27%"></div></div>
+          </div>
+          <div style="text-align:right">
+            <div class="cat-row__amount">Rp 270k</div>
+            <div class="cat-row__pct">15%</div>
+          </div>
+        </div>
+        <div class="cat-row">
+          <div class="cat-row__icon"><i data-lucide="gamepad-2" class="icon-md"></i></div>
+          <div class="cat-row__info">
+            <div class="cat-row__name">Hiburan</div>
+            <div class="cat-row__bar-wrap"><div class="cat-row__bar" style="width:18%"></div></div>
+          </div>
+          <div style="text-align:right">
+            <div class="cat-row__amount">Rp 180k</div>
+            <div class="cat-row__pct">10%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5.8 Buttons -->
+    <p class="subsection-title">5.8 Buttons</p>
+    <div style="max-width:375px; margin:0 auto">
+      <div class="component-box">
+        <div class="component-label"><i data-lucide="mouse-pointer-click" class="icon-xs"></i> Button Variants</div>
+        <div style="display:flex; flex-direction:column; gap:12px">
+          <button class="btn-primary"><i data-lucide="save" class="icon-sm"></i> Simpan Transaksi</button>
+          <div style="display:flex; gap:10px">
+            <button class="btn-secondary" style="flex:1"><i data-lucide="repeat-2" class="icon-sm"></i> Transfer</button>
+            <button class="btn-danger" style="flex:1"><i data-lucide="trash-2" class="icon-sm"></i> Hapus</button>
+          </div>
+          <div style="display:flex; align-items:center; justify-content:center; gap:16px; padding-top:8px">
+            <button class="fab"><i data-lucide="plus" class="icon-lg"></i></button>
+            <button class="btn-icon"><i data-lucide="search" class="icon-md"></i></button>
+            <button class="btn-icon"><i data-lucide="bell" class="icon-md"></i></button>
+            <button class="btn-icon"><i data-lucide="chevron-left" class="icon-md"></i></button>
+            <button class="btn-icon" style="background:var(--color-expense-light); color:var(--color-expense); border-color:#fecaca"><i data-lucide="trash-2" class="icon-md"></i></button>
+          </div>
+          <p style="text-align:center; font-size:11px; color:var(--neutral-400)">FAB · Icon Buttons</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5.9 Filter Chips -->
+    <p class="subsection-title">5.9 Filter Chips</p>
+    <div style="max-width:375px; margin:0 auto">
+      <div class="component-box">
+        <div class="component-label"><i data-lucide="filter" class="icon-xs"></i> Filter Chips</div>
+        <div style="display:flex; flex-wrap:wrap; gap:8px">
+          <span class="chip chip--active"><i data-lucide="layers" class="icon-xs"></i> Semua</span>
+          <span class="chip"><i data-lucide="building-2" class="icon-xs"></i> BCA</span>
+          <span class="chip"><i data-lucide="banknote" class="icon-xs"></i> Cash</span>
+          <span class="chip"><i data-lucide="smartphone" class="icon-xs"></i> OVO</span>
+          <span class="chip"><i data-lucide="utensils" class="icon-xs"></i> Makanan</span>
+          <span class="chip"><i data-lucide="car" class="icon-xs"></i> Transport</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5.10 Badges -->
+    <p class="subsection-title">5.10 Badges & Tags</p>
+    <div style="max-width:375px; margin:0 auto">
+      <div class="component-box">
+        <div class="component-label"><i data-lucide="tag" class="icon-xs"></i> Badge Variants</div>
+        <div style="display:flex; flex-wrap:wrap; gap:8px">
+          <span class="badge badge--income"><i data-lucide="trending-up" class="icon-xs"></i> Income</span>
+          <span class="badge badge--expense"><i data-lucide="trending-down" class="icon-xs"></i> Expense</span>
+          <span class="badge badge--primary"><i data-lucide="credit-card" class="icon-xs"></i> BCA</span>
+          <span class="badge badge--warning"><i data-lucide="alert-triangle" class="icon-xs"></i> Limit</span>
+          <span class="badge badge--neutral"><i data-lucide="tag" class="icon-xs"></i> Draft</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5.11 Form Inputs -->
+    <p class="subsection-title">5.11 Form Inputs</p>
+    <div style="max-width:375px; margin:0 auto">
+      <div class="component-box">
+        <div class="component-label"><i data-lucide="square-pen" class="icon-xs"></i> Form Elements</div>
+        <!-- Amount -->
+        <div style="text-align:center; margin-bottom:8px; padding:20px; background:var(--primary-50); border-radius:16px; border:2px dashed var(--primary-200)">
+          <div style="font-size:12px;color:var(--neutral-400);font-weight:600;margin-bottom:4px">Jumlah</div>
+          <input type="text" class="form-input form-input--amount" value="Rp 75.000" style="width:100%; background:transparent">
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:14px; margin-top:16px">
+          <div class="form-group">
+            <label class="form-label"><i data-lucide="type" class="icon-xs"></i> Deskripsi</label>
+            <div class="form-input-wrap">
+              <div class="form-input-icon"><i data-lucide="pencil" class="icon-sm"></i></div>
+              <input type="text" class="form-input form-input--with-icon" value="Nasi Goreng Spesial" placeholder="Nama item / deskripsi">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label"><i data-lucide="tag" class="icon-xs"></i> Kategori</label>
+            <div class="form-input-wrap">
+              <div class="form-input-icon"><i data-lucide="utensils" class="icon-sm"></i></div>
+              <select class="form-select">
+                <option>Makanan & Minuman</option>
+                <option>Transportasi</option>
+                <option>Belanja / Shopping</option>
+                <option>Hiburan</option>
+              </select>
+              <div class="form-select-arrow"><i data-lucide="chevron-down" class="icon-sm"></i></div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label"><i data-lucide="wallet" class="icon-xs"></i> Wallet</label>
+            <div class="form-input-wrap">
+              <div class="form-input-icon"><i data-lucide="building-2" class="icon-sm"></i></div>
+              <select class="form-select">
+                <option>BCA</option>
+                <option>Cash</option>
+                <option>OVO</option>
+              </select>
+              <div class="form-select-arrow"><i data-lucide="chevron-down" class="icon-sm"></i></div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label"><i data-lucide="calendar" class="icon-xs"></i> Tanggal</label>
+            <div class="form-input-wrap">
+              <div class="form-input-icon"><i data-lucide="calendar-days" class="icon-sm"></i></div>
+              <input type="date" class="form-input form-input--with-icon" value="2026-09-07">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5.12 Toasts -->
+    <p class="subsection-title">5.12 Toast Notifications</p>
+    <div style="max-width:375px; margin:0 auto">
+      <div class="component-box" style="background:var(--neutral-50)">
+        <div class="component-label"><i data-lucide="bell-ring" class="icon-xs"></i> Toast Variants</div>
+        <div style="display:flex; flex-direction:column; gap:10px">
+          <div class="toast toast--success"><i data-lucide="check-circle-2" class="icon-md" style="color:var(--color-success);flex-shrink:0"></i> Transaksi berhasil disimpan!</div>
+          <div class="toast toast--error"><i data-lucide="x-circle" class="icon-md" style="color:var(--color-expense);flex-shrink:0"></i> Gagal menghapus. Masih ada transaksi terkait.</div>
+          <div class="toast toast--info"><i data-lucide="info" class="icon-md" style="color:var(--primary-500);flex-shrink:0"></i> Data berhasil di-export ke file JSON.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5.13 Avatars with Unsplash -->
+    <p class="subsection-title">5.13 Avatars — Unsplash Photos</p>
+    <div style="max-width:375px; margin:0 auto">
+      <div class="component-box">
+        <div class="component-label"><i data-lucide="user-circle" class="icon-xs"></i> Avatars — Unsplash Real Photos</div>
+        <div style="display:flex; align-items:center; gap:20px; flex-wrap:wrap">
+          <div style="text-align:center">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=64&h=64&fit=crop&crop=face&auto=format" class="avatar avatar--xl" alt="User">
+            <div style="font-size:10px;color:var(--neutral-400);margin-top:6px">64px xl</div>
+          </div>
+          <div style="text-align:center">
+            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=52&h=52&fit=crop&crop=face&auto=format" class="avatar avatar--lg" alt="User">
+            <div style="font-size:10px;color:var(--neutral-400);margin-top:6px">52px lg</div>
+          </div>
+          <div style="text-align:center">
+            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=40&h=40&fit=crop&crop=face&auto=format" class="avatar avatar--md" alt="User">
+            <div style="font-size:10px;color:var(--neutral-400);margin-top:6px">40px md</div>
+          </div>
+          <div style="text-align:center">
+            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=32&h=32&fit=crop&crop=face&auto=format" class="avatar avatar--sm" alt="User">
+            <div style="font-size:10px;color:var(--neutral-400);margin-top:6px">32px sm</div>
+          </div>
+          <!-- Fallback initials -->
+          <div style="text-align:center">
+            <div class="avatar-fallback avatar--lg" style="font-size:18px">AK</div>
+            <div style="font-size:10px;color:var(--neutral-400);margin-top:6px">Fallback</div>
+          </div>
+        </div>
+
+        <!-- Quick transfer row -->
+        <div style="margin-top:20px">
+          <div style="font-size:12px;font-weight:600;color:var(--neutral-500);margin-bottom:12px;text-transform:uppercase;letter-spacing:.05em">Quick Transfer</div>
+          <div style="display:flex; gap:16px; align-items:center">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+              <div style="width:40px;height:40px;border-radius:50%;border:2px solid var(--primary-300);display:flex;align-items:center;justify-content:center;color:var(--primary-500);background:var(--primary-50);cursor:pointer"><i data-lucide="user-plus" class="icon-sm"></i></div>
+              <span style="font-size:11px;color:var(--neutral-400)">Tambah</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face&auto=format" class="avatar avatar--md" alt="Shawn">
+              <span style="font-size:11px;color:var(--neutral-500)">Shawn</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+              <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=40&h=40&fit=crop&crop=face&auto=format" class="avatar avatar--md" alt="Jeny">
+              <span style="font-size:11px;color:var(--neutral-500)">Jeny</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+              <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face&auto=format" class="avatar avatar--md" alt="Smith">
+              <span style="font-size:11px;color:var(--neutral-500)">Smith</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5.14 Modal -->
+    <p class="subsection-title">5.14 Modal / Dialog</p>
+    <div style="max-width:375px; margin:0 auto">
+      <div class="modal-overlay">
+        <div class="modal">
+          <div class="modal__icon">
+            <div style="width:52px;height:52px;background:var(--color-expense-light);border-radius:16px;display:flex;align-items:center;justify-content:center;color:var(--color-expense)">
+              <i data-lucide="trash-2" class="icon-xl"></i>
+            </div>
+          </div>
+          <div class="modal__title">Hapus Wallet?</div>
+          <div class="modal__text">Wallet <strong>BCA</strong> dan semua transaksi terkait akan dihapus permanen. Aksi ini tidak bisa dibatalkan.</div>
+          <div style="display:flex; gap:10px">
+            <button class="btn-secondary" style="flex:1"><i data-lucide="x" class="icon-sm"></i> Batal</button>
+            <button class="btn-danger" style="flex:1"><i data-lucide="trash-2" class="icon-sm"></i> Hapus</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5.15 Empty State -->
+    <p class="subsection-title">5.15 Empty State</p>
+    <div style="max-width:375px; margin:0 auto">
+      <div class="component-box">
+        <div class="component-label"><i data-lucide="inbox" class="icon-xs"></i> Empty State</div>
+        <div class="empty-state">
+          <div class="empty-state__icon-wrap"><i data-lucide="inbox" class="icon-2xl"></i></div>
+          <div class="empty-state__title">Belum ada transaksi</div>
+          <div class="empty-state__desc">Tap tombol di bawah untuk mulai mencatat pemasukan atau pengeluaran pertamamu.</div>
+          <button class="btn-primary" style="margin-top:20px; max-width:220px; margin-left:auto; margin-right:auto"><i data-lucide="plus" class="icon-sm"></i> Tambah Transaksi</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5.16 Bottom Navigation -->
+    <p class="subsection-title">5.16 Bottom Navigation</p>
+    <div style="max-width:375px; margin:0 auto">
+      <div style="border-radius:24px; overflow:hidden; box-shadow:var(--shadow-card)">
+        <div class="bottom-nav" style="border-radius:0">
+          <div class="bottom-nav__item bottom-nav__item--active">
+            <i data-lucide="home" class="icon-md"></i>
+            <span>Home</span>
+          </div>
+          <div class="bottom-nav__item">
+            <i data-lucide="wallet" class="icon-md"></i>
+            <span>Wallet</span>
+          </div>
+          <div class="bottom-nav__item">
+            <button class="fab" style="width:48px;height:48px"><i data-lucide="plus" class="icon-lg"></i></button>
+          </div>
+          <div class="bottom-nav__item">
+            <i data-lucide="clock" class="icon-md"></i>
+            <span>History</span>
+          </div>
+          <div class="bottom-nav__item">
+            <i data-lucide="settings-2" class="icon-md"></i>
+            <span>Settings</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5.17 Glassmorphism -->
+    <p class="subsection-title">5.17 Glassmorphism</p>
+    <div style="max-width:375px; margin:0 auto">
+      <div style="background:var(--gradient-dark); border-radius:24px; padding:28px; position:relative; overflow:hidden">
+        <div style="position:absolute;width:160px;height:160px;background:radial-gradient(circle,rgba(59,130,246,0.25) 0%,transparent 70%);top:-40px;right:-40px;border-radius:50%"></div>
+        <div style="position:absolute;width:100px;height:100px;background:radial-gradient(circle,rgba(6,182,212,0.18) 0%,transparent 70%);bottom:20px;left:20px;border-radius:50%"></div>
+        <div class="glass" style="padding:20px; margin-bottom:12px; position:relative; z-index:1">
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px">
+            <i data-lucide="building-2" class="icon-sm" style="color:rgba(255,255,255,0.6)"></i>
+            <span style="font-size:13px;color:rgba(255,255,255,0.6);font-weight:500">BCA — Glass Card</span>
+          </div>
+          <div style="font-size:22px;color:white;font-weight:700;font-variant-numeric:tabular-nums">Rp 5.200.000</div>
+        </div>
+        <div class="glass" style="padding:20px; position:relative; z-index:1; background:rgba(255,255,255,0.13); border-color:rgba(255,255,255,0.2)">
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px">
+            <i data-lucide="smartphone" class="icon-sm" style="color:rgba(255,255,255,0.6)"></i>
+            <span style="font-size:13px;color:rgba(255,255,255,0.6);font-weight:500">OVO — Glass Light</span>
+          </div>
+          <div style="font-size:22px;color:white;font-weight:700;font-variant-numeric:tabular-nums">Rp 500.000</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ============================================================ -->
+  <!-- 6. FULL PAGE PREVIEW — DASHBOARD                             -->
+  <!-- ============================================================ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon-wrap"><i data-lucide="smartphone" class="icon-md"></i></div>
+      <h2 class="section-title">Full Page Preview — Dashboard</h2>
+    </div>
+    <p class="section-desc">Preview lengkap halaman Dashboard dalam phone frame. Layout identik di semua device (mobile-first, max-width 480px).</p>
+
+    <div class="phone-frame">
+      <!-- Notch -->
+      <div style="background:var(--neutral-50); padding-top:8px">
+        <div class="phone-notch"><div class="phone-notch-cam"></div><div style="width:60px;height:6px;background:var(--neutral-300);border-radius:3px"></div></div>
+        <!-- Status bar -->
+        <div class="phone-status">
+          <span>9:41</span>
+          <div class="phone-status-icons">
+            <i data-lucide="signal-high" style="width:14px;height:14px"></i>
+            <i data-lucide="wifi" style="width:14px;height:14px"></i>
+            <i data-lucide="battery-full" style="width:16px;height:16px"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- App Header -->
+      <div style="padding:8px 16px 14px; display:flex; justify-content:space-between; align-items:center; background:var(--neutral-50)">
+        <div style="display:flex;align-items:center;gap:12px">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=52&h=52&fit=crop&crop=face&auto=format" class="avatar avatar--lg" alt="User">
+          <div>
+            <div style="font-size:12px;color:var(--neutral-400);font-weight:500">Selamat Sore 👋</div>
+            <div style="font-size:17px;font-weight:700;color:var(--neutral-900)">Andika</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn-icon" style="width:40px;height:40px;border-radius:12px"><i data-lucide="search" class="icon-md"></i></button>
+          <button class="btn-icon" style="width:40px;height:40px;border-radius:12px;position:relative">
+            <i data-lucide="bell" class="icon-md"></i>
+            <div style="position:absolute;top:8px;right:8px;width:8px;height:8px;background:var(--color-expense);border-radius:50%;border:2px solid white"></div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="phone-content">
+
+        <!-- Wallet Card -->
+        <div class="wallet-card anim" style="margin-bottom:20px">
+          <div class="wallet-card__top">
+            <div>
+              <div class="wallet-card__label">Wallet Balance</div>
+            </div>
+            <div class="wallet-card__badge"><i data-lucide="trending-up" class="icon-xs"></i> 4%</div>
+          </div>
+          <div class="wallet-card__balance">Rp 12.455.000</div>
+          <div class="wallet-card__subtitle"><i data-lucide="refresh-cw" class="icon-xs"></i> Updated 07/09/2026</div>
+          <div class="wallet-card__actions">
+            <div class="wallet-card__action"><div class="wallet-card__action-circle"><i data-lucide="send" class="icon-sm"></i></div><span class="wallet-card__action-label">Send</span></div>
+            <div class="wallet-card__action"><div class="wallet-card__action-circle"><i data-lucide="download" class="icon-sm"></i></div><span class="wallet-card__action-label">Receive</span></div>
+            <div class="wallet-card__action"><div class="wallet-card__action-circle"><i data-lucide="plus-circle" class="icon-sm"></i></div><span class="wallet-card__action-label">Top-Up</span></div>
+            <div class="wallet-card__action"><div class="wallet-card__action-circle"><i data-lucide="more-horizontal" class="icon-sm"></i></div><span class="wallet-card__action-label">More</span></div>
+          </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:20px" class="anim anim-d1">
+          <div class="summary-card">
+            <div class="summary-card__icon-wrap" style="background:var(--color-income-light)"><i data-lucide="trending-up" class="icon-sm" style="color:#166534"></i></div>
+            <div class="summary-card__label">Income</div>
+            <div class="summary-card__amount" style="color:var(--color-income); font-size:15px">+8jt</div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-card__icon-wrap" style="background:var(--color-expense-light)"><i data-lucide="trending-down" class="icon-sm" style="color:#991b1b"></i></div>
+            <div class="summary-card__label">Expense</div>
+            <div class="summary-card__amount" style="color:var(--color-expense); font-size:15px">-1.8jt</div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-card__icon-wrap" style="background:var(--primary-100)"><i data-lucide="wallet" class="icon-sm" style="color:var(--primary-600)"></i></div>
+            <div class="summary-card__label">Net</div>
+            <div class="summary-card__amount" style="color:var(--primary-600); font-size:15px">+6.2jt</div>
+          </div>
+        </div>
+
+        <!-- Wallet Mini -->
+        <div class="card anim anim-d2" style="margin-bottom:16px">
+          <div class="card__header">
+            <div class="card__title">Wallet Saya</div>
+            <span class="card__link">Lihat Semua <i data-lucide="chevron-right" class="icon-xs"></i></span>
+          </div>
+          <div class="scroll-x" style="margin:0 -20px; padding:0 20px 8px">
+            <div class="wallet-mini scroll-snap">
+              <div class="wallet-mini__top"><div class="wallet-mini__icon-wrap"><i data-lucide="building-2" class="icon-sm"></i></div></div>
+              <div class="wallet-mini__name">BCA</div>
+              <div class="wallet-mini__balance">Rp 5.2jt</div>
+            </div>
+            <div class="wallet-mini scroll-snap" style="background:linear-gradient(135deg,#1e3a6e,#3b82f6)">
+              <div class="wallet-mini__top"><div class="wallet-mini__icon-wrap"><i data-lucide="banknote" class="icon-sm"></i></div></div>
+              <div class="wallet-mini__name">Cash</div>
+              <div class="wallet-mini__balance">Rp 800rb</div>
+            </div>
+            <div class="wallet-mini scroll-snap" style="background:linear-gradient(135deg,#142244,#1d4ed8)">
+              <div class="wallet-mini__top"><div class="wallet-mini__icon-wrap"><i data-lucide="smartphone" class="icon-sm"></i></div></div>
+              <div class="wallet-mini__name">OVO</div>
+              <div class="wallet-mini__balance">Rp 500rb</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Transactions -->
+        <div class="card anim anim-d3">
+          <div class="card__header">
+            <div class="card__title">Transaksi Terakhir</div>
+            <span class="card__link">Semua <i data-lucide="chevron-right" class="icon-xs"></i></span>
+          </div>
+          <div class="txn-item">
+            <div class="txn-item__icon txn-item__icon--expense"><i data-lucide="utensils" class="icon-md"></i></div>
+            <div class="txn-item__info"><div class="txn-item__name">Makan Siang</div><div class="txn-item__meta"><i data-lucide="building-2" class="icon-xs"></i> BCA · Hari ini</div></div>
+            <div class="txn-item__amount txn-item__amount--expense">-Rp 75.000</div>
+          </div>
+          <div class="txn-item">
+            <div class="txn-item__icon txn-item__icon--income"><i data-lucide="banknote" class="icon-md"></i></div>
+            <div class="txn-item__info"><div class="txn-item__name">Gaji September</div><div class="txn-item__meta"><i data-lucide="building-2" class="icon-xs"></i> BCA · 1 Sep</div></div>
+            <div class="txn-item__amount txn-item__amount--income">+Rp 8.000.000</div>
+          </div>
+          <div class="txn-item">
+            <div class="txn-item__icon" style="background:var(--primary-50);color:var(--primary-600)"><i data-lucide="car" class="icon-md"></i></div>
+            <div class="txn-item__info"><div class="txn-item__name">Grab ke Kantor</div><div class="txn-item__meta"><i data-lucide="smartphone" class="icon-xs"></i> OVO · 1 Sep</div></div>
+            <div class="txn-item__amount txn-item__amount--expense">-Rp 25.000</div>
+          </div>
+          <div class="txn-item">
+            <div class="txn-item__icon" style="background:var(--primary-50);color:var(--primary-600)"><i data-lucide="shopping-bag" class="icon-md"></i></div>
+            <div class="txn-item__info"><div class="txn-item__name">Belanja Bulanan</div><div class="txn-item__meta"><i data-lucide="banknote" class="icon-xs"></i> Cash · 31 Agu</div></div>
+            <div class="txn-item__amount txn-item__amount--expense">-Rp 450.000</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Nav fixed at bottom -->
+      <div style="position:absolute;bottom:0;left:0;right:0">
+        <div class="bottom-nav" style="border-radius:28px 28px 0 0">
+          <div class="bottom-nav__item bottom-nav__item--active"><i data-lucide="home" class="icon-md"></i><span>Home</span></div>
+          <div class="bottom-nav__item"><i data-lucide="bar-chart-3" class="icon-md"></i></div>
+          <div class="bottom-nav__item"><button class="fab" style="width:48px;height:48px"><i data-lucide="plus" class="icon-lg"></i></button></div>
+          <div class="bottom-nav__item"><i data-lucide="clock" class="icon-md"></i></div>
+          <div class="bottom-nav__item"><i data-lucide="settings-2" class="icon-md"></i></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Initialize Lucide icons
+  lucide.createIcons();
+</script>
+</body>
+</html>

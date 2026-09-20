@@ -1,0 +1,1693 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Design System — Personal Wallet</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      /* === PRIMARY (Biru) === */
+      --primary-900: #0c1a3d;
+      --primary-800: #0f2557;
+      --primary-700: #1e3a6e;
+      --primary-600: #1d4ed8;
+      --primary-500: #3b82f6;
+      --primary-400: #60a5fa;
+      --primary-300: #93c5fd;
+      --primary-200: #bfdbfe;
+      --primary-100: #dbeafe;
+      --primary-50:  #eff6ff;
+
+      /* === ACCENT (Cyan) === */
+      --accent-500: #06b6d4;
+      --accent-400: #22d3ee;
+      --accent-300: #67e8f9;
+      --accent-200: #a5f3fc;
+
+      /* === SEMANTIC === */
+      --color-income: #22c55e;
+      --color-income-light: #dcfce7;
+      --color-expense: #ef4444;
+      --color-expense-light: #fee2e2;
+      --color-warning: #f59e0b;
+      --color-warning-light: #fef3c7;
+      --color-success: #10b981;
+
+      /* === NEUTRAL === */
+      --neutral-900: #0f172a;
+      --neutral-800: #1e293b;
+      --neutral-700: #334155;
+      --neutral-600: #475569;
+      --neutral-500: #64748b;
+      --neutral-400: #94a3b8;
+      --neutral-300: #cbd5e1;
+      --neutral-200: #e2e8f0;
+      --neutral-100: #f1f5f9;
+      --neutral-50:  #f8fafc;
+      --white:       #ffffff;
+
+      /* === GRADIENTS === */
+      --gradient-wallet:   linear-gradient(135deg, #0f2557 0%, #1e3a6e 50%, #1d4ed8 100%);
+      --gradient-dark:     linear-gradient(180deg, #0c1a3d 0%, #0f2557 60%, #1e3a6e 100%);
+      --gradient-nav:      linear-gradient(135deg, #0f2557 0%, #142244 100%);
+      --gradient-accent:   linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+      --gradient-chart-bg: linear-gradient(180deg, #0f2557 0%, #1a2d54 100%);
+      --gradient-glass:    linear-gradient(135deg, rgba(59,130,246,0.15) 0%, rgba(6,182,212,0.08) 100%);
+      --gradient-page-bg:  linear-gradient(180deg, #eff6ff 0%, #f8fafc 100%);
+
+      /* === SHADOWS === */
+      --shadow-card:          0 2px 8px rgba(15,23,42,0.06), 0 1px 3px rgba(15,23,42,0.04);
+      --shadow-card-elevated: 0 4px 16px rgba(15,23,42,0.08), 0 2px 6px rgba(15,23,42,0.04);
+      --shadow-nav:           0 -4px 20px rgba(15,23,42,0.08);
+      --shadow-fab:           0 4px 16px rgba(59,130,246,0.35), 0 2px 8px rgba(59,130,246,0.2);
+      --shadow-container:     0 0 40px rgba(15,23,42,0.08);
+
+      /* === RADIUS === */
+      --radius-full: 9999px;
+      --radius-2xl:  24px;
+      --radius-xl:   20px;
+      --radius-lg:   16px;
+      --radius-md:   12px;
+      --radius-sm:   8px;
+
+      /* === SPACING === */
+      --space-1:  4px;
+      --space-2:  8px;
+      --space-3:  12px;
+      --space-4:  16px;
+      --space-5:  20px;
+      --space-6:  24px;
+      --space-8:  32px;
+      --space-10: 40px;
+      --space-12: 48px;
+
+      /* === TYPOGRAPHY === */
+      --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+      /* === TRANSITIONS === */
+      --transition-fast: 150ms ease;
+      --transition-base: 200ms ease;
+      --transition-slow: 300ms ease;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-primary);
+      background: linear-gradient(180deg, #e0ecff 0%, #f1f5f9 100%);
+      min-height: 100vh;
+      color: var(--neutral-900);
+    }
+
+    /* === CATALOG LAYOUT === */
+    .catalog {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+    .catalog-title {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--primary-800);
+      margin-bottom: 8px;
+    }
+    .catalog-subtitle {
+      font-size: 15px;
+      color: var(--neutral-500);
+      margin-bottom: 48px;
+    }
+    .section {
+      margin-bottom: 56px;
+    }
+    .section-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--neutral-900);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-desc {
+      font-size: 13px;
+      color: var(--neutral-500);
+      margin-bottom: 24px;
+    }
+    .subsection-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--neutral-600);
+      margin-bottom: 12px;
+      margin-top: 24px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* === SWATCH GRID === */
+    .swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 12px;
+    }
+    .swatch {
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      background: white;
+    }
+    .swatch-color {
+      height: 64px;
+      width: 100%;
+    }
+    .swatch-info {
+      padding: 8px 10px;
+    }
+    .swatch-name {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--neutral-700);
+    }
+    .swatch-hex {
+      font-size: 10px;
+      color: var(--neutral-400);
+      font-family: monospace;
+    }
+
+    /* === GRADIENT BARS === */
+    .gradient-bar {
+      height: 56px;
+      border-radius: 12px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+    }
+    .gradient-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: white;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+
+    /* === PHONE FRAME === */
+    .phone-frame {
+      width: 375px;
+      min-height: 500px;
+      background: var(--neutral-50);
+      border-radius: 32px;
+      box-shadow: var(--shadow-container), 0 0 0 8px var(--neutral-200);
+      overflow: hidden;
+      position: relative;
+      margin: 0 auto;
+    }
+    .phone-status-bar {
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--neutral-900);
+      background: var(--neutral-50);
+    }
+    .phone-content {
+      padding: 0 16px 100px;
+    }
+
+    /* === COMPONENT SHOWCASE === */
+    .component-box {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: var(--shadow-card);
+      margin-bottom: 16px;
+    }
+    .component-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--primary-500);
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px dashed var(--neutral-200);
+    }
+
+    /* === ACTUAL COMPONENTS CSS === */
+
+    /* Wallet Card */
+    .wallet-card {
+      background: var(--gradient-wallet);
+      border-radius: 24px;
+      padding: 24px;
+      color: #ffffff;
+      box-shadow: 0 8px 32px rgba(15, 37, 87, 0.4);
+      position: relative;
+      overflow: hidden;
+    }
+    .wallet-card::before {
+      content: '';
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(96,165,250,0.15) 0%, transparent 70%);
+      top: -50px;
+      right: -50px;
+      border-radius: 50%;
+    }
+    .wallet-card::after {
+      content: '';
+      position: absolute;
+      width: 140px;
+      height: 140px;
+      background: radial-gradient(circle, rgba(6,182,212,0.1) 0%, transparent 70%);
+      bottom: -30px;
+      left: -20px;
+      border-radius: 50%;
+    }
+    .wallet-card__label {
+      font-size: 14px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.7);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .wallet-card__badge {
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(8px);
+      border-radius: 9999px;
+      padding: 2px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #67e8f9;
+    }
+    .wallet-card__balance {
+      font-size: 32px;
+      font-weight: 800;
+      color: #ffffff;
+      margin: 8px 0;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.02em;
+      position: relative;
+      z-index: 1;
+    }
+    .wallet-card__subtitle {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Action Icons */
+    .action-icon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+    .action-icon__circle {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--primary-50);
+      border: 1.5px solid var(--primary-200);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary-600);
+      font-size: 20px;
+      transition: all var(--transition-base);
+    }
+    .action-icon__circle:hover {
+      background: var(--primary-100);
+      border-color: var(--primary-300);
+      transform: translateY(-2px);
+    }
+    .action-icon:active .action-icon__circle {
+      transform: scale(0.95);
+    }
+    .action-icon__label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--neutral-600);
+    }
+
+    /* Bottom Nav */
+    .bottom-nav {
+      background: var(--gradient-nav);
+      border-radius: 24px 24px 0 0;
+      padding: 8px 12px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      height: 64px;
+      box-shadow: var(--shadow-nav);
+    }
+    .bottom-nav__item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      padding: 8px 12px;
+      border-radius: 12px;
+      color: rgba(255,255,255,0.45);
+      font-size: 10px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition-base);
+    }
+    .bottom-nav__item:hover {
+      color: rgba(255,255,255,0.7);
+    }
+    .bottom-nav__item--active {
+      background: var(--primary-500);
+      color: #ffffff;
+      padding: 8px 20px;
+      border-radius: 9999px;
+      flex-direction: row;
+      gap: 6px;
+    }
+    .bottom-nav__icon {
+      font-size: 20px;
+    }
+
+    /* Transaction Item */
+    .txn-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--neutral-100);
+    }
+    .txn-item:last-child {
+      border-bottom: none;
+    }
+    .txn-item__icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: var(--primary-50);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .txn-item__info {
+      flex: 1;
+      min-width: 0;
+    }
+    .txn-item__name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--neutral-900);
+    }
+    .txn-item__meta {
+      font-size: 12px;
+      color: var(--neutral-400);
+      margin-top: 2px;
+    }
+    .txn-item__amount {
+      font-size: 14px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      flex-shrink: 0;
+    }
+    .txn-item__amount--income { color: var(--color-income); }
+    .txn-item__amount--expense { color: var(--neutral-900); }
+
+    /* Toggle Tabs */
+    .toggle-tabs {
+      display: flex;
+      background: var(--neutral-100);
+      border-radius: 9999px;
+      padding: 4px;
+      gap: 4px;
+    }
+    .toggle-tabs__item {
+      flex: 1;
+      padding: 10px 20px;
+      border-radius: 9999px;
+      font-size: 14px;
+      font-weight: 600;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      color: var(--neutral-500);
+      background: transparent;
+      border: none;
+    }
+    .toggle-tabs__item--active {
+      background: var(--primary-500);
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(59,130,246,0.3);
+    }
+
+    /* Summary Cards */
+    .summary-card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: var(--shadow-card);
+      text-align: center;
+    }
+    .summary-card__label {
+      font-size: 12px;
+      color: var(--neutral-500);
+      font-weight: 500;
+    }
+    .summary-card__amount {
+      font-size: 18px;
+      font-weight: 700;
+      margin-top: 4px;
+      font-variant-numeric: tabular-nums;
+    }
+    .summary-card__trend {
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+    }
+
+    /* Stats Chart Card */
+    .stats-card {
+      background: var(--gradient-chart-bg);
+      border-radius: 20px;
+      padding: 20px;
+      color: #ffffff;
+    }
+    .stats-card__title {
+      font-size: 12px;
+      color: rgba(255,255,255,0.6);
+      font-weight: 500;
+    }
+    .stats-card__amount {
+      font-size: 22px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-top: 4px;
+      font-variant-numeric: tabular-nums;
+    }
+    .chart-bar {
+      border-radius: 6px 6px 2px 2px;
+      min-width: 24px;
+      transition: height 0.5s ease;
+    }
+    .chart-bar--primary {
+      background: linear-gradient(180deg, #60a5fa 0%, #3b82f6 100%);
+    }
+    .chart-bar--secondary {
+      background: rgba(96,165,250,0.25);
+    }
+    .chart-bar--highlight {
+      background: linear-gradient(180deg, #22d3ee 0%, #06b6d4 100%);
+    }
+    .chart-label {
+      font-size: 10px;
+      color: rgba(255,255,255,0.5);
+      font-weight: 500;
+    }
+    .chart-tooltip {
+      background: #ffffff;
+      color: var(--neutral-900);
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      white-space: nowrap;
+    }
+
+    /* Form Input */
+    .form-input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1.5px solid var(--neutral-200);
+      border-radius: 12px;
+      font-size: 14px;
+      font-family: var(--font-primary);
+      color: var(--neutral-900);
+      background: var(--white);
+      transition: border-color var(--transition-base), box-shadow var(--transition-base);
+      outline: none;
+    }
+    .form-input:focus {
+      border-color: var(--primary-500);
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+    }
+    .form-input::placeholder {
+      color: var(--neutral-400);
+    }
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--neutral-700);
+      margin-bottom: 6px;
+    }
+    .form-input--amount {
+      font-size: 28px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      text-align: center;
+      padding: 20px 16px;
+      letter-spacing: -0.02em;
+    }
+
+    /* Buttons */
+    .btn-primary {
+      width: 100%;
+      padding: 14px 24px;
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 600;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all var(--transition-base);
+      box-shadow: 0 4px 12px rgba(59,130,246,0.3);
+      font-family: var(--font-primary);
+    }
+    .btn-primary:hover {
+      box-shadow: 0 6px 20px rgba(59,130,246,0.4);
+      transform: translateY(-1px);
+    }
+    .btn-primary:active {
+      transform: scale(0.98);
+      box-shadow: 0 2px 8px rgba(59,130,246,0.2);
+    }
+    .btn-secondary {
+      padding: 12px 24px;
+      background: transparent;
+      color: var(--primary-600);
+      font-size: 14px;
+      font-weight: 600;
+      border: 1.5px solid var(--primary-300);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all var(--transition-base);
+      font-family: var(--font-primary);
+    }
+    .btn-secondary:hover {
+      background: var(--primary-50);
+    }
+    .btn-secondary:active {
+      background: var(--primary-100);
+    }
+    .btn-danger {
+      padding: 12px 24px;
+      background: transparent;
+      color: var(--color-expense);
+      font-size: 14px;
+      font-weight: 600;
+      border: 1.5px solid #fecaca;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all var(--transition-base);
+      font-family: var(--font-primary);
+    }
+    .btn-danger:hover {
+      background: var(--color-expense-light);
+    }
+    .fab {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+      color: #ffffff;
+      font-size: 24px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-fab);
+      transition: all var(--transition-base);
+    }
+    .fab:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(59,130,246,0.45), 0 3px 10px rgba(59,130,246,0.25);
+    }
+    .fab:active {
+      transform: scale(0.93);
+    }
+    .btn-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--neutral-100);
+      border: 1px solid var(--neutral-200);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--neutral-700);
+      font-size: 18px;
+      cursor: pointer;
+      transition: all var(--transition-base);
+    }
+    .btn-icon:hover {
+      background: var(--neutral-200);
+    }
+
+    /* Category Card */
+    .category-card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      box-shadow: var(--shadow-card);
+      text-align: center;
+    }
+    .category-card__icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      background: var(--primary-50);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+    .category-card__name {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--neutral-800);
+    }
+    .category-card__amount {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--neutral-500);
+    }
+
+    /* Card */
+    .card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: var(--shadow-card);
+    }
+    .card__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .card__title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--neutral-900);
+    }
+    .card__link {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--primary-500);
+      cursor: pointer;
+    }
+
+    /* Badge */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .badge--income {
+      background: var(--color-income-light);
+      color: #166534;
+    }
+    .badge--expense {
+      background: var(--color-expense-light);
+      color: #991b1b;
+    }
+    .badge--primary {
+      background: var(--primary-100);
+      color: var(--primary-700);
+    }
+    .badge--warning {
+      background: var(--color-warning-light);
+      color: #92400e;
+    }
+
+    /* Toast */
+    .toast {
+      padding: 14px 20px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 20px rgba(15,23,42,0.12);
+    }
+    .toast--success {
+      background: #ecfdf5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+    }
+    .toast--error {
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+    .toast--info {
+      background: var(--primary-50);
+      color: var(--primary-800);
+      border: 1px solid var(--primary-200);
+    }
+
+    /* Glass */
+    .glass {
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 20px;
+    }
+    .glass-light {
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 20px;
+    }
+
+    /* Wallet mini card */
+    .wallet-mini {
+      background: var(--gradient-wallet);
+      border-radius: 16px;
+      padding: 16px;
+      color: white;
+      min-width: 140px;
+      flex-shrink: 0;
+    }
+    .wallet-mini__icon { font-size: 20px; }
+    .wallet-mini__name {
+      font-size: 13px;
+      font-weight: 600;
+      margin-top: 12px;
+      color: rgba(255,255,255,0.8);
+    }
+    .wallet-mini__balance {
+      font-size: 16px;
+      font-weight: 700;
+      margin-top: 2px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Date header */
+    .date-header {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--neutral-500);
+      padding: 12px 0 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Filter chips */
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 8px 14px;
+      border-radius: 9999px;
+      font-size: 13px;
+      font-weight: 500;
+      border: 1.5px solid var(--neutral-200);
+      background: white;
+      color: var(--neutral-600);
+      cursor: pointer;
+      transition: all var(--transition-base);
+    }
+    .chip:hover { border-color: var(--primary-300); color: var(--primary-600); }
+    .chip--active {
+      background: var(--primary-500);
+      color: white;
+      border-color: var(--primary-500);
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: relative;
+      background: rgba(15,23,42,0.4);
+      border-radius: 16px;
+      padding: 40px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal {
+      background: white;
+      border-radius: 20px;
+      padding: 24px;
+      width: 100%;
+      max-width: 340px;
+      box-shadow: 0 8px 40px rgba(15,23,42,0.2);
+    }
+    .modal__title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--neutral-900);
+      margin-bottom: 8px;
+    }
+    .modal__text {
+      font-size: 14px;
+      color: var(--neutral-500);
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    /* Dropdown */
+    .form-select {
+      width: 100%;
+      padding: 14px 16px;
+      padding-right: 40px;
+      border: 1.5px solid var(--neutral-200);
+      border-radius: 12px;
+      font-size: 14px;
+      font-family: var(--font-primary);
+      color: var(--neutral-900);
+      background: var(--white);
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2364748b' viewBox='0 0 16 16'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      outline: none;
+      transition: border-color var(--transition-base);
+      cursor: pointer;
+    }
+    .form-select:focus {
+      border-color: var(--primary-500);
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+    }
+
+    /* Avatar */
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--gradient-accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 16px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .avatar--sm { width: 32px; height: 32px; font-size: 13px; }
+    .avatar--lg { width: 48px; height: 48px; font-size: 18px; }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+    }
+    .empty-state__icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+    .empty-state__title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--neutral-700);
+      margin-bottom: 4px;
+    }
+    .empty-state__desc {
+      font-size: 13px;
+      color: var(--neutral-400);
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .animate-in {
+      animation: fadeInUp 0.4s ease both;
+    }
+    .animate-in-delay-1 { animation-delay: 0.05s; }
+    .animate-in-delay-2 { animation-delay: 0.1s; }
+    .animate-in-delay-3 { animation-delay: 0.15s; }
+    .animate-in-delay-4 { animation-delay: 0.2s; }
+  </style>
+</head>
+<body>
+
+<div class="catalog">
+
+  <!-- ============================================ -->
+  <!-- HEADER -->
+  <!-- ============================================ -->
+  <h1 class="catalog-title">🎨 Personal Wallet — Design System</h1>
+  <p class="catalog-subtitle">Panduan visual & komponen UI untuk membangun template HTML. Semua nuansa menggunakan warna biru.</p>
+
+  <!-- ============================================ -->
+  <!-- 1. COLOR PALETTE -->
+  <!-- ============================================ -->
+  <div class="section">
+    <h2 class="section-title">🎨 1. Color Palette</h2>
+    <p class="section-desc">Semua warna yang digunakan dalam aplikasi, diorganisir berdasarkan fungsi.</p>
+
+    <p class="subsection-title">Primary — Biru</p>
+    <div class="swatch-grid">
+      <div class="swatch"><div class="swatch-color" style="background:#0c1a3d"></div><div class="swatch-info"><div class="swatch-name">900</div><div class="swatch-hex">#0c1a3d</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#0f2557"></div><div class="swatch-info"><div class="swatch-name">800</div><div class="swatch-hex">#0f2557</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#1e3a6e"></div><div class="swatch-info"><div class="swatch-name">700</div><div class="swatch-hex">#1e3a6e</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#1d4ed8"></div><div class="swatch-info"><div class="swatch-name">600</div><div class="swatch-hex">#1d4ed8</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#3b82f6"></div><div class="swatch-info"><div class="swatch-name">500</div><div class="swatch-hex">#3b82f6</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#60a5fa"></div><div class="swatch-info"><div class="swatch-name">400</div><div class="swatch-hex">#60a5fa</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#93c5fd"></div><div class="swatch-info"><div class="swatch-name">300</div><div class="swatch-hex">#93c5fd</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#bfdbfe"></div><div class="swatch-info"><div class="swatch-name">200</div><div class="swatch-hex">#bfdbfe</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#dbeafe"></div><div class="swatch-info"><div class="swatch-name">100</div><div class="swatch-hex">#dbeafe</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#eff6ff"></div><div class="swatch-info"><div class="swatch-name">50</div><div class="swatch-hex">#eff6ff</div></div></div>
+    </div>
+
+    <p class="subsection-title">Accent — Cyan</p>
+    <div class="swatch-grid">
+      <div class="swatch"><div class="swatch-color" style="background:#06b6d4"></div><div class="swatch-info"><div class="swatch-name">500</div><div class="swatch-hex">#06b6d4</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#22d3ee"></div><div class="swatch-info"><div class="swatch-name">400</div><div class="swatch-hex">#22d3ee</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#67e8f9"></div><div class="swatch-info"><div class="swatch-name">300</div><div class="swatch-hex">#67e8f9</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#a5f3fc"></div><div class="swatch-info"><div class="swatch-name">200</div><div class="swatch-hex">#a5f3fc</div></div></div>
+    </div>
+
+    <p class="subsection-title">Semantic</p>
+    <div class="swatch-grid">
+      <div class="swatch"><div class="swatch-color" style="background:#22c55e"></div><div class="swatch-info"><div class="swatch-name">Income</div><div class="swatch-hex">#22c55e</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#dcfce7"></div><div class="swatch-info"><div class="swatch-name">Income Lt</div><div class="swatch-hex">#dcfce7</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#ef4444"></div><div class="swatch-info"><div class="swatch-name">Expense</div><div class="swatch-hex">#ef4444</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#fee2e2"></div><div class="swatch-info"><div class="swatch-name">Expense Lt</div><div class="swatch-hex">#fee2e2</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#f59e0b"></div><div class="swatch-info"><div class="swatch-name">Warning</div><div class="swatch-hex">#f59e0b</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#10b981"></div><div class="swatch-info"><div class="swatch-name">Success</div><div class="swatch-hex">#10b981</div></div></div>
+    </div>
+
+    <p class="subsection-title">Neutral</p>
+    <div class="swatch-grid">
+      <div class="swatch"><div class="swatch-color" style="background:#0f172a"></div><div class="swatch-info"><div class="swatch-name">900</div><div class="swatch-hex">#0f172a</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#1e293b"></div><div class="swatch-info"><div class="swatch-name">800</div><div class="swatch-hex">#1e293b</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#334155"></div><div class="swatch-info"><div class="swatch-name">700</div><div class="swatch-hex">#334155</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#475569"></div><div class="swatch-info"><div class="swatch-name">600</div><div class="swatch-hex">#475569</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#64748b"></div><div class="swatch-info"><div class="swatch-name">500</div><div class="swatch-hex">#64748b</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#94a3b8"></div><div class="swatch-info"><div class="swatch-name">400</div><div class="swatch-hex">#94a3b8</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#cbd5e1"></div><div class="swatch-info"><div class="swatch-name">300</div><div class="swatch-hex">#cbd5e1</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#e2e8f0"></div><div class="swatch-info"><div class="swatch-name">200</div><div class="swatch-hex">#e2e8f0</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#f1f5f9"></div><div class="swatch-info"><div class="swatch-name">100</div><div class="swatch-hex">#f1f5f9</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#f8fafc; border: 1px solid #e2e8f0"></div><div class="swatch-info"><div class="swatch-name">50</div><div class="swatch-hex">#f8fafc</div></div></div>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- 2. GRADIENTS -->
+  <!-- ============================================ -->
+  <div class="section">
+    <h2 class="section-title">🌈 2. Gradients</h2>
+    <p class="section-desc">Gradient digunakan pada wallet card, bottom nav, tombol, dan chart card.</p>
+
+    <div style="display:flex; flex-direction:column; gap:12px">
+      <div class="gradient-bar" style="background: var(--gradient-wallet)"><span class="gradient-label">Wallet Card — gradient-wallet</span></div>
+      <div class="gradient-bar" style="background: var(--gradient-dark)"><span class="gradient-label">Onboarding / Dark — gradient-dark</span></div>
+      <div class="gradient-bar" style="background: var(--gradient-nav)"><span class="gradient-label">Bottom Nav — gradient-nav</span></div>
+      <div class="gradient-bar" style="background: var(--gradient-accent)"><span class="gradient-label">Accent / CTA — gradient-accent</span></div>
+      <div class="gradient-bar" style="background: var(--gradient-chart-bg)"><span class="gradient-label">Chart Background — gradient-chart-bg</span></div>
+      <div class="gradient-bar" style="background: var(--gradient-glass); border: 1px solid var(--primary-200)"><span class="gradient-label" style="color: var(--primary-700)">Glass Overlay — gradient-glass</span></div>
+      <div class="gradient-bar" style="background: var(--gradient-page-bg); border: 1px solid var(--neutral-200)"><span class="gradient-label" style="color: var(--neutral-600)">Page Background — gradient-page-bg</span></div>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- 3. TYPOGRAPHY -->
+  <!-- ============================================ -->
+  <div class="section">
+    <h2 class="section-title">✏️ 3. Typography</h2>
+    <p class="section-desc">Font: Inter. Semua nominal uang menggunakan tabular-nums untuk alignment yang rapi.</p>
+
+    <div class="component-box">
+      <div style="display:flex; flex-direction:column; gap:20px">
+        <div>
+          <span style="font-size:11px; color:var(--neutral-400); font-weight:500">Display — 32px / ExtraBold</span>
+          <div style="font-size:32px; font-weight:800; color:var(--neutral-900); letter-spacing:-0.02em; font-variant-numeric:tabular-nums">Rp 12.500.000</div>
+        </div>
+        <div>
+          <span style="font-size:11px; color:var(--neutral-400); font-weight:500">H1 — 28px / Bold</span>
+          <div style="font-size:28px; font-weight:700; color:var(--neutral-900)">Halo, Andika!</div>
+        </div>
+        <div>
+          <span style="font-size:11px; color:var(--neutral-400); font-weight:500">H2 — 22px / Bold</span>
+          <div style="font-size:22px; font-weight:700; color:var(--neutral-900); font-variant-numeric:tabular-nums">Rp 2.455.000</div>
+        </div>
+        <div>
+          <span style="font-size:11px; color:var(--neutral-400); font-weight:500">H3 — 18px / Semibold</span>
+          <div style="font-size:18px; font-weight:600; color:var(--neutral-900)">Quick Transfer</div>
+        </div>
+        <div>
+          <span style="font-size:11px; color:var(--neutral-400); font-weight:500">H4 — 16px / Semibold</span>
+          <div style="font-size:16px; font-weight:600; color:var(--neutral-900)">Manage Expenses</div>
+        </div>
+        <div>
+          <span style="font-size:11px; color:var(--neutral-400); font-weight:500">Body — 14px / Regular</span>
+          <div style="font-size:14px; font-weight:400; color:var(--neutral-700)">Kelola anggaran dan pengeluaranmu dengan mudah.</div>
+        </div>
+        <div>
+          <span style="font-size:11px; color:var(--neutral-400); font-weight:500">Body Medium — 14px / Medium</span>
+          <div style="font-size:14px; font-weight:500; color:var(--neutral-700)">Nasi Goreng Spesial</div>
+        </div>
+        <div>
+          <span style="font-size:11px; color:var(--neutral-400); font-weight:500">Small — 12px / Regular</span>
+          <div style="font-size:12px; font-weight:400; color:var(--neutral-500)">Updated: 07/09/2026</div>
+        </div>
+        <div>
+          <span style="font-size:11px; color:var(--neutral-400); font-weight:500">Tiny — 10px / Medium</span>
+          <div style="font-size:10px; font-weight:500; color:var(--neutral-400)">LABEL TEXT</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- 4. SPACING & RADIUS -->
+  <!-- ============================================ -->
+  <div class="section">
+    <h2 class="section-title">📐 4. Spacing & Border Radius</h2>
+    <p class="section-desc">Sistem spacing 4px base. Border radius besar untuk kesan modern & friendly.</p>
+
+    <p class="subsection-title">Spacing Scale</p>
+    <div class="component-box">
+      <div style="display:flex; flex-direction:column; gap:10px">
+        <div style="display:flex; align-items:center; gap:12px"><div style="width:4px; height:20px; background:var(--primary-400); border-radius:2px"></div><span style="font-size:12px; color:var(--neutral-500); width:60px">4px</span><span style="font-size:12px; font-weight:500; color:var(--neutral-700)">space-1 — icon gap</span></div>
+        <div style="display:flex; align-items:center; gap:12px"><div style="width:8px; height:20px; background:var(--primary-400); border-radius:2px"></div><span style="font-size:12px; color:var(--neutral-500); width:60px">8px</span><span style="font-size:12px; font-weight:500; color:var(--neutral-700)">space-2 — badge padding</span></div>
+        <div style="display:flex; align-items:center; gap:12px"><div style="width:12px; height:20px; background:var(--primary-400); border-radius:2px"></div><span style="font-size:12px; color:var(--neutral-500); width:60px">12px</span><span style="font-size:12px; font-weight:500; color:var(--neutral-700)">space-3 — inner card</span></div>
+        <div style="display:flex; align-items:center; gap:12px"><div style="width:16px; height:20px; background:var(--primary-500); border-radius:2px"></div><span style="font-size:12px; color:var(--neutral-500); width:60px">16px</span><span style="font-size:12px; font-weight:500; color:var(--neutral-700)">space-4 — page padding, card padding</span></div>
+        <div style="display:flex; align-items:center; gap:12px"><div style="width:20px; height:20px; background:var(--primary-500); border-radius:2px"></div><span style="font-size:12px; color:var(--neutral-500); width:60px">20px</span><span style="font-size:12px; font-weight:500; color:var(--neutral-700)">space-5 — card padding medium</span></div>
+        <div style="display:flex; align-items:center; gap:12px"><div style="width:24px; height:20px; background:var(--primary-500); border-radius:2px"></div><span style="font-size:12px; color:var(--neutral-500); width:60px">24px</span><span style="font-size:12px; font-weight:500; color:var(--neutral-700)">space-6 — section spacing</span></div>
+        <div style="display:flex; align-items:center; gap:12px"><div style="width:32px; height:20px; background:var(--primary-600); border-radius:2px"></div><span style="font-size:12px; color:var(--neutral-500); width:60px">32px</span><span style="font-size:12px; font-weight:500; color:var(--neutral-700)">space-8 — major section gap</span></div>
+      </div>
+    </div>
+
+    <p class="subsection-title">Border Radius</p>
+    <div class="component-box">
+      <div style="display:flex; flex-wrap:wrap; gap:16px; align-items:end">
+        <div style="text-align:center"><div style="width:56px; height:56px; background:var(--primary-100); border:2px solid var(--primary-300); border-radius:8px"></div><div style="font-size:10px; margin-top:4px; color:var(--neutral-500)">8px sm</div></div>
+        <div style="text-align:center"><div style="width:56px; height:56px; background:var(--primary-100); border:2px solid var(--primary-300); border-radius:12px"></div><div style="font-size:10px; margin-top:4px; color:var(--neutral-500)">12px md</div></div>
+        <div style="text-align:center"><div style="width:56px; height:56px; background:var(--primary-100); border:2px solid var(--primary-300); border-radius:16px"></div><div style="font-size:10px; margin-top:4px; color:var(--neutral-500)">16px lg</div></div>
+        <div style="text-align:center"><div style="width:56px; height:56px; background:var(--primary-100); border:2px solid var(--primary-300); border-radius:20px"></div><div style="font-size:10px; margin-top:4px; color:var(--neutral-500)">20px xl</div></div>
+        <div style="text-align:center"><div style="width:56px; height:56px; background:var(--primary-100); border:2px solid var(--primary-300); border-radius:24px"></div><div style="font-size:10px; margin-top:4px; color:var(--neutral-500)">24px 2xl</div></div>
+        <div style="text-align:center"><div style="width:56px; height:56px; background:var(--primary-100); border:2px solid var(--primary-300); border-radius:9999px"></div><div style="font-size:10px; margin-top:4px; color:var(--neutral-500)">full</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- 5. COMPONENTS — displayed in phone frames -->
+  <!-- ============================================ -->
+  <div class="section">
+    <h2 class="section-title">🧩 5. Components</h2>
+    <p class="section-desc">Semua komponen UI ditampilkan dalam konteks mobile frame (max-width 480px).</p>
+
+    <!-- 5.1 Wallet Balance Card -->
+    <p class="subsection-title">5.1 Wallet Balance Card</p>
+    <div style="max-width:400px; margin:0 auto">
+      <div class="component-box" style="background:var(--neutral-50)">
+        <div class="component-label">Wallet Card — Gradient Utama</div>
+        <div class="wallet-card animate-in">
+          <div class="wallet-card__label">
+            Wallet Balance <span class="wallet-card__badge">↑ 4%</span>
+          </div>
+          <div class="wallet-card__balance">Rp 12.455.000</div>
+          <div class="wallet-card__subtitle">Updated: 07/09/2026</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5.2 Quick Action Icons -->
+    <p class="subsection-title">5.2 Quick Action Icons</p>
+    <div style="max-width:400px; margin:0 auto">
+      <div class="component-box">
+        <div class="component-label">Action Icons — Circle Style</div>
+        <div style="display:flex; justify-content:space-around">
+          <div class="action-icon">
+            <div class="action-icon__circle">💸</div>
+            <span class="action-icon__label">Send</span>
+          </div>
+          <div class="action-icon">
+            <div class="action-icon__circle">💰</div>
+            <span class="action-icon__label">Receive</span>
+          </div>
+          <div class="action-icon">
+            <div class="action-icon__circle">🔝</div>
+            <span class="action-icon__label">Top-Up</span>
+          </div>
+          <div class="action-icon">
+            <div class="action-icon__circle">⋯</div>
+            <span class="action-icon__label">More</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5.3 Wallet Mini Cards (Horizontal Scroll) -->
+    <p class="subsection-title">5.3 Wallet Mini Cards</p>
+    <div style="max-width:400px; margin:0 auto">
+      <div class="component-box" style="background:var(--neutral-50); overflow:hidden">
+        <div class="component-label">Wallet Cards — Horizontal Scroll</div>
+        <div style="display:flex; gap:12px; overflow-x:auto; padding-bottom:4px">
+          <div class="wallet-mini">
+            <div class="wallet-mini__icon">🏦</div>
+            <div class="wallet-mini__name">BCA</div>
+            <div class="wallet-mini__balance">Rp 5.200.000</div>
+          </div>
+          <div class="wallet-mini" style="background:linear-gradient(135deg, #1e3a6e 0%, #3b82f6 100%)">
+            <div class="wallet-mini__icon">💵</div>
+            <div class="wallet-mini__name">Cash</div>
+            <div class="wallet-mini__balance">Rp 800.000</div>
+          </div>
+          <div class="wallet-mini" style="background:linear-gradient(135deg, #142244 0%, #1d4ed8 100%)">
+            <div class="wallet-mini__icon">📱</div>
+            <div class="wallet-mini__name">OVO</div>
+            <div class="wallet-mini__balance">Rp 500.000</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5.4 Transaction List -->
+    <p class="subsection-title">5.4 Transaction List Items</p>
+    <div style="max-width:400px; margin:0 auto">
+      <div class="component-box">
+        <div class="component-label">Transaction List — Grouped by Date</div>
+
+        <div class="date-header">📅 Hari Ini — 7 Sep 2026</div>
+
+        <div class="txn-item animate-in animate-in-delay-1">
+          <div class="txn-item__icon">🍔</div>
+          <div class="txn-item__info">
+            <div class="txn-item__name">Makan Siang</div>
+            <div class="txn-item__meta">BCA · 12:30</div>
+          </div>
+          <div class="txn-item__amount txn-item__amount--expense">-Rp 75.000</div>
+        </div>
+
+        <div class="txn-item animate-in animate-in-delay-2">
+          <div class="txn-item__icon">🚗</div>
+          <div class="txn-item__info">
+            <div class="txn-item__name">Grab ke Kantor</div>
+            <div class="txn-item__meta">OVO · 08:15</div>
+          </div>
+          <div class="txn-item__amount txn-item__amount--expense">-Rp 25.000</div>
+        </div>
+
+        <div class="txn-item animate-in animate-in-delay-3">
+          <div class="txn-item__icon" style="background:var(--color-income-light)">💰</div>
+          <div class="txn-item__info">
+            <div class="txn-item__name">Gaji September</div>
+            <div class="txn-item__meta">BCA · 09:00</div>
+          </div>
+          <div class="txn-item__amount txn-item__amount--income">+Rp 8.000.000</div>
+        </div>
+
+        <div class="txn-item animate-in animate-in-delay-4">
+          <div class="txn-item__icon">🛒</div>
+          <div class="txn-item__info">
+            <div class="txn-item__name">Belanja Bulanan</div>
+            <div class="txn-item__meta">Cash · 14:00</div>
+          </div>
+          <div class="txn-item__amount txn-item__amount--expense">-Rp 450.000</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5.5 Toggle Tabs -->
+    <p class="subsection-title">5.5 Toggle Tabs</p>
+    <div style="max-width:400px; margin:0 auto">
+      <div class="component-box">
+        <div class="component-label">Toggle — Income / Expense</div>
+        <div class="toggle-tabs" style="margin-bottom:16px">
+          <button class="toggle-tabs__item toggle-tabs__item--active">Income</button>
+          <button class="toggle-tabs__item">Expense</button>
+        </div>
+        <div class="component-label" style="margin-top:20px">Toggle — Weekly / Monthly</div>
+        <div class="toggle-tabs">
+          <button class="toggle-tabs__item">Weekly</button>
+          <button class="toggle-tabs__item toggle-tabs__item--active">Monthly</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5.6 Summary Cards -->
+    <p class="subsection-title">5.6 Summary Cards</p>
+    <div style="max-width:400px; margin:0 auto">
+      <div class="component-box" style="background:var(--neutral-50)">
+        <div class="component-label">Summary — Income / Expense / Net</div>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px">
+          <div class="summary-card">
+            <div class="summary-card__label">Income</div>
+            <div class="summary-card__amount" style="color:var(--color-income)">+2.5jt</div>
+            <div class="summary-card__trend" style="color:var(--color-income)">↑ 12%</div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-card__label">Expense</div>
+            <div class="summary-card__amount" style="color:var(--color-expense)">-1.8jt</div>
+            <div class="summary-card__trend" style="color:var(--color-expense)">↑ 5%</div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-card__label">Net</div>
+            <div class="summary-card__amount" style="color:var(--primary-600)">+700rb</div>
+            <div class="summary-card__trend" style="color:var(--color-income)">↑ 8%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5.7 Stats / Chart Card -->
+    <p class="subsection-title">5.7 Stats Chart Card</p>
+    <div style="max-width:400px; margin:0 auto">
+      <div class="component-box" style="background:var(--neutral-50)">
+        <div class="component-label">Chart Card — Bar Chart (Weekly)</div>
+        <div class="stats-card">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px">
+            <div>
+              <div class="stats-card__title">Total expenses</div>
+              <div class="stats-card__amount">Rp 6.282.000</div>
+            </div>
+            <div style="width:36px; height:36px; border-radius:10px; background:rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:center; font-size:16px; cursor:pointer">↗</div>
+          </div>
+
+          <!-- Bar Chart -->
+          <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:8px; height:120px; margin-bottom:8px">
+            <div style="display:flex; flex-direction:column; align-items:center; gap:4px; flex:1">
+              <div class="chart-bar chart-bar--secondary" style="width:100%; height:40px"></div>
+              <span class="chart-label">Sen</span>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center; gap:4px; flex:1">
+              <div class="chart-bar chart-bar--secondary" style="width:100%; height:55px"></div>
+              <span class="chart-label">Sel</span>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center; gap:4px; flex:1">
+              <div class="chart-bar chart-bar--primary" style="width:100%; height:70px"></div>
+              <span class="chart-label">Rab</span>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center; gap:4px; flex:1">
+              <div class="chart-bar chart-bar--primary" style="width:100%; height:50px"></div>
+              <span class="chart-label">Kam</span>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center; gap:4px; flex:1; position:relative">
+              <div class="chart-tooltip" style="position:absolute; top:-24px">Rp 2.135k</div>
+              <div class="chart-bar chart-bar--highlight" style="width:100%; height:100px"></div>
+              <span class="chart-label">Jum</span>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center; gap:4px; flex:1">
+              <div class="chart-bar chart-bar--primary" style="width:100%; height:65px"></div>
+              <span class="chart-label">Sab</span>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center; gap:4px; flex:1">
+              <div class="chart-bar chart-bar--secondary" style="width:100%; height:35px"></div>
+              <span class="chart-label">Min</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5.8 Category Cards -->
+    <p class="subsection-title">5.8 Category / Payment Cards</p>
+    <div style="max-width:400px; margin:0 auto">
+      <div class="component-box" style="background:var(--neutral-50)">
+        <div class="component-label">Category Cards — Grid</div>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px">
+          <div class="category-card">
+            <div class="category-card__icon">🍔</div>
+            <div class="category-card__name">Makanan</div>
+            <div class="category-card__amount">Rp 635k/bln</div>
+          </div>
+          <div class="category-card">
+            <div class="category-card__icon">🚗</div>
+            <div class="category-card__name">Transport</div>
+            <div class="category-card__amount">Rp 360k/bln</div>
+          </div>
+          <div class="category-card">
+            <div class="category-card__icon">🛒</div>
+            <div class="category-card__name">Belanja</div>
+            <div class="category-card__amount">Rp 270k/bln</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5.9 Buttons -->
+    <p class="subsection-title">5.9 Buttons</p>
+    <div style="max-width:400px; margin:0 auto">
+      <div class="component-box">
+        <div class="component-label">Button Variants</div>
+        <div style="display:flex; flex-direction:column; gap:12px">
+          <button class="btn-primary">💾 Simpan Transaksi</button>
+          <button class="btn-secondary" style="width:100%">🔄 Transfer Antar Wallet</button>
+          <button class="btn-danger" style="width:100%">🗑️ Hapus Data</button>
+          <div style="display:flex; gap:12px; align-items:center; justify-content:center; padding-top:8px">
+            <button class="fab">➕</button>
+            <button class="btn-icon">🔍</button>
+            <button class="btn-icon">🔔</button>
+            <button class="btn-icon">←</button>
+          </div>
+          <div style="text-align:center; font-size:11px; color:var(--neutral-400)">FAB · Icon Buttons</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5.10 Filter Chips -->
+    <p class="subsection-title">5.10 Filter Chips</p>
+    <div style="max-width:400px; margin:0 auto">
+      <div class="component-box">
+        <div class="component-label">Chips — Filter & Selection</div>
+        <div style="display:flex; flex-wrap:wrap; gap:8px">
+          <span class="chip chip--active">Semua</span>
+          <span class="chip">💳 BCA</span>
+          <span class="chip">💵 Cash</span>
+          <span class="chip">📱 OVO</span>
+          <span class="chip">🍔 Makanan</span>
+          <span class="chip">🚗 Transport</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5.11 Badges -->
+    <p class="subsection-title">5.11 Badges</p>
+    <div style="max-width:400px; margin:0 auto">
+      <div class="component-box">
+        <div class="component-label">Badge Variants</div>
+        <div style="display:flex; flex-wrap:wrap; gap:8px">
+          <span class="badge badge--income">✓ Income</span>
+          <span class="badge badge--expense">↓ Expense</span>
+          <span class="badge badge--primary">💳 BCA</span>
+          <span class="badge badge--warning">⚠ Limit</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5.12 Form Inputs -->
+    <p class="subsection-title">5.12 Form Inputs</p>
+    <div style="max-width:400px; margin:0 auto">
+      <div class="component-box">
+        <div class="component-label">Form Elements</div>
+        <div style="display:flex; flex-direction:column; gap:16px">
+
+          <div>
+            <label class="form-label">Jumlah</label>
+            <input type="text" class="form-input form-input--amount" placeholder="Rp 0" value="Rp 75.000">
+          </div>
+
+          <div>
+            <label class="form-label">Deskripsi</label>
+            <input type="text" class="form-input" placeholder="Contoh: Makan siang di restoran" value="Nasi Goreng Spesial">
+          </div>
+
+          <div>
+            <label class="form-label">Kategori</label>
+            <select class="form-select">
+              <option>🍔 Makanan & Minuman</option>
+              <option>🚗 Transportasi</option>
+              <option>🛒 Belanja / Shopping</option>
+              <option>🏠 Rumah & Utilitas</option>
+              <option>🎮 Hiburan</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="form-label">Wallet</label>
+            <select class="form-select">
+              <option>🏦 BCA</option>
+              <option>💵 Cash</option>
+              <option>📱 OVO</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="form-label">Tanggal</label>
+            <input type="date" class="form-input" value="2026-09-07">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5.13 Toast Notifications -->
+    <p class="subsection-title">5.13 Toast Notifications</p>
+    <div style="max-width:400px; margin:0 auto">
+      <div class="component-box" style="background:var(--neutral-50)">
+        <div class="component-label">Toast Variants</div>
+        <div style="display:flex; flex-direction:column; gap:10px">
+          <div class="toast toast--success">✅ Transaksi berhasil disimpan!</div>
+          <div class="toast toast--error">❌ Gagal menghapus wallet. Masih ada transaksi terkait.</div>
+          <div class="toast toast--info">ℹ️ Data berhasil di-export ke file JSON.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5.14 Avatars -->
+    <p class="subsection-title">5.14 Avatars</p>
+    <div style="max-width:400px; margin:0 auto">
+      <div class="component-box">
+        <div class="component-label">Avatar Sizes</div>
+        <div style="display:flex; align-items:center; gap:16px">
+          <div style="text-align:center">
+            <div class="avatar avatar--sm">A</div>
+            <div style="font-size:10px; color:var(--neutral-400); margin-top:4px">32px</div>
+          </div>
+          <div style="text-align:center">
+            <div class="avatar">AK</div>
+            <div style="font-size:10px; color:var(--neutral-400); margin-top:4px">40px</div>
+          </div>
+          <div style="text-align:center">
+            <div class="avatar avatar--lg">AK</div>
+            <div style="font-size:10px; color:var(--neutral-400); margin-top:4px">48px</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5.15 Modal / Dialog -->
+    <p class="subsection-title">5.15 Modal / Dialog</p>
+    <div style="max-width:400px; margin:0 auto">
+      <div class="modal-overlay">
+        <div class="modal">
+          <div class="modal__title">Hapus Wallet?</div>
+          <div class="modal__text">Wallet <strong>"BCA"</strong> dan semua transaksi terkait akan dihapus secara permanen. Aksi ini tidak bisa dibatalkan.</div>
+          <div style="display:flex; gap:10px">
+            <button class="btn-secondary" style="flex:1">Batal</button>
+            <button class="btn-danger" style="flex:1">Hapus</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5.16 Empty State -->
+    <p class="subsection-title">5.16 Empty State</p>
+    <div style="max-width:400px; margin:0 auto">
+      <div class="component-box">
+        <div class="empty-state">
+          <div class="empty-state__icon">📭</div>
+          <div class="empty-state__title">Belum ada transaksi</div>
+          <div class="empty-state__desc">Tap tombol + untuk mulai mencatat pemasukan atau pengeluaran.</div>
+          <button class="btn-primary" style="margin-top:20px; max-width:200px; margin-left:auto; margin-right:auto">➕ Tambah Transaksi</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5.17 Bottom Navigation -->
+    <p class="subsection-title">5.17 Bottom Navigation</p>
+    <div style="max-width:400px; margin:0 auto">
+      <div class="component-box" style="padding:0; overflow:hidden; border-radius:24px">
+        <div class="bottom-nav" style="position:static; transform:none">
+          <div class="bottom-nav__item bottom-nav__item--active">
+            <span class="bottom-nav__icon">🏠</span>
+            <span>Home</span>
+          </div>
+          <div class="bottom-nav__item">
+            <span class="bottom-nav__icon">👛</span>
+            <span>Wallet</span>
+          </div>
+          <div class="bottom-nav__item">
+            <button class="fab" style="width:44px; height:44px; font-size:20px">➕</button>
+          </div>
+          <div class="bottom-nav__item">
+            <span class="bottom-nav__icon">📋</span>
+            <span>History</span>
+          </div>
+          <div class="bottom-nav__item">
+            <span class="bottom-nav__icon">⚙️</span>
+            <span>Settings</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5.18 Glassmorphism -->
+    <p class="subsection-title">5.18 Glassmorphism</p>
+    <div style="max-width:400px; margin:0 auto">
+      <div style="background: var(--gradient-dark); border-radius:20px; padding:32px 20px; position:relative; overflow:hidden">
+        <!-- Decorative orbs -->
+        <div style="position:absolute; width:120px; height:120px; background:radial-gradient(circle, rgba(59,130,246,0.3) 0%, transparent 70%); top:-20px; right:-20px; border-radius:50%"></div>
+        <div style="position:absolute; width:80px; height:80px; background:radial-gradient(circle, rgba(6,182,212,0.2) 0%, transparent 70%); bottom:10px; left:10px; border-radius:50%"></div>
+
+        <div class="glass" style="padding:20px; margin-bottom:12px">
+          <div style="font-size:14px; color:rgba(255,255,255,0.7); font-weight:500">Glass Card</div>
+          <div style="font-size:20px; color:white; font-weight:700; margin-top:4px">Rp 5.200.000</div>
+        </div>
+        <div class="glass-light" style="padding:20px">
+          <div style="font-size:14px; color:rgba(255,255,255,0.7); font-weight:500">Glass Light Card</div>
+          <div style="font-size:20px; color:white; font-weight:700; margin-top:4px">Rp 800.000</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- 6. FULL PAGE PREVIEW — DASHBOARD -->
+  <!-- ============================================ -->
+  <div class="section">
+    <h2 class="section-title">📱 6. Full Page Preview — Dashboard</h2>
+    <p class="section-desc">Preview lengkap halaman Dashboard dalam phone frame. Ini adalah tampilan yang sama di mobile, tablet, maupun desktop (mobile-first).</p>
+
+    <div class="phone-frame" style="margin:0 auto">
+      <div class="phone-status-bar">9:41</div>
+
+      <!-- Header -->
+      <div style="padding:0 16px 16px; display:flex; justify-content:space-between; align-items:center">
+        <div style="display:flex; align-items:center; gap:12px">
+          <div class="avatar">AK</div>
+          <div>
+            <div style="font-size:12px; color:var(--neutral-400)">Selamat Sore 👋</div>
+            <div style="font-size:16px; font-weight:700; color:var(--neutral-900)">Andika</div>
+          </div>
+        </div>
+        <div style="display:flex; gap:8px">
+          <button class="btn-icon" style="width:38px; height:38px; font-size:16px">🔍</button>
+          <button class="btn-icon" style="width:38px; height:38px; font-size:16px">🔔</button>
+        </div>
+      </div>
+
+      <div class="phone-content">
+        <!-- Wallet Card -->
+        <div class="wallet-card animate-in" style="margin-bottom:20px">
+          <div class="wallet-card__label">
+            Wallet Balance <span class="wallet-card__badge">↑ 4%</span>
+          </div>
+          <div class="wallet-card__balance">Rp 12.455.000</div>
+          <div class="wallet-card__subtitle">Updated: 07/09/2026</div>
+        </div>
+
+        <!-- Action Icons -->
+        <div style="display:flex; justify-content:space-around; margin-bottom:24px" class="animate-in animate-in-delay-1">
+          <div class="action-icon">
+            <div class="action-icon__circle">💸</div>
+            <span class="action-icon__label">Send</span>
+          </div>
+          <div class="action-icon">
+            <div class="action-icon__circle">💰</div>
+            <span class="action-icon__label">Receive</span>
+          </div>
+          <div class="action-icon">
+            <div class="action-icon__circle">🔝</div>
+            <span class="action-icon__label">Top-Up</span>
+          </div>
+          <div class="action-icon">
+            <div class="action-icon__circle">⋯</div>
+            <span class="action-icon__label">More</span>
+          </div>
+        </div>
+
+        <!-- Wallet Mini -->
+        <div class="card animate-in animate-in-delay-2" style="margin-bottom:20px">
+          <div class="card__header">
+            <div class="card__title">Wallet Saya</div>
+            <span class="card__link">Lihat Semua →</span>
+          </div>
+          <div style="display:flex; gap:10px; overflow-x:auto; margin: 0 -20px; padding: 0 20px 4px">
+            <div class="wallet-mini">
+              <div class="wallet-mini__icon">🏦</div>
+              <div class="wallet-mini__name">BCA</div>
+              <div class="wallet-mini__balance">Rp 5.2jt</div>
+            </div>
+            <div class="wallet-mini" style="background:linear-gradient(135deg, #1e3a6e 0%, #3b82f6 100%)">
+              <div class="wallet-mini__icon">💵</div>
+              <div class="wallet-mini__name">Cash</div>
+              <div class="wallet-mini__balance">Rp 800rb</div>
+            </div>
+            <div class="wallet-mini" style="background:linear-gradient(135deg, #142244 0%, #1d4ed8 100%)">
+              <div class="wallet-mini__icon">📱</div>
+              <div class="wallet-mini__name">OVO</div>
+              <div class="wallet-mini__balance">Rp 500rb</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Transactions -->
+        <div class="card animate-in animate-in-delay-3">
+          <div class="card__header">
+            <div class="card__title">Transaksi Terakhir</div>
+            <span class="card__link">Semua →</span>
+          </div>
+          <div class="txn-item">
+            <div class="txn-item__icon">🍔</div>
+            <div class="txn-item__info">
+              <div class="txn-item__name">Makan Siang</div>
+              <div class="txn-item__meta">BCA · Hari ini</div>
+            </div>
+            <div class="txn-item__amount txn-item__amount--expense">-Rp 75.000</div>
+          </div>
+          <div class="txn-item">
+            <div class="txn-item__icon" style="background:var(--color-income-light)">💰</div>
+            <div class="txn-item__info">
+              <div class="txn-item__name">Gaji September</div>
+              <div class="txn-item__meta">BCA · 1 Sep</div>
+            </div>
+            <div class="txn-item__amount txn-item__amount--income">+Rp 8.000.000</div>
+          </div>
+          <div class="txn-item">
+            <div class="txn-item__icon">🚗</div>
+            <div class="txn-item__info">
+              <div class="txn-item__name">Grab ke Kantor</div>
+              <div class="txn-item__meta">OVO · 1 Sep</div>
+            </div>
+            <div class="txn-item__amount txn-item__amount--expense">-Rp 25.000</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Nav -->
+      <div class="bottom-nav" style="position:absolute; bottom:0; left:0; right:0; transform:none; border-radius:0; border-radius: 24px 24px 0 0;">
+        <div class="bottom-nav__item bottom-nav__item--active">
+          <span class="bottom-nav__icon">🏠</span>
+          <span>Home</span>
+        </div>
+        <div class="bottom-nav__item">
+          <span class="bottom-nav__icon">📊</span>
+        </div>
+        <div class="bottom-nav__item">
+          <button class="fab" style="width:44px; height:44px; font-size:18px">➕</button>
+        </div>
+        <div class="bottom-nav__item">
+          <span class="bottom-nav__icon">📋</span>
+        </div>
+        <div class="bottom-nav__item">
+          <span class="bottom-nav__icon">⚙️</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wallet — Personal Wallet</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<div class="app">
+  <div class="app-scroll">
+
+    <!-- TOP BAR -->
+    <div class="topbar" style="background: transparent; border: none; padding-top: 20px; align-items: flex-start;">
+      <div class="topbar__title-col" style="flex:1;">
+        <div class="topbar__title" style="font-size: 24px; font-weight: 800; color: #111;">Wallet Saya</div>
+        <div class="topbar__subtitle" style="font-size: 13px; color: var(--neutral-500); font-weight: 500; margin-top: 2px;" id="walletCount">3 wallet aktif</div>
+      </div>
+      <button class="topbar__action" onclick="openAddWalletModal()" title="Tambah Wallet" style="border-radius: 20px; padding: 8px 16px; background: var(--primary-500); color: white; font-weight: 600; border: none; display: flex; align-items: center; gap: 4px; height: auto; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);">
+        <i data-lucide="plus" style="width:16px;height:16px"></i> Wallet
+      </button>
+    </div>
+
+    <!-- TOTAL WALLET CARD -->
+    <div style="padding: 10px 20px 0;">
+      <div style="background: var(--gradient-wallet); border-radius: 24px; padding: 24px; color: white; display: flex; flex-direction: column; align-items: center; box-shadow: 0 10px 30px rgba(15, 37, 87, 0.25); position: relative; overflow: hidden;">
+        <div style="position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(96, 165, 250, 0.16) 0%, transparent 70%); border-radius: 50%; pointer-events: none;"></div>
+        <div style="font-size: 14px; color: rgba(255,255,255,0.7); margin-bottom: 8px; position: relative; z-index: 1;">Total Saldo Semua Wallet</div>
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 24px; position: relative; z-index: 1;">
+          <div style="font-size: 36px; font-weight: 800; letter-spacing: -0.5px;" id="totalBalance">Rp13.179.000</div>
+          <i data-lucide="eye" style="width: 20px; height: 20px; color: rgba(255,255,255,0.5);"></i>
+        </div>
+        
+        <div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; position: relative; z-index: 1;" id="typePills">
+          <!-- rendered by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- WALLET LIST -->
+    <div style="padding: 24px 20px 100px;">
+      <div style="font-size: 12px; font-weight: 700; color: var(--neutral-500); letter-spacing: 1px; margin-bottom: 12px;">DAFTAR WALLET</div>
+      <div id="walletListContainer">
+        <!-- rendered by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAVIGATION -->
+  <nav class="bottom-nav">
+    <div class="bottom-nav__bar">
+      <div class="nav-item" title="Dashboard" onclick="window.location.href='dashboard.html'">
+        <i data-lucide="home" style="width:24px;height:24px"></i>
+        <span>Home</span>
+      </div>
+      <div class="nav-item nav-item--active" title="Wallet">
+        <i data-lucide="wallet" style="width:24px;height:24px"></i>
+        <span>Wallet</span>
+      </div>
+      <div class="nav-fab-wrap">
+        <div class="nav-fab-bg"></div>
+        <button class="nav-fab" title="Tambah Transaksi" onclick="window.location.href='dashboard.html'">
+          <i data-lucide="plus" style="width:34px;height:34px"></i>
+        </button>
+      </div>
+      <div class="nav-item" title="Statistik" onclick="window.location.href='stats.html'">
+        <i data-lucide="bar-chart-2" style="width:24px;height:24px"></i>
+        <span>Statistik</span>
+      </div>
+      <div class="nav-item" title="Pengaturan">
+        <i data-lucide="settings-2" style="width:24px;height:24px"></i>
+        <span>Setelan</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ══════════ WALLET MODAL (Add / Edit) ══════════ -->
+  <div class="modal-overlay" id="walletModal">
+    <div class="modal-content">
+      <div class="modal-drag-handle"></div>
+      <div class="modal-header">
+        <h3 class="modal-title" id="walletModalTitle">Tambah Wallet</h3>
+        <button class="modal-close" onclick="closeWalletModal()"><i data-lucide="x" style="width:18px;height:18px"></i></button>
+      </div>
+      <form id="walletForm" onsubmit="handleWalletSubmit(event)" style="display:flex; flex-direction:column; gap:20px;">
+        <input type="hidden" id="walletEditId" value="">
+        <!-- Nama Wallet -->
+        <div class="form-group">
+          <label class="form-label">Nama Wallet</label>
+          <input type="text" class="form-input" id="walletName" placeholder="Contoh: BCA, GoPay, Tunai" required>
+        </div>
+        <!-- Tipe Wallet -->
+        <div class="form-group">
+          <label class="form-label">Tipe Wallet</label>
+          <div class="category-grid" id="walletTypeGrid">
+            <div class="cat-pill active" data-type="bank" onclick="setWalletType(this)">
+              <i data-lucide="landmark" style="width:16px;height:16px"></i> Bank
+            </div>
+            <div class="cat-pill" data-type="e-wallet" onclick="setWalletType(this)">
+              <i data-lucide="smartphone" style="width:16px;height:16px"></i> E-Wallet
+            </div>
+            <div class="cat-pill" data-type="tunai" onclick="setWalletType(this)">
+              <i data-lucide="banknote" style="width:16px;height:16px"></i> Tunai
+            </div>
+          </div>
+          <input type="hidden" id="walletType" value="bank">
+        </div>
+        <!-- Saldo -->
+        <div class="form-group">
+          <label class="form-label" id="walletBalanceLabel">Saldo Awal</label>
+          <div class="nominal-wrapper">
+            <span class="nominal-prefix">Rp</span>
+            <input type="number" class="nominal-input" id="walletBalance" placeholder="0" min="0" required style="font-size:20px;">
+          </div>
+        </div>
+        <!-- Catatan -->
+        <div class="form-group">
+          <label class="form-label">Catatan (opsional)</label>
+          <input type="text" class="form-input" id="walletNote" placeholder="Contoh: Rekening utama gaji">
+        </div>
+
+        <!-- Toggle Utama -->
+        <div style="display:flex; align-items:center; justify-content:space-between; background:var(--neutral-50); padding:14px 16px; border-radius:14px;">
+          <div>
+            <div style="font-size:14px; font-weight:600; color:var(--neutral-800);">Jadikan Wallet Utama</div>
+            <div style="font-size:12px; color:var(--neutral-500); margin-top:2px;">Wallet default untuk transaksi</div>
+          </div>
+          <label style="position:relative; width:48px; height:28px; cursor:pointer;">
+            <input type="checkbox" id="walletPrimary" style="display:none;">
+            <span class="toggle-track"></span>
+          </label>
+        </div>
+        <!-- Actions -->
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" onclick="closeWalletModal()">Batal</button>
+          <button type="submit" class="btn-submit" id="walletSubmitBtn">Tambah Wallet</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ══════════ DELETE CONFIRMATION MODAL ══════════ -->
+  <div class="modal-overlay" id="deleteModal">
+    <div class="modal-content" style="gap:16px;">
+      <div class="modal-drag-handle"></div>
+      <div style="text-align:center; padding:10px 0 0;">
+        <div style="width:64px; height:64px; border-radius:50%; background:var(--color-expense-light); display:flex; align-items:center; justify-content:center; margin:0 auto 16px;">
+          <i data-lucide="trash-2" style="width:28px; height:28px; color:var(--color-expense);"></i>
+        </div>
+        <div style="font-size:18px; font-weight:700; color:var(--neutral-900); margin-bottom:8px;">Hapus Wallet?</div>
+        <div style="font-size:14px; color:var(--neutral-500); line-height:1.5;">
+          Wallet <strong id="deleteWalletName"></strong> beserta semua data transaksi di dalamnya akan dihapus secara permanen.
+        </div>
+      </div>
+      <div class="modal-actions" style="margin-top:8px;">
+        <button type="button" class="btn-cancel" onclick="closeDeleteModal()">Batal</button>
+        <button type="button" class="btn-submit" style="background:var(--color-expense); box-shadow:0 4px 12px rgba(239,68,68,.3);" onclick="executeDelete()">Hapus</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ TOAST ══════════ -->
+  <div id="toast" style="position:fixed; bottom:100px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--neutral-900); color:white; padding:12px 24px; border-radius:14px; font-size:14px; font-weight:600; font-family:var(--font); z-index:200; opacity:0; transition:all 0.3s; pointer-events:none; display:flex; align-items:center; gap:8px; box-shadow:0 8px 24px rgba(0,0,0,0.2);">
+    <i data-lucide="check-circle" style="width:18px;height:18px; color:var(--color-income);"></i>
+    <span id="toastMessage"></span>
+  </div>
+
+</div><!-- /app -->
+
+<style>
+  .toggle-track {
+    position:absolute; top:0; left:0; right:0; bottom:0;
+    background:var(--neutral-200); border-radius:999px; transition:background 0.2s;
+  }
+  .toggle-track::after {
+    content:''; position:absolute; top:3px; left:3px;
+    width:22px; height:22px; background:white; border-radius:50%;
+    box-shadow:0 2px 4px rgba(0,0,0,0.15); transition:transform 0.2s;
+  }
+  input:checked + .toggle-track { background:var(--primary-500); }
+  input:checked + .toggle-track::after { transform:translateX(20px); }
+
+
+</style>
+
+
+<script src="assets/js/app.js"></script>
+<script src="assets/js/wallet.js"></script>
+</body>
+
+</html>

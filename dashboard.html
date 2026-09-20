@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — Personal Wallet</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<div class="app">
+  <div class="app-scroll">
+
+    <!-- =========================================================
+         TOP BAR
+    ========================================================= -->
+    <header class="topbar slide-up">
+      <div class="topbar__left">
+        <!-- Avatar -->
+        <div class="topbar__avatar-wrap">
+          <img
+            src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=88&h=88&fit=crop&crop=face&auto=format&q=80"
+            alt="Andika Kurniawan"
+            class="topbar__avatar"
+          >
+          <div class="topbar__online-dot"></div>
+        </div>
+        <!-- Text -->
+        <div>
+          <div class="topbar__greeting" id="greeting">Selamat pagi 🌤</div>
+          <div class="topbar__name">Andika Kurniawan</div>
+        </div>
+      </div>
+
+      <div class="topbar__actions">
+        <!-- Search -->
+        <button class="icon-btn" title="Cari">
+          <i data-lucide="search" style="width:18px;height:18px"></i>
+        </button>
+        <!-- Notification -->
+        <button class="icon-btn" title="Notifikasi">
+          <i data-lucide="bell" style="width:18px;height:18px"></i>
+          <span class="notif-badge"></span>
+        </button>
+      </div>
+    </header>
+
+    <!-- =========================================================
+         WALLET BALANCE CARD
+    ========================================================= -->
+    <div class="wallet-section slide-up d1">
+      <div class="wallet-card">
+        <!-- Sparkles -->
+        <div class="sparkle sparkle-1"></div>
+        <div class="sparkle sparkle-2"></div>
+        <div class="sparkle sparkle-3"></div>
+
+        <!-- Top: Label + Badge -->
+        <div class="wallet-card__top-row">
+          <span class="wallet-card__label">Total Saldo</span>
+          <span class="wallet-card__badge">baru</span>
+        </div>
+
+        <!-- Balance + Eye -->
+        <div class="wallet-card__balance-row">
+          <div class="wallet-card__balance" id="balanceText">Rp13.182.000</div>
+          <button class="wallet-card__eye" onclick="toggleBalance()" title="Tampilkan/Sembunyikan saldo">
+            <i data-lucide="eye" style="width:16px;height:16px" id="eyeIcon"></i>
+          </button>
+        </div>
+
+        <!-- Subtitle -->
+        <div class="wallet-card__subtitle" id="walletSubtitle">3 wallet aktif</div>
+
+        <!-- Individual Wallet Pills (dynamically populated by dashboard.js) -->
+        <div class="wallet-pills" id="walletPillsContainer">
+          <!-- rendered by JS -->
+        </div>
+
+        <!-- Quick Actions — rectangular buttons -->
+        <div class="wallet-actions">
+          <div class="wallet-action">
+            <div class="wallet-action__icon">
+              <i data-lucide="arrow-down-left" style="width:22px;height:22px"></i>
+            </div>
+            <span class="wallet-action__label">Masuk</span>
+          </div>
+          <div class="wallet-action">
+            <div class="wallet-action__icon">
+              <i data-lucide="arrow-up-right" style="width:22px;height:22px"></i>
+            </div>
+            <span class="wallet-action__label">Keluar</span>
+          </div>
+          <div class="wallet-action">
+            <div class="wallet-action__icon">
+              <i data-lucide="repeat-2" style="width:22px;height:22px"></i>
+            </div>
+            <span class="wallet-action__label">Transfer</span>
+          </div>
+          <div class="wallet-action">
+            <div class="wallet-action__icon">
+              <i data-lucide="layout-grid" style="width:22px;height:22px"></i>
+            </div>
+            <span class="wallet-action__label">Lainnya</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========================================================
+         INCOME / EXPENSE SUMMARY CARDS
+    ========================================================= -->
+    <div class="stats-strip slide-up d2">
+      <div class="stat-card">
+        <div class="stat-card__top">
+          <div class="stat-card__icon stat-card__icon--income">
+            <i data-lucide="arrow-down-left" style="width:18px;height:18px"></i>
+          </div>
+          <div class="stat-card__label">Pemasukan</div>
+        </div>
+        <div class="stat-card__amount stat-card__amount--income">Rp9,6jt</div>
+        <div class="stat-card__period">September 2026</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card__top">
+          <div class="stat-card__icon stat-card__icon--expense">
+            <i data-lucide="arrow-up-right" style="width:18px;height:18px"></i>
+          </div>
+          <div class="stat-card__label">Pengeluaran</div>
+        </div>
+        <div class="stat-card__amount stat-card__amount--expense">Rp1,7jt</div>
+        <div class="stat-card__period">September 2026</div>
+      </div>
+    </div>
+
+    <!-- =========================================================
+         TRANSACTION SECTION — Tabs
+    ========================================================= -->
+    <div class="txn-section slide-up d3">
+
+      <div class="txn-section__header">
+        <div class="txn-section__title">Transaksi</div>
+        <a href="transactions.html" class="txn-section__link" style="font-size:13px; font-weight:600; color:var(--primary-500); text-decoration:none;">Semua Transaksi</a>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <button class="tab tab--active" onclick="switchTab('expense', this)" id="tab-expense">
+          <i data-lucide="trending-down" style="width:14px;height:14px"></i>
+          Pengeluaran
+          <span class="tab__count">12</span>
+        </button>
+        <button class="tab" onclick="switchTab('income', this)" id="tab-income">
+          <i data-lucide="trending-up" style="width:14px;height:14px"></i>
+          Pemasukan
+          <span class="tab__count">4</span>
+        </button>
+      </div>
+
+      <!-- ─── EXPENSE PANEL ─── -->
+      <div class="tab-panel tab-panel--active" id="panel-expense">
+        <div id="expense-list"></div>
+      </div>
+
+      <!-- ─── INCOME PANEL ─── -->
+      <div class="tab-panel" id="panel-income">
+        <div id="income-list"></div>
+      </div>
+
+    </div><!-- /txn-section -->
+  </div><!-- /app-scroll -->
+
+  <!-- =========================================================
+       BOTTOM NAVIGATION
+  ========================================================= -->
+  <nav class="bottom-nav">
+    <div class="bottom-nav__bar">
+
+      <!-- Home -->
+      <div class="nav-item nav-item--active" title="Dashboard">
+        <i data-lucide="home" style="width:24px;height:24px"></i>
+        <span>Home</span>
+      </div>
+
+      <!-- Wallet -->
+      <div class="nav-item" title="Wallet" onclick="window.location.href='wallet.html'">
+        <i data-lucide="wallet" style="width:24px;height:24px"></i>
+        <span>Wallet</span>
+      </div>
+
+      <!-- FAB — Add Transaction -->
+      <div class="nav-fab-wrap">
+        <div class="nav-fab-bg"></div>
+        <button class="nav-fab" title="Tambah Transaksi" onclick="onFabClick()">
+          <i data-lucide="plus" style="width:34px;height:34px"></i>
+        </button>
+      </div>
+
+      <!-- History -->
+      <div class="nav-item" title="Statistik" onclick="window.location.href='stats.html'">
+        <i data-lucide="bar-chart-2" style="width:24px;height:24px"></i>
+        <span>Statistik</span>
+      </div>
+
+      <!-- Settings -->
+      <div class="nav-item" title="Pengaturan">
+        <i data-lucide="settings-2" style="width:24px;height:24px"></i>
+        <span>Setelan</span>
+      </div>
+
+    </div>
+  </nav>
+
+
+  
+  <!-- MODAL ADD TRANSACTION -->
+  <div class="modal-overlay" id="txnModal">
+    <div class="modal-content">
+      <div class="modal-drag-handle"></div>
+      
+      <div class="modal-header">
+        <h3 class="modal-title">Tambah Transaksi</h3>
+        <button class="modal-close" onclick="closeModal()"><i data-lucide="x" style="width:18px;height:18px"></i></button>
+      </div>
+      
+      <form id="txnForm" onsubmit="handleFormSubmit(event)" style="display:flex; flex-direction:column; gap:20px;">
+        <!-- Segmented Type -->
+        <div class="segment-control">
+          <button type="button" class="segment-btn active" data-val="expense" onclick="setTxnType('expense')">Pengeluaran</button>
+          <button type="button" class="segment-btn" data-val="income" onclick="setTxnType('income')">Pemasukan</button>
+        </div>
+        <input type="hidden" id="txnType" value="expense">
+
+        <!-- Nominal -->
+        <div class="form-group">
+          <label class="form-label">Nominal</label>
+          <div class="nominal-wrapper">
+            <span class="nominal-prefix">Rp</span>
+            <input type="number" class="nominal-input" id="txnAmount" placeholder="0" min="1" required>
+          </div>
+        </div>
+
+        <!-- Categories -->
+        <div class="form-group">
+          <label class="form-label">Kategori</label>
+          <div class="category-grid" id="categoryGrid">
+            <!-- Populated by JS -->
+          </div>
+          <input type="hidden" id="txnCategory" required>
+        </div>
+
+        <!-- Wallet & Date -->
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Wallet</label>
+            <select class="form-select" id="txnWallet" required>
+              <!-- dynamically populated by app.js -->
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tanggal</label>
+            <input type="date" class="form-input" id="txnDate" required>
+          </div>
+        </div>
+
+        <!-- Note/Name -->
+        <div class="form-group">
+          <label class="form-label">Catatan (opsional)</label>
+          <input type="text" class="form-input" id="txnName" placeholder="Contoh: Makan siang di kantin" required>
+        </div>
+
+        <!-- Actions -->
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" onclick="closeModal()">Batal</button>
+          <button type="submit" class="btn-submit">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div><!-- /app -->
+
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/dashboard.js"></script>
+
+</body>
+</html>

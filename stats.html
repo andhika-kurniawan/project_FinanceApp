@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistik | Personal Wallet</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="assets/js/app.js"></script>
+</head>
+<body>
+    <div class="app">
+        <div class="app-scroll">
+            <div class="section-pad" style="padding-top: 24px;">
+                <h1 style="font-size: 24px; font-weight: 800; margin-bottom: 4px;">Statistik</h1>
+                <div id="summary-title" style="color:var(--neutral-500); font-size: 14px; margin-bottom: 20px;">Ringkasan mingguan</div>
+
+                <div class="tabs" style="background:var(--neutral-900); margin-bottom: 20px;">
+                    <button class="tab tab--active" id="tab-weekly" onclick="setPeriodType('weekly')">Mingguan</button>
+                    <button class="tab" id="tab-monthly" onclick="setPeriodType('monthly')">Bulanan</button>
+                </div>
+
+                <div style="background:var(--neutral-100); border-radius:16px; padding:12px; display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                    <button class="icon-btn" onclick="changePeriod(-1)" style="border-radius:12px; background:white; border:none; width:36px; height:36px; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+                        <i data-lucide="chevron-left" style="width:18px; height:18px;"></i>
+                    </button>
+                    <div style="text-align:center;">
+                        <div id="period-label" style="font-weight:700; font-size:14px; color:var(--neutral-900);">...</div>
+                        <div id="period-sub-label" style="font-size:11px; color:var(--neutral-500);">Minggu ini</div>
+                    </div>
+                    <button class="icon-btn" onclick="changePeriod(1)" style="border-radius:12px; background:white; border:none; width:36px; height:36px; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+                        <i data-lucide="chevron-right" style="width:18px; height:18px;"></i>
+                    </button>
+                </div>
+
+                <div style="background:var(--gradient-wallet); border-radius:24px; padding:24px; color:white; box-shadow:0 12px 24px rgba(15,37,87,0.2);">
+                    <div style="display:flex; justify-content:space-between; margin-bottom: 24px;">
+                        <div>
+                            <div style="font-size:12px; opacity:0.7; margin-bottom:6px; display:flex; align-items:center; gap:4px;">
+                                <i data-lucide="arrow-down-left" style="width:12px;height:12px;"></i> Pemasukan
+                            </div>
+                            <div id="total-income" style="font-size:22px; font-weight:800; color:var(--accent-400);">Rp0</div>
+                        </div>
+                        <div style="text-align:right;">
+                            <div style="font-size:12px; opacity:0.7; margin-bottom:6px; display:flex; align-items:center; gap:4px; justify-content:flex-end;">
+                                <i data-lucide="arrow-up-right" style="width:12px;height:12px;"></i> Pengeluaran
+                            </div>
+                            <div id="total-expense" style="font-size:22px; font-weight:800;">Rp0</div>
+                        </div>
+                    </div>
+                    <div style="border-top: 1px solid rgba(255,255,255,0.15); padding-top: 18px; display:flex; justify-content:space-between; align-items:center;">
+                        <div style="font-size:14px; opacity:0.8; font-weight:600;">Selisih</div>
+                        <div id="total-net" style="font-size:22px; font-weight:800;">Rp0</div>
+                    </div>
+                </div>
+
+                <div class="stat-card" style="margin-top:20px; padding:20px; border-radius:24px; background:white; box-shadow:var(--shadow-card);">
+                    <canvas id="barChart" style="max-height: 220px;"></canvas>
+                </div>
+
+                <div class="stat-card" style="margin-top:20px; padding:24px; border-radius:24px; background:white; box-shadow:var(--shadow-card); position:relative;">
+                    <div style="font-weight:700; font-size:16px; margin-bottom:20px; color:var(--neutral-900);">Pengeluaran per Kategori</div>
+                    <div style="position:relative; width:180px; height:180px; margin:0 auto 24px;">
+                        <canvas id="doughnutChart"></canvas>
+                        <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); text-align:center;">
+                            <div style="font-size:11px; color:var(--neutral-400); font-weight:600; text-transform:uppercase; letter-spacing:0.05em;">Total</div>
+                            <div id="chart-total-amount" style="font-size:16px; font-weight:800; color:var(--neutral-900);">Rp0</div>
+                        </div>
+                    </div>
+                    <div id="breakdown-list" style="margin-top:10px;"></div>
+                </div>
+                <div style="height: 100px;"></div>
+            </div>
+        </div>
+
+        <nav class="bottom-nav">
+            <div class="bottom-nav__bar">
+                <div class="nav-item" title="Dashboard" onclick="window.location.href='dashboard.html'">
+                    <i data-lucide="home" style="width:24px;height:24px"></i>
+                    <span>Home</span>
+                </div>
+                <div class="nav-item" title="Wallet" onclick="window.location.href='wallet.html'">
+                    <i data-lucide="wallet" style="width:24px;height:24px"></i>
+                    <span>Wallet</span>
+                </div>
+                <div class="nav-fab-wrap">
+                    <button class="nav-fab" title="Tambah Transaksi" onclick="window.location.href='dashboard.html'">
+                        <i data-lucide="plus" style="width:34px;height:34px"></i>
+                    </button>
+                </div>
+                <div class="nav-item nav-item--active" title="Statistik">
+                    <i data-lucide="bar-chart-2" style="width:24px;height:24px"></i>
+                    <span>Statistik</span>
+                </div>
+                <div class="nav-item" title="Pengaturan">
+                    <i data-lucide="settings-2" style="width:24px;height:24px"></i>
+                    <span>Setelan</span>
+                </div>
+            </div>
+        </nav>
+        <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+        <script>lucide.createIcons();</script>
+    </div>
+    <script src="assets/js/stats.js"></script>
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detail Wallet — Personal Wallet</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<div class="app">
+  <div class="app-scroll">
+
+    <!-- TOP BAR -->
+    <div class="topbar" style="background: transparent; border: none; padding-top: 20px;">
+      <button class="topbar__back" onclick="window.history.back()" title="Kembali" style="border-radius: 50%; width: 44px; height: 44px; background: rgba(255,255,255,0.4); color: var(--neutral-900); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+        <i data-lucide="chevron-left" style="width:24px;height:24px"></i>
+      </button>
+      <div class="topbar__title-col" style="flex:1; margin-left: 12px;">
+        <div class="topbar__title" style="font-size: 18px;">Detail Wallet</div>
+      </div>
+      <button class="topbar__action" onclick="openEditWalletModal()" title="Edit Wallet" style="border-radius: 50%; width: 44px; height: 44px; background: rgba(255,255,255,0.4); color: var(--neutral-900); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+        <i data-lucide="edit-3" style="width:20px;height:20px"></i>
+      </button>
+    </div>
+
+    <!-- WALLET BALANCE CARD -->
+    <div class="wallet-section slide-up d1" style="padding-top: 10px;">
+      <div class="wallet-card">
+        <!-- Sparkles -->
+        <div class="sparkle sparkle-1"></div>
+        <div class="sparkle sparkle-2"></div>
+        <div class="sparkle sparkle-3"></div>
+
+        <div class="wallet-card__top-row">
+          <span class="wallet-card__label" id="walletLabel">Saldo BCA</span>
+          <span class="wallet-card__badge" id="walletBadge" style="background: rgba(255,255,255,0.2); color: white; border: none;">Utama</span>
+        </div>
+
+        <div class="wallet-card__balance-row">
+          <div class="wallet-card__balance" id="walletBalance">Rp12.200.000</div>
+        </div>
+
+        <div class="wallet-card__subtitle" id="walletSubtitle">Rekening Bank BCA</div>
+
+        <!-- Wallet Actions (Optional for details) -->
+        <div class="wallet-actions">
+          <div class="wallet-action">
+            <div class="wallet-action__icon"><i data-lucide="arrow-down-left" style="width:20px;height:20px"></i></div>
+            <span class="wallet-action__label">Terima</span>
+          </div>
+          <div class="wallet-action">
+            <div class="wallet-action__icon"><i data-lucide="arrow-up-right" style="width:20px;height:20px"></i></div>
+            <span class="wallet-action__label">Kirim</span>
+          </div>
+          <div class="wallet-action">
+            <div class="wallet-action__icon"><i data-lucide="plus-circle" style="width:20px;height:20px"></i></div>
+            <span class="wallet-action__label">Top Up</span>
+          </div>
+          <div class="wallet-action">
+            <div class="wallet-action__icon"><i data-lucide="more-horizontal" style="width:20px;height:20px"></i></div>
+            <span class="wallet-action__label">Lainnya</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7 DAYS EXPENSE CHART -->
+    <div class="wallet-section slide-up d2" style="margin-top: 24px; padding: 0 20px;">
+      <div style="background: white; border-radius: 24px; padding: 24px; box-shadow: var(--shadow-card);">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
+          <div>
+            <div style="font-size: 16px; font-weight: 700; color: var(--neutral-900);">Pengeluaran 7 Hari</div>
+            <div style="font-size: 12px; color: var(--neutral-500); margin-top: 4px;" id="chartDateRange">21 - 27 Agu 2026</div>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size: 12px; color: var(--neutral-500);">Total keluar</div>
+            <div style="font-size: 16px; font-weight: 700; color: var(--color-expense); margin-top: 2px;" id="chartTotal">Rp0</div>
+          </div>
+        </div>
+        
+        <div style="position: relative; height: 140px; display: flex; align-items: flex-end; justify-content: space-between; padding: 0 4px;" id="chartBars">
+          <!-- Horizontal grid lines -->
+          <div style="position: absolute; top: 0; left: 0; right: 0; border-top: 1px solid var(--neutral-100);"></div>
+          <div style="position: absolute; top: 25%; left: 0; right: 0; border-top: 1px solid var(--neutral-100);"></div>
+          <div style="position: absolute; top: 50%; left: 0; right: 0; border-top: 1px solid var(--neutral-100);"></div>
+          <div style="position: absolute; top: 75%; left: 0; right: 0; border-top: 1px solid var(--neutral-100);"></div>
+          <div style="position: absolute; bottom: 0; left: 0; right: 0; border-top: 1px solid var(--neutral-100);"></div>
+          
+          <!-- Empty Bars (0 height) -->
+          <div style="width: 24px; height: 0%; background: var(--primary-500); border-radius: 4px 4px 0 0; position: relative; z-index: 1;"></div>
+          <div style="width: 24px; height: 0%; background: var(--primary-500); border-radius: 4px 4px 0 0; position: relative; z-index: 1;"></div>
+          <div style="width: 24px; height: 0%; background: var(--primary-500); border-radius: 4px 4px 0 0; position: relative; z-index: 1;"></div>
+          <div style="width: 24px; height: 0%; background: var(--primary-500); border-radius: 4px 4px 0 0; position: relative; z-index: 1;"></div>
+          <div style="width: 24px; height: 0%; background: var(--primary-500); border-radius: 4px 4px 0 0; position: relative; z-index: 1;"></div>
+          <div style="width: 24px; height: 0%; background: var(--primary-500); border-radius: 4px 4px 0 0; position: relative; z-index: 1;"></div>
+          <div style="width: 24px; height: 0%; background: var(--primary-500); border-radius: 4px 4px 0 0; position: relative; z-index: 1;"></div>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-top: 12px; padding: 0 6px; font-size: 11px; color: var(--neutral-500); font-weight: 600;" id="chartDays">
+          <div>Jum</div><div>Sab</div><div>Min</div><div>Sen</div><div>Sel</div><div>Rab</div><div>Kam</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RECENT TRANSACTIONS HEADER & EMPTY STATE -->
+    <div class="txn-section slide-up d3" style="margin-top: 24px; padding: 0 20px 40px;">
+      <div class="txn-section__header" style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:16px;">
+        <div>
+          <div class="txn-section__title" style="font-size: 16px; font-weight: 700;">Transaksi 7 Hari Terakhir</div>
+          <div style="font-size: 12px; color: var(--neutral-500); margin-top: 4px;" id="txnSummary">0 transaksi &middot; masuk Rp0 &middot; keluar Rp0</div>
+        </div>
+        <div id="btnViewAll" style="font-size: 13px; font-weight: 600; color: var(--primary-600); display: flex; align-items: center; gap: 4px; cursor: pointer;">
+          Semua <i data-lucide="chevron-right" style="width: 14px; height: 14px;"></i>
+        </div>
+      </div>
+      
+      <div id="txnListContainer">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ WALLET MODAL (Edit) ══════════ -->
+<div class="modal-overlay" id="walletModal">
+  <div class="modal-content">
+    <div class="modal-drag-handle"></div>
+    <div class="modal-header">
+      <h3 class="modal-title" id="walletModalTitle">Edit Wallet</h3>
+      <button class="modal-close" onclick="closeWalletModal()"><i data-lucide="x" style="width:18px;height:18px"></i></button>
+    </div>
+    <form id="walletForm" onsubmit="handleWalletSubmit(event)" style="display:flex; flex-direction:column; gap:20px;">
+      <input type="hidden" id="walletEditId" value="">
+      
+      <div class="form-group">
+        <label class="form-label">Nama Wallet</label>
+        <input type="text" class="form-input" id="walletName" placeholder="Contoh: BCA, GoPay, Tunai" required>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">Tipe Wallet</label>
+        <div class="category-grid" id="walletTypeGrid">
+          <div class="cat-pill active" data-type="bank" onclick="setWalletType(this)">
+            <i data-lucide="landmark" style="width:16px;height:16px"></i> Bank
+          </div>
+          <div class="cat-pill" data-type="e-wallet" onclick="setWalletType(this)">
+            <i data-lucide="smartphone" style="width:16px;height:16px"></i> E-Wallet
+          </div>
+          <div class="cat-pill" data-type="tunai" onclick="setWalletType(this)">
+            <i data-lucide="banknote" style="width:16px;height:16px"></i> Tunai
+          </div>
+        </div>
+        <input type="hidden" id="walletType" value="bank">
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label" id="walletBalanceLabel">Saldo Saat Ini</label>
+        <div class="nominal-wrapper">
+          <span class="nominal-prefix">Rp</span>
+          <input type="number" class="nominal-input" id="walletBalance" placeholder="0" min="0" required style="font-size:20px;">
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">Catatan (opsional)</label>
+        <input type="text" class="form-input" id="walletNote" placeholder="Contoh: Rekening utama gaji">
+      </div>
+
+      <div style="display:flex; align-items:center; justify-content:space-between; background:var(--neutral-50); padding:14px 16px; border-radius:14px;">
+        <div>
+          <div style="font-size:14px; font-weight:600; color:var(--neutral-800);">Jadikan Wallet Utama</div>
+          <div style="font-size:12px; color:var(--neutral-500); margin-top:2px;">Wallet default untuk transaksi</div>
+        </div>
+        <label style="position:relative; width:48px; height:28px; cursor:pointer;">
+          <input type="checkbox" id="walletPrimary" style="display:none;">
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+      
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" onclick="closeWalletModal()">Batal</button>
+        <button type="submit" class="btn-submit" id="walletSubmitBtn">Simpan Perubahan</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<style>
+  .toggle-track {
+    position:absolute; top:0; left:0; right:0; bottom:0;
+    background:var(--neutral-200); border-radius:999px; transition:background 0.2s;
+  }
+  .toggle-track::after {
+    content:''; position:absolute; top:3px; left:3px;
+    width:22px; height:22px; background:white; border-radius:50%;
+    box-shadow:0 2px 4px rgba(0,0,0,0.15); transition:transform 0.2s;
+  }
+  input:checked + .toggle-track { background:var(--primary-500); }
+  input:checked + .toggle-track::after { transform:translateX(20px); }
+</style>
+
+<script src="assets/js/app.js"></script>
+<script src="assets/js/wallet-detail.js"></script>
+</body>
+</html>
