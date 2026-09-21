@@ -279,4 +279,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 14. Init
     renderWallets();
+    PW.modal.init(renderWallets);
+
+    window.closeModal = function () { PW.modal.close(); };
+    window.setTxnType = function (type) { PW.modal.setType(type); };
+    window.handleFormSubmit = function (e) { /* PW.modal handles the submit, just need to make sure the event handler is defined */ };
 });

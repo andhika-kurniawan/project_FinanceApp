@@ -231,4 +231,11 @@ function renderDoughnutChart(categoriesData) {
     lucide.createIcons();
 }
 
-document.addEventListener('DOMContentLoaded', updateStats);
+document.addEventListener('DOMContentLoaded', () => {
+    updateStats();
+    PW.modal.init(() => updateStats());
+});
+
+window.closeModal = function () { PW.modal.close(); };
+window.setTxnType = function (type) { PW.modal.setType(type); };
+// Remove handleFormSubmit from global as form is handled by PW.modal.init via submit listener
