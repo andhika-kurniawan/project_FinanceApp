@@ -338,21 +338,23 @@
   /* ─────────────────────────────────────────────────────────
      3. CATEGORY METADATA
   ───────────────────────────────────────────────────────── */
-  const categories = {
-    expense: [
-      { id: 'food',      label: 'Makanan',    icon: 'utensils'      },
-      { id: 'transport', label: 'Transport',  icon: 'car'           },
-      { id: 'shopping',  label: 'Belanja',    icon: 'shopping-bag'  },
-      { id: 'health',    label: 'Kesehatan',  icon: 'heart-pulse'   },
-      { id: 'edu',       label: 'Pendidikan', icon: 'book-open'     },
-      { id: 'game',      label: 'Hiburan',    icon: 'gamepad-2'     },
-      { id: 'other',     label: 'Lainnya',    icon: 'more-horizontal'},
-    ],
-    income: [
-      { id: 'income',  label: 'Gaji/Bonus', icon: 'banknote'        },
-      { id: 'invest',  label: 'Investasi',  icon: 'landmark'        },
-      { id: 'other',   label: 'Lainnya',    icon: 'more-horizontal' },
-    ],
+   const categories = {
+     expense: [
+       { id: 'transport', label: 'Transport',  icon: 'car',            transactions: 3, amount: 75000 },
+       { id: 'shopping',  label: 'Belanja',    icon: 'shopping-bag',   transactions: 1, amount: 450000 },
+       { id: 'health',    label: 'Tagihan',    icon: 'clipboard',      transactions: 1, amount: 285000 },
+       { id: 'game',      label: 'Hiburan',    icon: 'gamepad-2',      transactions: 1, amount: 180000 },
+       { id: 'health',    label: 'Kesehatan',  icon: 'heart-pulse',    transactions: 1, amount: 220000 },
+       { id: 'edu',       label: 'Pendidikan', icon: 'book-open',      transactions: 0, amount: 0 },
+       { id: 'travel',    label: 'Travel',     icon: 'plane',          transactions: 0, amount: 0 },
+       { id: 'food',      label: 'Makanan',    icon: 'utensils',       transactions: 0, amount: 0 },
+       { id: 'other',     label: 'Olahraga',   icon: 'dumbbell',       transactions: 1, amount: 350000 },
+     ],
+     income: [
+       { id: 'income',  label: 'Gaji/Bonus', icon: 'banknote',        transactions: 0, amount: 0 },
+       { id: 'invest',  label: 'Investasi',  icon: 'landmark',        transactions: 0, amount: 0 },
+       { id: 'other',   label: 'Lainnya',    icon: 'more-horizontal', transactions: 0, amount: 0 },
+     ],
 
     /** Icon class for a given category id. */
     iconClass(id) {

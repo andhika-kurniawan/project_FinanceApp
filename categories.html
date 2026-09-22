@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kelola Kategori — Personal Wallet</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    .cat-management__header {
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--neutral-50);
+    }
+
+    .cat-management__header-text {
+      flex: 1;
+    }
+
+    .cat-management__title {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--neutral-900);
+      margin-bottom: 4px;
+    }
+
+    .cat-management__subtitle {
+      font-size: 12px;
+      color: var(--neutral-500);
+      font-weight: 500;
+    }
+
+    .cat-management__btn-new {
+      background: var(--primary-500);
+      color: white;
+      border: none;
+      border-radius: 24px;
+      padding: 10px 20px;
+      font-weight: 700;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all var(--tr);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .cat-management__btn-new:hover {
+      background: var(--primary-600);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+    }
+
+    .cat-management__tabs {
+      background: white;
+      padding: 16px 20px;
+      display: flex;
+      gap: 12px;
+      border-bottom: 1px solid var(--neutral-100);
+    }
+
+    .cat-tab {
+      flex: 1;
+      padding: 12px 16px;
+      border-radius: 20px;
+      border: none;
+      background: var(--neutral-100);
+      color: var(--neutral-600);
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all var(--tr);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .cat-tab:hover {
+      background: var(--neutral-200);
+    }
+
+    .cat-tab.active {
+      background: var(--primary-500);
+      color: white;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .cat-tab.active:hover {
+      background: var(--primary-600);
+    }
+
+    .cat-management__list {
+      padding: 16px 20px 100px;
+    }
+
+    .cat-card {
+      background: white;
+      border-radius: 16px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+      transition: all var(--tr);
+    }
+
+    .cat-card:hover {
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.1);
+    }
+
+    .cat-card__icon-wrap {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .cat-card__icon-wrap i {
+      width: 28px;
+      height: 28px;
+      stroke-width: 1.5;
+    }
+
+    .cat-card__content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .cat-card__name {
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--neutral-900);
+      margin-bottom: 4px;
+    }
+
+    .cat-card__meta {
+      font-size: 12px;
+      color: var(--neutral-500);
+      font-weight: 500;
+    }
+
+    .cat-card__actions {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .cat-action-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      border: none;
+      background: transparent;
+      color: var(--neutral-400);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all var(--tr);
+    }
+
+    .cat-action-btn:hover {
+      color: var(--neutral-600);
+    }
+
+    .cat-action-btn.delete:hover {
+      color: var(--color-expense);
+    }
+
+    /* Color classes for different category types - soft pastel backgrounds */
+    .cat-icon--car          { background: rgba(3, 105, 161, 0.12); } .cat-icon--car i          { color: #0369a1; }
+    .cat-icon--shopping-bag { background: rgba(37, 99, 235, 0.12); } .cat-icon--shopping-bag i { color: #2563eb; }
+    .cat-icon--clipboard    { background: rgba(220, 38, 38, 0.12); } .cat-icon--clipboard i    { color: #dc2626; }
+    .cat-icon--gamepad-2    { background: rgba(217, 119, 6, 0.12); } .cat-icon--gamepad-2 i    { color: #d97706; }
+    .cat-icon--heart-pulse  { background: rgba(236, 72, 153, 0.12); } .cat-icon--heart-pulse i  { color: #ec4899; }
+    .cat-icon--book-open    { background: rgba(34, 197, 94, 0.12); } .cat-icon--book-open i    { color: #22c55e; }
+    .cat-icon--plane        { background: rgba(168, 85, 247, 0.12); } .cat-icon--plane i        { color: #a855f7; }
+    .cat-icon--utensils     { background: rgba(249, 115, 22, 0.12); } .cat-icon--utensils i     { color: #f97316; }
+    .cat-icon--dumbbell     { background: rgba(239, 68, 68, 0.12); } .cat-icon--dumbbell i     { color: #ef4444; }
+    .cat-icon--banknote     { background: rgba(34, 197, 94, 0.12); } .cat-icon--banknote i     { color: #22c55e; }
+    .cat-icon--landmark     { background: rgba(168, 85, 247, 0.12); } .cat-icon--landmark i     { color: #a855f7; }
+    .cat-icon--more-horizontal { background: rgba(107, 114, 128, 0.12); } .cat-icon--more-horizontal i { color: #6b7280; }
+
+    /* Category Form Modal */
+    .cat-form-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .cat-form-overlay.active {
+      display: flex;
+    }
+
+    .cat-form-modal {
+      width: 100%;
+      max-width: 480px;
+      background: white;
+      border-radius: 32px 32px 0 0;
+      padding: 24px;
+      transform: translateY(100%);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .cat-form-overlay.active .cat-form-modal {
+      transform: translateY(0);
+    }
+
+    .cat-form-modal::-webkit-scrollbar {
+      display: none;
+    }
+
+    .cat-form-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .cat-form-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--neutral-900);
+      letter-spacing: -0.02em;
+    }
+
+    .cat-form-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--neutral-100);
+      color: var(--neutral-600);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .cat-form-close:hover {
+      background: var(--neutral-200);
+    }
+
+    .cat-form-preview {
+      background: var(--neutral-100);
+      border-radius: 20px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .cat-form-preview-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .cat-form-preview-icon i {
+      width: 28px;
+      height: 28px;
+      stroke-width: 1.5;
+    }
+
+    .cat-form-preview-text h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--neutral-900);
+      margin: 0;
+    }
+
+    .cat-form-preview-text p {
+      font-size: 12px;
+      color: var(--neutral-500);
+      margin: 4px 0 0;
+    }
+
+    .cat-form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .cat-form-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--neutral-700);
+      text-transform: capitalize;
+    }
+
+    .cat-form-type-toggle {
+      display: flex;
+      gap: 12px;
+    }
+
+    .cat-form-type-btn {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 20px;
+      background: var(--neutral-100);
+      color: var(--neutral-600);
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all var(--tr);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .cat-form-type-btn:hover {
+      background: var(--neutral-200);
+    }
+
+    .cat-form-type-btn.active {
+      background: #ef4444;
+      color: white;
+    }
+
+    .cat-form-type-btn.active.income {
+      background: var(--color-income);
+    }
+
+    .cat-form-input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid var(--neutral-200);
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: var(--font);
+      color: var(--neutral-900);
+      background: var(--neutral-50);
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .cat-form-input:focus {
+      border-color: var(--primary-400);
+      background: white;
+      box-shadow: 0 0 0 3px var(--primary-50);
+    }
+
+    .cat-form-input::placeholder {
+      color: var(--neutral-400);
+    }
+
+    .cat-color-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 12px;
+    }
+
+    .cat-color-btn {
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      border: 3px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .cat-color-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .cat-color-btn.active {
+      border-color: var(--neutral-900);
+      box-shadow: 0 0 0 2px white;
+    }
+
+    .cat-icon-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+      max-height: 200px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .cat-icon-grid::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .cat-icon-grid::-webkit-scrollbar-thumb {
+      background: var(--neutral-300);
+      border-radius: 3px;
+    }
+
+    .cat-icon-btn {
+      aspect-ratio: 1;
+      border: 2px solid var(--neutral-200);
+      border-radius: 12px;
+      background: var(--neutral-50);
+      color: var(--neutral-600);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+
+    .cat-icon-btn i {
+      width: 20px;
+      height: 20px;
+      stroke-width: 1.5;
+    }
+
+    .cat-icon-btn:hover {
+      border-color: var(--primary-300);
+      background: var(--primary-50);
+      color: var(--primary-600);
+    }
+
+    .cat-icon-btn.active {
+      border-color: var(--primary-600);
+      background: var(--primary-100);
+      color: var(--primary-600);
+    }
+
+    .cat-form-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .cat-form-btn-cancel {
+      flex: 1;
+      padding: 14px;
+      background: var(--neutral-100);
+      color: var(--neutral-700);
+      border: none;
+      border-radius: 20px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: var(--font);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .cat-form-btn-cancel:hover {
+      background: var(--neutral-200);
+    }
+
+    .cat-form-btn-submit {
+      flex: 1;
+      padding: 14px;
+      background: #8bc34a;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: var(--font);
+      cursor: pointer;
+      transition: background 0.2s;
+      box-shadow: 0 4px 12px rgba(139, 195, 74, 0.3);
+    }
+
+    .cat-form-btn-submit:hover {
+      background: #7cb342;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app">
+  <div class="app-scroll">
+    <!-- Header -->
+    <div class="cat-management__header">
+      <button onclick="history.back()" style="border:none; background:none; padding:0; cursor:pointer; color: var(--neutral-700);"><i data-lucide="chevron-left"></i></button>
+      <div class="cat-management__header-text">
+        <div class="cat-management__title">Kelola Kategori</div>
+        <div class="cat-management__subtitle" id="headerSubtitle">13 kategori • 9 keluar, 4 masuk</div>
+      </div>
+      <button class="cat-management__btn-new" onclick="openCategoryModal()">
+        <i data-lucide="plus"></i> Baru
+      </button>
+    </div>
+
+    <!-- Tabs -->
+    <div class="cat-management__tabs">
+      <button class="cat-tab active" data-type="expense" onclick="switchTab('expense')">
+        <i data-lucide="trending-down"></i> Pengeluaran
+        <span id="expenseCount">9</span>
+      </button>
+      <button class="cat-tab" data-type="income" onclick="switchTab('income')">
+        <i data-lucide="trending-up"></i> Pemasukan
+        <span id="incomeCount">4</span>
+      </button>
+    </div>
+
+    <!-- List -->
+    <div class="cat-management__list">
+      <div id="categoryList"></div>
+    </div>
+  </div>
+
+  <!-- Category Form Modal -->
+  <div class="cat-form-overlay" id="catFormOverlay">
+    <div class="cat-form-modal">
+      <div class="cat-form-header">
+        <h2 class="cat-form-title" id="formTitle">Tambah Kategori</h2>
+        <button class="cat-form-close" onclick="closeCategoryForm()">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <!-- Preview -->
+      <div class="cat-form-preview">
+        <div class="cat-form-preview-icon" id="previewIcon" style="background: rgba(139, 195, 74, 0.2);">
+          <i data-lucide="smiley" style="color: #8bc34a;"></i>
+        </div>
+        <div class="cat-form-preview-text">
+          <h3 id="previewName">Kategori Baru</h3>
+          <p id="previewType">Pengeluaran</p>
+        </div>
+      </div>
+
+      <!-- Form Type -->
+      <div class="cat-form-group">
+        <label class="cat-form-label">Tipe Kategori</label>
+        <div class="cat-form-type-toggle">
+          <button class="cat-form-type-btn active expense" data-type="expense" onclick="selectFormType('expense')">
+            <i data-lucide="trending-down"></i> Pengeluaran
+          </button>
+          <button class="cat-form-type-btn income" data-type="income" onclick="selectFormType('income')">
+            <i data-lucide="trending-up"></i> Pemasukan
+          </button>
+        </div>
+      </div>
+
+      <!-- Category Name -->
+      <div class="cat-form-group">
+        <label class="cat-form-label">Nama kategori</label>
+        <input type="text" class="cat-form-input" id="catName" placeholder="Contoh: Kopi, Donasi, Servis" oninput="updatePreview()">
+      </div>
+
+      <!-- Color Picker -->
+      <div class="cat-form-group">
+        <label class="cat-form-label">Warna</label>
+        <div class="cat-color-grid" id="colorGrid"></div>
+      </div>
+
+      <!-- Icon Picker -->
+      <div class="cat-form-group">
+        <label class="cat-form-label">Ikon</label>
+        <div class="cat-icon-grid" id="iconGrid"></div>
+      </div>
+
+      <!-- Actions -->
+      <div class="cat-form-actions">
+        <button class="cat-form-btn-cancel" onclick="closeCategoryForm()">Batal</button>
+        <button class="cat-form-btn-submit" onclick="submitCategoryForm()">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <div class="bottom-nav__bar">
+      <div class="nav-item" onclick="window.location.href='dashboard.html'"><i data-lucide="home"></i><span>Home</span></div>
+      <div class="nav-item" onclick="window.location.href='wallet.html'"><i data-lucide="wallet"></i><span>Wallet</span></div>
+      <div class="nav-fab-wrap"><button class="nav-fab" onclick="PW.modal.open()"><i data-lucide="plus"></i></button></div>
+      <div class="nav-item" onclick="window.location.href='stats.html'"><i data-lucide="bar-chart-2"></i><span>Statistik</span></div>
+      <div class="nav-item nav-item--active" onclick="window.location.href='profile.html'"><i data-lucide="user"></i><span>Profil</span></div>
+    </div>
+  </nav>
+</div>
+
+<script src="assets/js/app.js"></script>
+<script>
+    let currentTab = 'expense';
+    let formData = {
+        type: 'expense',
+        name: '',
+        color: '#8bc34a',
+        icon: 'smile'
+    };
+    let editingCategoryId = null;
+
+    const CUSTOM_CATEGORIES_KEY = 'pw_custom_categories';
+
+    const colors = [
+        '#8bc34a', '#16a085', '#3b82f6', '#ef4444', '#f97316', '#a855f7', '#22c55e',
+        '#ec4899', '#06b6d4', '#64748b'
+    ];
+
+    const icons = [
+        'utensils', 'coffee', 'pizza', 'shopping-bag', 'shopping-cart', 'shirt',
+        'car', 'bus', 'fuel', 'plane', 'ticket', 'home',
+        'file-text', 'wifi', 'smartphone', 'gamepad-2', 'music', 'camera',
+        'heart-pulse', 'pill', 'stethoscope', 'dumbbell', 'bike', 'book-open',
+        'briefcase', 'laptop', 'pencil', 'palette', 'scissors', 'hammer',
+        'banknote', 'wallet', 'credit-card', 'landmark', 'trending-up', 'piggy-bank',
+        'gift', 'sparkles', 'star', 'smile', 'paw-print', 'tree-palm'
+    ];
+
+    function getCustomCategories() {
+        const stored = localStorage.getItem(CUSTOM_CATEGORIES_KEY);
+        return stored ? JSON.parse(stored) : { expense: [], income: [] };
+    }
+
+    function saveCustomCategories(categories) {
+        localStorage.setItem(CUSTOM_CATEGORIES_KEY, JSON.stringify(categories));
+    }
+
+    function getAllCategories() {
+        const defaultCats = PW.categories;
+        const customCats = getCustomCategories();
+        const customExpIds = new Set(customCats.expense.map(c => c.id));
+        const customIncIds = new Set(customCats.income.map(c => c.id));
+        
+        return {
+            expense: [...defaultCats.expense.filter(c => !customExpIds.has(c.id)), ...customCats.expense],
+            income: [...defaultCats.income.filter(c => !customIncIds.has(c.id)), ...customCats.income]
+        };
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        PW.modal.init();
+        renderCategories('expense');
+        initFormColors();
+        initFormIcons();
+        lucide.createIcons();
+    });
+
+    function initFormColors() {
+        const grid = document.getElementById('colorGrid');
+        grid.innerHTML = colors.map((color, idx) => `
+            <button class="cat-color-btn ${idx === 0 ? 'active' : ''}" 
+                    style="background: ${color};" 
+                    data-color="${color}"
+                    onclick="selectColor('${color}')"></button>
+        `).join('');
+    }
+
+    function initFormIcons() {
+        const grid = document.getElementById('iconGrid');
+        grid.innerHTML = icons.map((icon, idx) => `
+            <button class="cat-icon-btn ${icon === formData.icon ? 'active' : ''}" 
+                    data-icon="${icon}"
+                    onclick="selectIcon('${icon}')">
+                <i data-lucide="${icon}"></i>
+            </button>
+        `).join('');
+        lucide.createIcons();
+    }
+
+    function switchTab(type) {
+        currentTab = type;
+        document.querySelectorAll('.cat-tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        document.querySelector(`[data-type="${type}"]`).classList.add('active');
+        renderCategories(type);
+    }
+
+    function renderCategories(type) {
+        const cats = getAllCategories();
+        const categoryList = document.getElementById('categoryList');
+        const categories = type === 'expense' ? cats.expense : cats.income;
+
+        const expenseCount = cats.expense.length;
+        const incomeCount = cats.income.length;
+        document.getElementById('expenseCount').textContent = expenseCount;
+        document.getElementById('incomeCount').textContent = incomeCount;
+        document.getElementById('headerSubtitle').textContent = `${expenseCount + incomeCount} kategori • ${expenseCount} keluar, ${incomeCount} masuk`;
+
+        if (!categories.length) {
+            categoryList.innerHTML = `
+                <div class="empty-state">
+                    <i data-lucide="folder-plus" style="width:48px;height:48px;"></i>
+                    <div class="empty-state__title">Belum ada kategori</div>
+                    <div class="empty-state__sub">Ketuk tombol Baru untuk menambahkan</div>
+                </div>`;
+            lucide.createIcons();
+            return;
+        }
+
+        categoryList.innerHTML = categories.map(c => {
+            const isCustom = !!c.custom;
+            const customBg = isCustom ? hexToRgba(c.color, 0.12) : '';
+            const customColor = isCustom ? c.color : '';
+            const iconStyle = isCustom ? `style="background:${customBg};"` : '';
+            const iconInnerStyle = isCustom ? `style="color:${customColor};"` : '';
+            const iconClass = isCustom ? '' : `cat-icon--${c.icon}`;
+            const transactionCount = c.transactions || 0;
+            const amount = c.amount || 0;
+            const deleteBtn = isCustom ? `
+                        <button class="cat-action-btn delete" onclick="deleteCategory('${c.id}')" title="Hapus">
+                            <i data-lucide="trash-2"></i>
+                        </button>` : '';
+
+            return `
+                <div class="cat-card">
+                    <div class="cat-card__icon-wrap ${iconClass}" ${iconStyle}>
+                        <i data-lucide="${c.icon}" ${iconInnerStyle}></i>
+                    </div>
+                    <div class="cat-card__content">
+                        <div class="cat-card__name">${c.label}</div>
+                        <div class="cat-card__meta">${transactionCount} transaksi${amount ? ` • Rp${(amount/1000).toFixed(0)}rb` : ''}</div>
+                    </div>
+                    <div class="cat-card__actions">
+                        <button class="cat-action-btn" onclick="editCategory('${c.id}', ${isCustom})" title="Edit">
+                            <i data-lucide="edit-2"></i>
+                        </button>
+                        ${deleteBtn}
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        lucide.createIcons();
+    }
+
+    function hexToRgba(hex, alpha) {
+        const r = parseInt(hex.slice(1, 3), 16);
+        const g = parseInt(hex.slice(3, 5), 16);
+        const b = parseInt(hex.slice(5, 7), 16);
+        return `rgba(${r},${g},${b},${alpha})`;
+    }
+
+    function openCategoryModal(mode = 'add', categoryData = null) {
+        const overlay = document.getElementById('catFormOverlay');
+        const title = document.getElementById('formTitle');
+        
+        if (mode === 'edit' && categoryData) {
+            title.textContent = 'Edit Kategori';
+            editingCategoryId = categoryData.id;
+            formData = { ...categoryData };
+            document.getElementById('catName').value = categoryData.name;
+            selectFormType(categoryData.type);
+            selectColor(categoryData.color);
+            initFormIcons();
+            selectIcon(categoryData.icon);
+        } else {
+            title.textContent = 'Tambah Kategori';
+            editingCategoryId = null;
+            formData = {
+                type: 'expense',
+                name: '',
+                color: '#8bc34a',
+                icon: 'smile'
+            };
+            document.getElementById('catName').value = '';
+            selectFormType('expense');
+            selectColor('#8bc34a');
+            initFormIcons();
+            selectIcon('smile');
+        }
+        
+        overlay.classList.add('active');
+        updatePreview();
+    }
+
+    function closeCategoryForm() {
+        const overlay = document.getElementById('catFormOverlay');
+        overlay.classList.remove('active');
+        editingCategoryId = null;
+    }
+
+    function selectFormType(type) {
+        formData.type = type;
+        document.querySelectorAll('.cat-form-type-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        document.querySelector(`.cat-form-type-btn[data-type="${type}"]`).classList.add('active');
+        updatePreview();
+    }
+
+    function selectColor(color) {
+        formData.color = color;
+        document.querySelectorAll('.cat-color-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        document.querySelector(`.cat-color-btn[data-color="${color}"]`).classList.add('active');
+        updatePreview();
+    }
+
+    function selectIcon(icon) {
+        formData.icon = icon;
+        document.querySelectorAll('.cat-icon-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        document.querySelector(`.cat-icon-btn[data-icon="${icon}"]`).classList.add('active');
+        updatePreview();
+        lucide.createIcons();
+    }
+
+    function updatePreview() {
+        const name = document.getElementById('catName').value || 'Kategori Baru';
+        const type = formData.type === 'expense' ? 'Pengeluaran' : 'Pemasukan';
+        
+        formData.name = document.getElementById('catName').value;
+        
+        document.getElementById('previewName').textContent = name;
+        document.getElementById('previewType').textContent = type;
+        
+        const previewIcon = document.getElementById('previewIcon');
+        const hexToRgba = (hex, a) => {
+            const r = parseInt(hex.slice(1, 3), 16);
+            const g = parseInt(hex.slice(3, 5), 16);
+            const b = parseInt(hex.slice(5, 7), 16);
+            return `rgba(${r},${g},${b},${a})`;
+        };
+        
+        previewIcon.style.background = hexToRgba(formData.color, 0.2);
+        previewIcon.innerHTML = `<i data-lucide="${formData.icon}" style="color: ${formData.color};"></i>`;
+        lucide.createIcons();
+    }
+
+    function submitCategoryForm() {
+        if (!formData.name.trim()) {
+            alert('Nama kategori harus diisi!');
+            return;
+        }
+        
+        const customCats = getCustomCategories();
+        const categoryId = editingCategoryId || `custom_${Date.now()}`;
+        
+        const categoryObj = {
+            id: categoryId,
+            label: formData.name.trim(),
+            icon: formData.icon,
+            color: formData.color,
+            type: formData.type,
+            custom: true,
+            transactions: 0,
+            amount: 0
+        };
+
+        // Check if editing a default category
+        const allCats = getAllCategories();
+        const isEditingDefault = !editingCategoryId || 
+            (allCats.expense.some(c => c.id === editingCategoryId && !c.custom) ||
+             allCats.income.some(c => c.id === editingCategoryId && !c.custom));
+        
+        if (editingCategoryId) {
+            const targetList = formData.type === 'expense' ? customCats.expense : customCats.income;
+            const idx = targetList.findIndex(c => c.id === editingCategoryId);
+            if (idx !== -1) {
+                targetList[idx] = { ...targetList[idx], ...categoryObj };
+            } else if (isEditingDefault) {
+                // Editing default category -> add as custom override
+                targetList.push(categoryObj);
+            }
+        } else {
+            const targetList = formData.type === 'expense' ? customCats.expense : customCats.income;
+            targetList.push(categoryObj);
+        }
+
+        saveCustomCategories(customCats);
+        
+        renderCategories(currentTab);
+        closeCategoryForm();
+        alert(`Kategori "${formData.name.trim()}" berhasil disimpan!`);
+    }
+
+    function editCategory(id, isCustom) {
+        const allCats = getAllCategories();
+        const category = [...allCats.expense, ...allCats.income].find(c => c.id === id);
+        if (!category) return;
+        
+        const categoryType = allCats.expense.includes(category) ? 'expense' : 'income';
+        openCategoryModal('edit', {
+            id: category.id,
+            type: categoryType,
+            name: category.label,
+            color: category.color || '#8bc34a',
+            icon: category.icon
+        });
+    }
+
+    function deleteCategory(id) {
+        if (confirm('Yakin hapus kategori ini?')) {
+            const customCats = getCustomCategories();
+            const idxExp = customCats.expense.findIndex(c => c.id === id);
+            const idxInc = customCats.income.findIndex(c => c.id === id);
+            
+            if (idxExp !== -1) {
+                customCats.expense.splice(idxExp, 1);
+            } else if (idxInc !== -1) {
+                customCats.income.splice(idxInc, 1);
+            }
+            
+            saveCustomCategories(customCats);
+            renderCategories(currentTab);
+            alert('Kategori berhasil dihapus!');
+        }
+    }
+</script>
+</body>
+</html>
