@@ -184,7 +184,7 @@ body {
 .stat-card__period { font-size:12px; font-weight:500; color:var(--neutral-400); margin-top:-4px; }
 
 /* ── Transaction Section ────────────────────────────────────── */
-.txn-section { margin-top:24px; background:var(--white); border-radius:28px 28px 0 0; padding:24px 20px 0; box-shadow:0 -4px 24px rgba(15,23,42,.06); flex:1; }
+.txn-section { margin-top:24px; background:var(--white); border-radius:28px 28px 0 0; padding:24px 20px 120px; box-shadow:0 -4px 24px rgba(15,23,42,.06); flex:1; }
 .txn-section__header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
 .txn-section__title  { font-size:18px; font-weight:800; color:var(--neutral-900); letter-spacing:-0.02em; }
 .txn-section__filter { display:flex; align-items:center; gap:6px; padding:7px 12px; background:var(--neutral-100); border-radius:10px; font-size:12px; font-weight:600; color:var(--neutral-600); cursor:pointer; transition:all var(--tr); }

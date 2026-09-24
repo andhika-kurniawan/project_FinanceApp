@@ -363,6 +363,19 @@
 
     /** Lucide icon name for a given category id. */
     iconName(id) {
+      const customCats = (() => {
+        try {
+          const stored = localStorage.getItem('pw_custom_categories');
+          return stored ? JSON.parse(stored) : { expense: [], income: [] };
+        } catch(e) { return { expense: [], income: [] }; }
+      })();
+      const allCustom = [...customCats.expense, ...customCats.income];
+      const custom = allCustom.find(c => c.id === id);
+      if (custom) return custom.icon;
+      
+      const defaultCat = [...categories.expense, ...categories.income].find(c => c.id === id);
+      if (defaultCat) return defaultCat.icon;
+      
       const map = {
         food: 'utensils', transport: 'car', shopping: 'shopping-bag',
         health: 'heart-pulse', edu: 'book-open', invest: 'landmark',
@@ -373,12 +386,54 @@
 
     /** Display label for a given category id. */
     label(id) {
+      const customCats = (() => {
+        try {
+          const stored = localStorage.getItem('pw_custom_categories');
+          return stored ? JSON.parse(stored) : { expense: [], income: [] };
+        } catch(e) { return { expense: [], income: [] }; }
+      })();
+      const allCustom = [...customCats.expense, ...customCats.income];
+      const custom = allCustom.find(c => c.id === id);
+      if (custom) return custom.label;
+      
+      const defaultCat = [...categories.expense, ...categories.income].find(c => c.id === id);
+      if (defaultCat) return defaultCat.label;
+      
       const map = {
         food: 'Makanan', transport: 'Transport', shopping: 'Belanja',
         health: 'Kesehatan', edu: 'Pendidikan', invest: 'Investasi',
         game: 'Hiburan', income: 'Gaji/Bonus', other: 'Lainnya',
       };
       return map[id] || id;
+    },
+
+    /** Color hex for a given category id. */
+    color(id) {
+      const customCats = (() => {
+        try {
+          const stored = localStorage.getItem('pw_custom_categories');
+          return stored ? JSON.parse(stored) : { expense: [], income: [] };
+        } catch(e) { return { expense: [], income: [] }; }
+      })();
+      const allCustom = [...customCats.expense, ...customCats.income];
+      const custom = allCustom.find(c => c.id === id);
+      if (custom) return custom.color;
+      
+      const map = {
+        transport: '#0369a1', shopping: '#2563eb', health: '#dc2626',
+        game: '#d97706', edu: '#22c55e', travel: '#a855f7',
+        food: '#f97316', other: '#6b7280', income: '#166534', invest: '#92400e',
+      };
+      return map[id] || '#8bc34a';
+    },
+
+    /** Background color (rgba) for icon. */
+    iconBg(id) {
+      const c = this.color(id);
+      const r = parseInt(c.slice(1, 3), 16);
+      const g = parseInt(c.slice(3, 5), 16);
+      const b = parseInt(c.slice(5, 7), 16);
+      return `rgba(${r},${g},${b},0.12)`;
     },
   };
 
@@ -477,11 +532,26 @@
       modal._renderCategories(type);
     },
 
+    _getAllCategories(type) {
+      const defaultCats = categories[type] || categories.expense;
+      const customCats = (() => {
+        try {
+          const stored = localStorage.getItem('pw_custom_categories');
+          return stored ? JSON.parse(stored) : { expense: [], income: [] };
+        } catch(e) { return { expense: [], income: [] }; }
+      })();
+      const hiddenKey = 'pw_hidden_categories';
+      const hiddenIds = new Set(JSON.parse(localStorage.getItem(hiddenKey) || '[]'));
+      
+      const customList = customCats[type] || [];
+      return [...defaultCats.filter(c => !hiddenIds.has(c.id)), ...customList];
+    },
+
     _renderCategories(type) {
       const grid = document.getElementById('categoryGrid');
       if (!grid) return;
       grid.innerHTML = '';
-      const list = categories[type] || categories.expense;
+      const list = this._getAllCategories(type);
       list.forEach((c, i) => {
         const pill = document.createElement('div');
         pill.className = 'cat-pill' + (i === 0 ? ' active' : '');
@@ -566,9 +636,10 @@
     txnHTML(txn, showDelete = true) {
       const sign    = txn.type === 'income' ? '+' : '-';
       const amtCls  = txn.type === 'income' ? 'txn__amount--income' : 'txn__amount--expense';
-      const iconCls = 'txn__icon--' + txn.category;
       const iconNm  = categories.iconName(txn.category);
       const catLbl  = categories.label(txn.category);
+      const catColor = categories.color(txn.category);
+      const iconBg = categories.iconBg(txn.category);
       const delBtn  = showDelete
         ? `<div class="txn__actions">
              <button class="delete-btn" data-id="${txn.id}" title="Hapus">
@@ -579,8 +650,8 @@
 
       return `
         <div class="txn" data-txn-id="${txn.id}">
-          <div class="txn__icon ${iconCls}" >
-            <i data-lucide="${iconNm}" style="width:20px;height:20px"></i>
+          <div class="txn__icon" style="background:${iconBg};">
+            <i data-lucide="${iconNm}" style="width:20px;height:20px;color:${catColor};"></i>
           </div>
           <div class="txn__info" >
             <div class="txn__name" >${txn.name}</div>

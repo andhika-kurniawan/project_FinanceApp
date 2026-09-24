@@ -180,8 +180,12 @@
                 const txns = PW.store.getAll();
                 document.getElementById('count-wallet').textContent = wallets.length;
                 document.getElementById('count-txn').textContent = txns.length;
-                const uniqueCats = new Set(txns.map(t => t.category));
-                document.getElementById('count-cat').textContent = uniqueCats.size;
+                const defaultCats = PW.categories;
+                const hiddenKey = 'pw_hidden_categories';
+                const hiddenIds = new Set(JSON.parse(localStorage.getItem(hiddenKey) || '[]'));
+                const customCats = (() => { try { return JSON.parse(localStorage.getItem('pw_custom_categories') || '{"expense":[],"income":[]}'); } catch(e) { return {expense:[],income:[]}; } })();
+                const allCats = [...defaultCats.expense, ...defaultCats.income, ...customCats.expense, ...customCats.income].filter(c => !hiddenIds.has(c.id));
+                document.getElementById('count-cat').textContent = allCats.length;
             };
             updateStats();
             PW.sync.on('data-changed', updateStats);

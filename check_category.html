@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head><title>Check</title></head>
+<body>
+<script>
+const txns = JSON.parse(localStorage.getItem('pw_transactions') || '[]');
+const custom = JSON.parse(localStorage.getItem('pw_custom_categories') || '{"expense":[],"income":[]}');
+console.log('Transactions:', txns);
+console.log('Custom categories:', custom);
+const naik = txns.find(t => t.name === 'Naik');
+if (naik) {
+  console.log('Transaksi Naik:', naik);
+  console.log('Category ID:', naik.category);
+  const cat = [...custom.expense, ...custom.income].find(c => c.id === naik.category);
+  console.log('Category data:', cat);
+}
+document.body.innerHTML = '<pre>' + JSON.stringify({txns, custom}, null, 2) + '</pre>';
+</script>
+</body>
+</html>

@@ -44,6 +44,25 @@ function getWeekRange(date) {
     return { start, end };
 }
 
+function findCategory(catKey) {
+    const { categories } = PW;
+    // Search in default categories first
+    let found = categories.expense.find(c => c.id === catKey) || 
+                categories.income.find(c => c.id === catKey);
+    if (found) return found;
+    
+    // Search in custom categories
+    const customCats = (() => {
+        try {
+            const stored = localStorage.getItem('pw_custom_categories');
+            return stored ? JSON.parse(stored) : { expense: [], income: [] };
+        } catch(e) { return { expense: [], income: [] }; }
+    })();
+    found = customCats.expense.find(c => c.id === catKey) || 
+            customCats.income.find(c => c.id === catKey);
+    return found || null;
+}
+
 function updateStats() {
     const periodLabel = document.getElementById('period-label');
     const { store, categories, format } = PW;
@@ -103,10 +122,10 @@ function updateStats() {
     } else {
         renderBarChart(filtered);
         const catArray = Object.keys(catTotals).map(catKey => {
-            const catInfo = categories.expense.find(c => c.id === catKey) || 
-                            categories.income.find(c => c.id === catKey) || 
-                            { label: catKey, icon: 'circle' };
-            return { name: catInfo.label, icon: catInfo.icon, amount: catTotals[catKey] };
+            const catInfo = findCategory(catKey);
+            const label = catInfo ? categories.label(catKey) : catKey;
+            const icon  = catInfo ? categories.iconName(catKey) : 'circle';
+            return { name: label, icon: icon, amount: catTotals[catKey] };
         }).sort((a, b) => b.amount - a.amount);
         renderDoughnutChart(catArray);
     }

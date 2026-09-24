@@ -641,10 +641,12 @@
         const customCats = getCustomCategories();
         const customExpIds = new Set(customCats.expense.map(c => c.id));
         const customIncIds = new Set(customCats.income.map(c => c.id));
+        const hiddenKey = 'pw_hidden_categories';
+        const hiddenIds = new Set(JSON.parse(localStorage.getItem(hiddenKey) || '[]'));
         
         return {
-            expense: [...defaultCats.expense.filter(c => !customExpIds.has(c.id)), ...customCats.expense],
-            income: [...defaultCats.income.filter(c => !customIncIds.has(c.id)), ...customCats.income]
+            expense: [...defaultCats.expense.filter(c => !customExpIds.has(c.id) && !hiddenIds.has(c.id)), ...customCats.expense],
+            income: [...defaultCats.income.filter(c => !customIncIds.has(c.id) && !hiddenIds.has(c.id)), ...customCats.income]
         };
     }
 
@@ -718,10 +720,10 @@
             const iconClass = isCustom ? '' : `cat-icon--${c.icon}`;
             const transactionCount = c.transactions || 0;
             const amount = c.amount || 0;
-            const deleteBtn = isCustom ? `
-                        <button class="cat-action-btn delete" onclick="deleteCategory('${c.id}')" title="Hapus">
+            const deleteBtn = `
+                        <button class="cat-action-btn delete" onclick="deleteCategory('${c.id}', ${isCustom})" title="Hapus">
                             <i data-lucide="trash-2"></i>
-                        </button>` : '';
+                        </button>`;
 
             return `
                 <div class="cat-card">
@@ -903,16 +905,28 @@
         });
     }
 
-    function deleteCategory(id) {
+    function deleteCategory(id, isCustom) {
         if (confirm('Yakin hapus kategori ini?')) {
             const customCats = getCustomCategories();
-            const idxExp = customCats.expense.findIndex(c => c.id === id);
-            const idxInc = customCats.income.findIndex(c => c.id === id);
             
-            if (idxExp !== -1) {
-                customCats.expense.splice(idxExp, 1);
-            } else if (idxInc !== -1) {
-                customCats.income.splice(idxInc, 1);
+            if (isCustom) {
+                const idxExp = customCats.expense.findIndex(c => c.id === id);
+                const idxInc = customCats.income.findIndex(c => c.id === id);
+                
+                if (idxExp !== -1) {
+                    customCats.expense.splice(idxExp, 1);
+                } else if (idxInc !== -1) {
+                    customCats.income.splice(idxInc, 1);
+                }
+            } else {
+                const allCats = getAllCategories();
+                const category = [...allCats.expense, ...allCats.income].find(c => c.id === id);
+                if (category) {
+                    const hiddenKey = 'pw_hidden_categories';
+                    const hidden = JSON.parse(localStorage.getItem(hiddenKey) || '[]');
+                    hidden.push(id);
+                    localStorage.setItem(hiddenKey, JSON.stringify(hidden));
+                }
             }
             
             saveCustomCategories(customCats);

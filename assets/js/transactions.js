@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
   nav.setActive('transactions');
   modal.init(() => renderList());
   setupSearch();
+  renderFilterOptions();
   renderList();
   lucide.createIcons();
 
@@ -222,6 +223,44 @@ document.addEventListener('DOMContentLoaded', function () {
      ADVANCED FILTER MODAL
   ───────────────────────────────────────────── */
   
+  function renderFilterOptions() {
+    const { categories, walletStore } = PW;
+    
+    // Render kategori
+    const customCats = (() => {
+      try {
+        const stored = localStorage.getItem('pw_custom_categories');
+        return stored ? JSON.parse(stored) : { expense: [], income: [] };
+      } catch(e) { return { expense: [], income: [] }; }
+    })();
+    const hiddenKey = 'pw_hidden_categories';
+    const hiddenIds = new Set(JSON.parse(localStorage.getItem(hiddenKey) || '[]'));
+    
+    const allCats = [
+      ...categories.expense.filter(c => !hiddenIds.has(c.id)),
+      ...categories.income.filter(c => !hiddenIds.has(c.id)),
+      ...customCats.expense,
+      ...customCats.income
+    ];
+    
+    const catGrid = document.getElementById('filterCatGrid');
+    if (catGrid) {
+      catGrid.innerHTML = '<div class="cat-pill active" data-filter-cat="all" onclick="toggleFilterCat(\'all\')">Semua Kategori</div>';
+      allCats.forEach(c => {
+        catGrid.innerHTML += `<div class="cat-pill" data-filter-cat="${c.id}" onclick="toggleFilterCat('${c.id}')">${c.label}</div>`;
+      });
+    }
+    
+    // Render wallet
+    const wallets = walletStore.getAll();
+    const walletGrid = document.getElementById('filterWalletGrid');
+    if (walletGrid) {
+      walletGrid.innerHTML = '<div class="cat-pill active" data-filter-wallet="all" onclick="toggleFilterWallet(\'all\')">Semua Wallet</div>';
+      wallets.forEach(w => {
+        walletGrid.innerHTML += `<div class="cat-pill" data-filter-wallet="${w.name}" onclick="toggleFilterWallet('${w.name}')">${w.name}</div>`;
+      });
+    }
+  }
 
   window.openFilterModal = function() {
     document.getElementById('filterModal').classList.add('active');

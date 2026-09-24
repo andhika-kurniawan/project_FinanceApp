@@ -54,13 +54,16 @@ document.addEventListener('DOMContentLoaded', function () {
     const typeLabel = isExpense ? 'Pengeluaran' : 'Pemasukan';
     const iconName  = categories.iconName(t.category);
     const catLabel  = categories.label(t.category);
+    const catColor  = categories.color(t.category);
+    const iconBg    = categories.iconBg(t.category);
 
     /* Hero card */
     const heroCard = document.getElementById('heroCard');
     heroCard.classList.add(isExpense ? 'detail-hero--expense' : 'detail-hero--income');
 
-    document.getElementById('heroIcon').innerHTML =
-      `<i data-lucide="${iconName}" style="width:28px;height:28px"></i>`;
+    const heroIconEl = document.getElementById('heroIcon');
+    heroIconEl.style.background = iconBg;
+    heroIconEl.innerHTML = `<i data-lucide="${iconName}" style="width:28px;height:28px;color:${catColor};"></i>`;
 
     document.getElementById('heroLabel').textContent = typeLabel;
     document.getElementById('heroAmount').textContent = sign + format.rpFull(t.amount);
@@ -71,6 +74,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     /* Info rows */
     document.getElementById('detailCategory').textContent = catLabel;
+    const catIconEl = document.getElementById('detailCategoryIcon');
+    catIconEl.style.background = iconBg;
+    catIconEl.innerHTML = `<i data-lucide="${iconName}" style="width:18px;height:18px;color:${catColor};"></i>`;
     document.getElementById('detailWallet').textContent   = t.wallet;
     document.getElementById('detailDate').textContent     = format.dateLabel(t.date);
 
