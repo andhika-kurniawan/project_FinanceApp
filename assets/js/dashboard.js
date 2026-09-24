@@ -22,6 +22,21 @@ document.addEventListener('DOMContentLoaded', function () {
   // Subscribe to sync events for cross-tab / cross-component reactivity
   sync.on('data-changed', renderAll);
 
+  // Load profile avatar from localStorage
+  const savedPhoto = localStorage.getItem('pw_profile_photo');
+  const savedPhotoUrl = localStorage.getItem('pw_profile_photo_url');
+  const avatarImg = document.getElementById('homeAvatar');
+  if (avatarImg) {
+    if (savedPhoto) avatarImg.src = savedPhoto;
+    else if (savedPhotoUrl) avatarImg.src = savedPhotoUrl;
+  }
+  window.addEventListener('storage', function(e) {
+    if (e.key === 'pw_profile_photo' || e.key === 'pw_profile_photo_url') {
+      if (savedPhoto) avatarImg.src = savedPhoto;
+      else if (savedPhotoUrl) avatarImg.src = savedPhotoUrl;
+    }
+  });
+
   /* ─────────────────────────────────────────────
      RENDER EVERYTHING
   ───────────────────────────────────────────── */
