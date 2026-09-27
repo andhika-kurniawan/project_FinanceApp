@@ -101,8 +101,9 @@
     <div class="section-title">Data</div>
     <div class="menu-group">
       <div class="menu-item" onclick="loadDummyData()"><div class="menu-icon" style="background:#dcfce7; color:#22c55e;"><i data-lucide="database"></i></div><div style="flex:1"><b>Muat Data Contoh</b><br><small style="color:#6b7280">Isi aplikasi dengan data dummy</small></div><i data-lucide="chevron-right"></i></div>
-      <div class="menu-item"><div class="menu-icon"><i data-lucide="download"></i></div><div style="flex:1"><b>Export Data</b><br><small style="color:#6b7280">Unduh semua data sebagai JSON</small></div><i data-lucide="chevron-right"></i></div>
-      <div class="menu-item"><div class="menu-icon"><i data-lucide="upload"></i></div><div style="flex:1"><b>Import Data</b><br><small style="color:#6b7280">Pulihkan dari berkas JSON</small></div><span class="badge-soon">Segera</span></div>
+      <div class="menu-item" onclick="exportData()"><div class="menu-icon"><i data-lucide="download"></i></div><div style="flex:1"><b>Export Data</b><br><small style="color:#6b7280">Unduh semua data sebagai JSON</small></div><i data-lucide="chevron-right"></i></div>
+      <div class="menu-item" onclick="document.getElementById('importFileInput').click()"><div class="menu-icon"><i data-lucide="upload"></i></div><div style="flex:1"><b>Import Data</b><br><small style="color:#6b7280">Pulihkan dari berkas JSON</small></div><i data-lucide="chevron-right"></i></div>
+      <input type="file" id="importFileInput" accept=".json" style="display:none" onchange="importData(event)">
       <div class="menu-item" onclick="resetData()" style="color: #ef4444;"><div class="menu-icon" style="background:#fef2f2; color:#ef4444;"><i data-lucide="trash-2"></i></div><div style="flex:1"><b>Hapus Semua Data</b><br><small style="color:#ef4444;">Kosongkan wallet & transaksi</small></div><i data-lucide="chevron-right"></i></div>
     </div>
 
@@ -340,6 +341,82 @@
             localStorage.removeItem('pw_wallets');
             localStorage.removeItem('pw_transactions');
             location.reload();
+        };
+        
+        window.exportData = () => {
+            const data = {
+                wallets: PW.walletStore.getAll(),
+                transactions: PW.store.getAll(),
+                profile: {
+                    name: localStorage.getItem('pw_profile_name'),
+                    email: localStorage.getItem('pw_profile_email'),
+                    photo_url: localStorage.getItem('pw_profile_photo_url')
+                },
+                custom_categories: JSON.parse(localStorage.getItem('pw_custom_categories') || '{"expense":[],"income":[]}'),
+                hidden_categories: JSON.parse(localStorage.getItem('pw_hidden_categories') || '[]'),
+                exported_at: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `dompetku-backup-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            PW.successDialog.show({
+                title: 'Export Berhasil',
+                message: 'Data berhasil diunduh. Simpan file ini untuk restore nanti.'
+            });
+        };
+        
+        window.importData = async (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const confirmed = await PW.confirmDialog.show({
+                title: 'Import Data?',
+                message: 'Data yang ada akan ditimpa dengan data dari file. Sebaiknya export data dulu sebagai backup. Lanjutkan?',
+                cancelText: 'Batal',
+                deleteText: 'Import'
+            });
+            if (!confirmed) {
+                event.target.value = '';
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    if (!data.wallets || !data.transactions) {
+                        throw new Error('Format file tidak valid');
+                    }
+                    
+                    localStorage.setItem('pw_wallets', JSON.stringify(data.wallets));
+                    localStorage.setItem('pw_transactions', JSON.stringify(data.transactions));
+                    
+                    if (data.profile?.name) localStorage.setItem('pw_profile_name', data.profile.name);
+                    if (data.profile?.email) localStorage.setItem('pw_profile_email', data.profile.email);
+                    if (data.profile?.photo_url) localStorage.setItem('pw_profile_photo_url', data.profile.photo_url);
+                    
+                    if (data.custom_categories) localStorage.setItem('pw_custom_categories', JSON.stringify(data.custom_categories));
+                    if (data.hidden_categories) localStorage.setItem('pw_hidden_categories', JSON.stringify(data.hidden_categories));
+                    
+                    await PW.successDialog.show({
+                        title: 'Import Berhasil',
+                        message: `Berhasil import ${data.wallets.length} wallet & ${data.transactions.length} transaksi.`
+                    });
+                    
+                    location.reload();
+                } catch (err) {
+                    alert('Gagal import data: ' + err.message);
+                }
+                event.target.value = '';
+            };
+            reader.readAsText(file);
         };
         
         function formatDate(date) {
