@@ -246,6 +246,54 @@
   </div><!-- /app-scroll -->
 </div><!-- /app -->
 
+<!-- EDIT TRANSACTION MODAL -->
+<div class="modal-overlay" id="editTxnModal">
+  <div class="modal-content">
+    <div class="modal-drag-handle"></div>
+    <div class="modal-header">
+      <h3 class="modal-title">Edit Transaksi</h3>
+      <button class="modal-close" onclick="closeEditModal()"><i data-lucide="x" style="width:18px;height:18px"></i></button>
+    </div>
+    <form id="editTxnForm" onsubmit="handleEditSubmit(event)" style="display:flex;flex-direction:column;gap:20px;">
+      <div class="segment-control">
+        <button type="button" class="segment-btn active" data-val="expense" onclick="setEditTxnType('expense')">Pengeluaran</button>
+        <button type="button" class="segment-btn" data-val="income" onclick="setEditTxnType('income')">Pemasukan</button>
+      </div>
+      <input type="hidden" id="editTxnType" value="expense">
+      <div class="form-group">
+        <label class="form-label">Nominal</label>
+        <div class="nominal-wrapper">
+          <span class="nominal-prefix">Rp</span>
+          <input type="number" class="nominal-input" id="editTxnAmount" placeholder="0" min="1" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Kategori</label>
+        <div class="category-grid" id="editCategoryGrid"></div>
+        <input type="hidden" id="editTxnCategory" required>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Wallet</label>
+          <select class="form-select" id="editTxnWallet" required></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tanggal</label>
+          <input type="date" class="form-input" id="editTxnDate" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Catatan</label>
+        <input type="text" class="form-input" id="editTxnName" placeholder="Contoh: Makan siang di kantin" required>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" onclick="closeEditModal()">Batal</button>
+        <button type="submit" class="btn-submit">Simpan Perubahan</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <script src="assets/js/transaction-detail.js"></script>
 </body>
 </html>

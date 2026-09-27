@@ -40,9 +40,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   /* ── Edit button ── */
   document.getElementById('editBtn').addEventListener('click', () => {
-    // For now, we show an edit modal inline.
-    // This is a simple approach: delete old + go to add-new on the transactions page.
-    alert('Fitur edit akan segera hadir! Untuk saat ini, Anda bisa menghapus dan membuat ulang transaksi.');
+    openEditModal(txn);
   });
 
   /* ─────────────────────────────────────────────────
@@ -123,4 +121,122 @@ document.addEventListener('DOMContentLoaded', function () {
       window.location.href = 'transactions.html';
     }
   }
+
+  /* ─────────────────────────────────────────────────
+     EDIT MODAL
+  ───────────────────────────────────────────────── */
+  let currentEditTxn = null;
+
+  function openEditModal(t) {
+    currentEditTxn = t;
+    
+    document.getElementById('editTxnType').value = t.type;
+    document.getElementById('editTxnAmount').value = t.amount;
+    document.getElementById('editTxnCategory').value = t.category;
+    document.getElementById('editTxnWallet').value = t.wallet;
+    document.getElementById('editTxnDate').value = t.date;
+    document.getElementById('editTxnName').value = t.name;
+
+    const segmentBtns = document.querySelectorAll('#editTxnModal .segment-btn');
+    segmentBtns.forEach(btn => {
+      if (btn.dataset.val === t.type) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+
+    populateEditWallets();
+    populateEditCategories(t.type);
+    
+    document.getElementById('editTxnModal').classList.add('active');
+    setTimeout(() => lucide.createIcons(), 100);
+  }
+
+  window.closeEditModal = function() {
+    document.getElementById('editTxnModal').classList.remove('active');
+    currentEditTxn = null;
+  };
+
+  window.setEditTxnType = function(type) {
+    document.getElementById('editTxnType').value = type;
+    document.querySelectorAll('#editTxnModal .segment-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.val === type);
+    });
+    populateEditCategories(type);
+    document.getElementById('editTxnCategory').value = '';
+  };
+
+  function populateEditWallets() {
+    const select = document.getElementById('editTxnWallet');
+    const wallets = PW.walletStore.getAll();
+    select.innerHTML = wallets.map(w => 
+      `<option value="${w.name}">${w.name}</option>`
+    ).join('');
+    select.value = currentEditTxn.wallet;
+  }
+
+  function populateEditCategories(type) {
+    const grid = document.getElementById('editCategoryGrid');
+    const cats = type === 'expense' ? categories.expense : categories.income;
+    
+    const stored = localStorage.getItem('pw_custom_categories');
+    let customCats = { expense: [], income: [] };
+    if (stored) {
+      try { customCats = JSON.parse(stored); } catch(e) {}
+    }
+    const hiddenKey = 'pw_hidden_categories';
+    const hiddenIds = new Set(JSON.parse(localStorage.getItem(hiddenKey) || '[]'));
+    
+    const allCats = [...cats, ...(customCats[type] || [])].filter(c => !hiddenIds.has(c.id));
+    
+    grid.innerHTML = allCats.map(c => `
+      <div class="cat-pill ${c.id === currentEditTxn.category ? 'active' : ''}" 
+           data-cat="${c.id}" 
+           onclick="selectEditCategory('${c.id}')">
+        <i data-lucide="${c.icon}" style="width:16px;height:16px"></i>
+        <span>${c.label}</span>
+      </div>
+    `).join('');
+    
+    lucide.createIcons({ nodes: [grid] });
+  }
+
+  window.selectEditCategory = function(catId) {
+    document.getElementById('editTxnCategory').value = catId;
+    document.querySelectorAll('#editCategoryGrid .cat-pill').forEach(pill => {
+      pill.classList.toggle('active', pill.dataset.cat === catId);
+    });
+  };
+
+  window.handleEditSubmit = function(e) {
+    e.preventDefault();
+    
+    const type = document.getElementById('editTxnType').value;
+    const amount = parseInt(document.getElementById('editTxnAmount').value, 10);
+    const category = document.getElementById('editTxnCategory').value;
+    const wallet = document.getElementById('editTxnWallet').value;
+    const date = document.getElementById('editTxnDate').value;
+    const name = document.getElementById('editTxnName').value;
+
+    if (!category) {
+      alert('Pilih kategori terlebih dahulu.');
+      return;
+    }
+
+    const updated = {
+      ...currentEditTxn,
+      type,
+      amount,
+      category,
+      wallet,
+      date,
+      name
+    };
+
+    store.update(updated);
+    
+    closeEditModal();
+    location.reload();
+  };
 });
