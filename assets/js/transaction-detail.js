@@ -103,8 +103,12 @@ document.addEventListener('DOMContentLoaded', function () {
   /* ─────────────────────────────────────────────────
      DELETE
   ───────────────────────────────────────────────── */
-  function deleteTxn(t) {
-    if (!confirm(`Yakin ingin menghapus transaksi "${t.name}"?`)) return;
+  async function deleteTxn(t) {
+    const confirmed = await PW.confirmDialog.show({
+      title: 'Hapus Transaksi?',
+      message: `Transaksi "${t.name}" akan dihapus secara permanen.`
+    });
+    if (!confirmed) return;
     store.remove(t.id);
     goBack();
   }

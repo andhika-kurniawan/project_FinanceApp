@@ -98,14 +98,20 @@ document.addEventListener('DOMContentLoaded', function () {
     if (incEl) incEl.textContent = format.rpFull(totalIncome);
     if (expEl) expEl.textContent = format.rpFull(totalExpense);
 
-    /* 7. Render today's transactions (dashboard only shows today) */
-    const today = store.todayStr();
-    const todayTxns = txns
-      .filter(t => t.date === today)
+    /* 7. Render recent transactions (last 7 days) */
+    const today = new Date();
+    const sevenDaysAgo = new Date(today);
+    sevenDaysAgo.setDate(today.getDate() - 6);
+    const sevenDaysAgoStr = sevenDaysAgo.getFullYear() + '-' +
+      String(sevenDaysAgo.getMonth() + 1).padStart(2, '0') + '-' +
+      String(sevenDaysAgo.getDate()).padStart(2, '0');
+
+    const recentTxns = txns
+      .filter(t => t.date >= sevenDaysAgoStr)
       .sort((a, b) => b.id - a.id);
 
-    const expTxns = todayTxns.filter(t => t.type === 'expense');
-    const incTxns = todayTxns.filter(t => t.type === 'income');
+    const expTxns = recentTxns.filter(t => t.type === 'expense');
+    const incTxns = recentTxns.filter(t => t.type === 'income');
 
     /* tab counts */
     const expCount = document.querySelector('#tab-expense .tab__count');
@@ -113,13 +119,13 @@ document.addEventListener('DOMContentLoaded', function () {
     if (expCount) expCount.textContent = expTxns.length;
     if (incCount) incCount.textContent = incTxns.length;
 
-    renderPanel('expense-list', expTxns, 'Pengeluaran', today);
-    renderPanel('income-list',  incTxns, 'Pemasukan',   today);
+    renderPanel('expense-list', expTxns, 'Pengeluaran');
+    renderPanel('income-list',  incTxns, 'Pemasukan');
 
     lucide.createIcons();
   }
 
-  function renderPanel(containerId, txns, label, dateStr) {
+  function renderPanel(containerId, txns, label) {
     const container = document.getElementById(containerId);
     if (!container) return;
     container.innerHTML = '';
@@ -128,13 +134,24 @@ document.addEventListener('DOMContentLoaded', function () {
       container.innerHTML = `
         <div class="empty">
           <div class="empty__icon"><i data-lucide="inbox" style="width:32px;height:32px"></i></div>
-          <div class="empty__title">Belum ada ${label} hari ini</div>
+          <div class="empty__title">Belum ada ${label} minggu ini</div>
         </div>`;
       return;
     }
 
-    const labelText = `Hari Ini — ${format.dateLabel(dateStr)}`;
-    container.innerHTML = renderer.groupHTML(dateStr, txns, labelText);
+    // Group transactions by date
+    const grouped = {};
+    txns.forEach(t => {
+      if (!grouped[t.date]) grouped[t.date] = [];
+      grouped[t.date].push(t);
+    });
+
+    // Render each date group
+    Object.keys(grouped).sort().reverse().forEach(dateStr => {
+      const dateTxns = grouped[dateStr];
+      const labelText = format.dateLabel(dateStr);
+      container.innerHTML += renderer.groupHTML(dateStr, dateTxns, labelText);
+    });
 
     renderer.attachHandlers(container, () => renderAll());
   }

@@ -7,6 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
   <link rel="stylesheet" href="assets/css/style.css">
+  <script src="assets/js/app.js"></script>
   <style>
     .cat-management__header {
       padding: 20px;
@@ -477,7 +478,7 @@
     .cat-form-btn-submit {
       flex: 1;
       padding: 14px;
-      background: #8bc34a;
+      background: var(--primary-500);
       color: white;
       border: none;
       border-radius: 20px;
@@ -486,11 +487,12 @@
       font-family: var(--font);
       cursor: pointer;
       transition: background 0.2s;
-      box-shadow: 0 4px 12px rgba(139, 195, 74, 0.3);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
     }
 
     .cat-form-btn-submit:hover {
-      background: #7cb342;
+      background: var(--primary-600);
+      box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
     }
   </style>
 </head>
@@ -599,7 +601,6 @@
   </nav>
 </div>
 
-<script src="assets/js/app.js"></script>
 <script>
     let currentTab = 'expense';
     let formData = {
@@ -887,7 +888,10 @@
         
         renderCategories(currentTab);
         closeCategoryForm();
-        alert(`Kategori "${formData.name.trim()}" berhasil disimpan!`);
+        PW.successDialog.show({
+            title: 'Berhasil!',
+            message: `Kategori "${formData.name.trim()}" berhasil disimpan.`
+        });
     }
 
     function editCategory(id, isCustom) {
@@ -905,34 +909,35 @@
         });
     }
 
-    function deleteCategory(id, isCustom) {
-        if (confirm('Yakin hapus kategori ini?')) {
-            const customCats = getCustomCategories();
-            
-            if (isCustom) {
-                const idxExp = customCats.expense.findIndex(c => c.id === id);
-                const idxInc = customCats.income.findIndex(c => c.id === id);
-                
-                if (idxExp !== -1) {
-                    customCats.expense.splice(idxExp, 1);
-                } else if (idxInc !== -1) {
-                    customCats.income.splice(idxInc, 1);
-                }
-            } else {
-                const allCats = getAllCategories();
-                const category = [...allCats.expense, ...allCats.income].find(c => c.id === id);
-                if (category) {
-                    const hiddenKey = 'pw_hidden_categories';
-                    const hidden = JSON.parse(localStorage.getItem(hiddenKey) || '[]');
-                    hidden.push(id);
-                    localStorage.setItem(hiddenKey, JSON.stringify(hidden));
-                }
+    async function deleteCategory(id, isCustom) {
+        const allCats = getAllCategories();
+        const category = [...allCats.expense, ...allCats.income].find(c => c.id === id);
+        const catName = category ? category.label : 'Kategori';
+        
+        const confirmed = await PW.confirmDialog.show({
+            title: 'Hapus Kategori?',
+            message: `Kategori "${catName}" akan disembunyikan dari daftar.`
+        });
+        if (!confirmed) return;
+        
+        const customCats = getCustomCategories();
+        
+        if (isCustom) {
+            const idxExp = customCats.expense.findIndex(c => c.id === id);
+            const idxInc = customCats.income.findIndex(c => c.id === id);
+            if (idxExp !== -1) customCats.expense.splice(idxExp, 1);
+            else if (idxInc !== -1) customCats.income.splice(idxInc, 1);
+        } else {
+            if (category) {
+                const hiddenKey = 'pw_hidden_categories';
+                const hidden = JSON.parse(localStorage.getItem(hiddenKey) || '[]');
+                hidden.push(id);
+                localStorage.setItem(hiddenKey, JSON.stringify(hidden));
             }
-            
-            saveCustomCategories(customCats);
-            renderCategories(currentTab);
-            alert('Kategori berhasil dihapus!');
         }
+        
+        saveCustomCategories(customCats);
+        renderCategories(currentTab);
     }
 </script>
 </body>

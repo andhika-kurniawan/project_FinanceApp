@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dompetku</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #0f2557 0%, #1e3a6e 55%, #1d4ed8 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .splash-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.6s ease-out;
+    }
+
+    .logo-wrapper {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      padding: 32px;
+      border-radius: 24px;
+      box-shadow: 0 16px 48px rgba(15, 37, 87, 0.45), 0 4px 16px rgba(15, 37, 87, 0.25);
+      margin-bottom: 32px;
+      animation: scaleIn 0.6s ease-out 0.2s both;
+    }
+
+    .logo-icon {
+      width: 64px;
+      height: 64px;
+      color: #ffffff;
+    }
+
+    .app-name {
+      font-size: 32px;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.5px;
+      animation: slideUp 0.6s ease-out 0.4s both;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes scaleIn {
+      from {
+        transform: scale(0.8);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="splash-container">
+    <div class="logo-wrapper">
+      <i data-lucide="wallet" class="logo-icon"></i>
+    </div>
+    <h1 class="app-name">Dompetku</h1>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    setTimeout(() => {
+      window.location.href = 'dashboard.html';
+    }, 2000);
+  </script>
+</body>
+</html>

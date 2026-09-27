@@ -18,6 +18,69 @@
   'use strict';
 
   /* ─────────────────────────────────────────────────────────
+     0. SPLASH SCREEN — show only on first page load, not on navigation
+  ───────────────────────────────────────────────────────── */
+  (function initSplash() {
+    const SPLASH_DURATION = 2000;
+    const SPLASH_FLAG = '__pw_splash_shown';
+    
+    if (sessionStorage.getItem(SPLASH_FLAG)) return;
+    sessionStorage.setItem(SPLASH_FLAG, 'true');
+    
+    const style = document.createElement('style');
+    style.textContent = `
+      #pw-splash {
+        position: fixed; inset: 0; z-index: 99999;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        background: linear-gradient(135deg, #0f2557 0%, #1e3a6e 55%, #1d4ed8 100%);
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        animation: pwSplashFadeIn 0.6s ease-out;
+      }
+      #pw-splash .pw-splash-logo {
+        background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        padding: 32px; border-radius: 24px;
+        box-shadow: 0 16px 48px rgba(15,37,87,0.45), 0 4px 16px rgba(15,37,87,0.25);
+        margin-bottom: 32px; display: flex; align-items: center; justify-content: center;
+        animation: pwSplashScaleIn 0.6s ease-out 0.2s both; width: 128px; height: 128px;
+      }
+      #pw-splash .pw-splash-logo i { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; }
+      #pw-splash .pw-splash-logo svg { width: 64px; height: 64px; color: #fff; stroke: #fff; }
+      #pw-splash .pw-splash-name { font-size: 32px; font-weight: 800; color: #fff; letter-spacing: -0.5px; margin: 0; animation: pwSplashSlideUp 0.6s ease-out 0.4s both; }
+      #pw-splash.pw-splash-exit { animation: pwSplashFadeOut 0.4s ease-in forwards; }
+      @keyframes pwSplashFadeIn { from { opacity: 0 } to { opacity: 1 } }
+      @keyframes pwSplashFadeOut { from { opacity: 1 } to { opacity: 0 } }
+      @keyframes pwSplashScaleIn { from { transform: scale(0.8); opacity: 0 } to { transform: scale(1); opacity: 1 } }
+      @keyframes pwSplashSlideUp { from { transform: translateY(20px); opacity: 0 } to { transform: translateY(0); opacity: 1 } }
+    `;
+    document.head.appendChild(style);
+    
+    const splash = document.createElement('div');
+    splash.id = 'pw-splash';
+    splash.innerHTML = '<div class="pw-splash-logo"><i data-lucide="wallet"></i></div><h1 class="pw-splash-name">Dompetku</h1>';
+    
+    function mount() {
+      document.body.appendChild(splash);
+      if (window.lucide) window.lucide.createIcons({ nodes: [splash] });
+      else {
+        const t = setInterval(() => { 
+          if (window.lucide) { 
+            window.lucide.createIcons({ nodes: [splash] }); 
+            clearInterval(t); 
+          } 
+        }, 50);
+        setTimeout(() => clearInterval(t), 500);
+      }
+      setTimeout(() => {
+        splash.classList.add('pw-splash-exit');
+        setTimeout(() => { if (splash.parentNode) splash.remove(); }, 400);
+      }, SPLASH_DURATION);
+    }
+    
+    if (document.body) mount();
+    else document.addEventListener('DOMContentLoaded', mount, { once: true });
+  })();
+
+  /* ─────────────────────────────────────────────────────────
      1. STORAGE — single source of truth (localStorage)
   ───────────────────────────────────────────────────────── */
   const STORAGE_KEY = 'pw_transactions';
@@ -704,10 +767,15 @@
 
       // Delete buttons
       container.querySelectorAll('.delete-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.stopPropagation(); // Prevent row click
+        btn.addEventListener('click', async (e) => {
+          e.stopPropagation();
           const id = parseInt(btn.dataset.id, 10);
-          if (confirm('Yakin ingin menghapus transaksi ini?')) {
+          const txn = store.getAll().find(t => t.id === id);
+          const confirmed = await confirmDialog.show({
+            title: 'Hapus Transaksi?',
+            message: txn ? `Transaksi "${txn.name}" akan dihapus secara permanen.` : 'Transaksi ini akan dihapus secara permanen.'
+          });
+          if (confirmed) {
             store.remove(id);
             if (onDelete) onDelete(id);
           }
@@ -717,8 +785,127 @@
   };
 
   /* ─────────────────────────────────────────────────────────
+     7b. CONFIRM DIALOG — custom delete confirmation
+  ───────────────────────────────────────────────────────── */
+  const confirmDialog = {
+    show(options = {}) {
+      return new Promise((resolve) => {
+        const {
+          icon = 'trash-2',
+          title = 'Hapus Data?',
+          message = 'Data ini akan dihapus secara permanen.',
+          cancelText = 'Batal',
+          deleteText = 'Hapus'
+        } = options;
+
+        const old = document.getElementById('pw-confirm-overlay');
+        if (old) old.remove();
+
+        const overlay = document.createElement('div');
+        overlay.id = 'pw-confirm-overlay';
+        overlay.className = 'confirm-dialog-overlay';
+        overlay.innerHTML = `
+          <div class="confirm-dialog">
+            <div class="confirm-icon"><i data-lucide="${icon}"></i></div>
+            <h2 class="confirm-title"></h2>
+            <p class="confirm-message"></p>
+            <div class="confirm-actions">
+              <button class="confirm-btn confirm-btn-cancel" type="button"></button>
+              <button class="confirm-btn confirm-btn-delete" type="button"></button>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(overlay);
+
+        const dialog = overlay.querySelector('.confirm-dialog');
+        overlay.querySelector('.confirm-title').textContent = title;
+        overlay.querySelector('.confirm-message').textContent = message;
+        overlay.querySelector('.confirm-btn-cancel').textContent = cancelText;
+        overlay.querySelector('.confirm-btn-delete').textContent = deleteText;
+
+        let settled = false;
+        const done = (value) => {
+          if (settled) return;
+          settled = true;
+          overlay.classList.remove('active');
+          setTimeout(() => overlay.remove(), 300);
+          resolve(value);
+        };
+
+        overlay.querySelector('.confirm-btn-cancel').addEventListener('click', () => done(false));
+        overlay.querySelector('.confirm-btn-delete').addEventListener('click', () => done(true));
+        overlay.addEventListener('click', (e) => {
+          if (e.target === overlay) done(false);
+        });
+
+        overlay.classList.add('active');
+        if (window.lucide) window.lucide.createIcons({ nodes: [dialog] });
+      });
+    }
+  };
+
+  /* ─────────────────────────────────────────────────────────
+     7c. SUCCESS DIALOG — success notification
+  ───────────────────────────────────────────────────────── */
+  const successDialog = {
+    show(options = {}) {
+      return new Promise((resolve) => {
+        const {
+          icon = 'check-circle',
+          title = 'Berhasil!',
+          message = 'Operasi berhasil dilakukan.',
+          buttonText = 'OK'
+        } = options;
+
+        const old = document.getElementById('pw-success-overlay');
+        if (old) old.remove();
+
+        const overlay = document.createElement('div');
+        overlay.id = 'pw-success-overlay';
+        overlay.className = 'confirm-dialog-overlay';
+        overlay.innerHTML = `
+          <div class="confirm-dialog">
+            <div class="success-icon"><i data-lucide="${icon}"></i></div>
+            <h2 class="confirm-title"></h2>
+            <p class="confirm-message"></p>
+            <div class="confirm-actions">
+              <button class="confirm-btn confirm-btn-ok" type="button"></button>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(overlay);
+
+        const dialog = overlay.querySelector('.confirm-dialog');
+        overlay.querySelector('.confirm-title').textContent = title;
+        overlay.querySelector('.confirm-message').textContent = message;
+        overlay.querySelector('.confirm-btn-ok').textContent = buttonText;
+
+        let settled = false;
+        const done = () => {
+          if (settled) return;
+          settled = true;
+          overlay.classList.remove('active');
+          setTimeout(() => overlay.remove(), 300);
+          resolve();
+        };
+
+        overlay.querySelector('.confirm-btn-ok').addEventListener('click', done);
+        overlay.addEventListener('click', (e) => {
+          if (e.target === overlay) done();
+        });
+
+        overlay.classList.add('active');
+        if (window.lucide) window.lucide.createIcons({ nodes: [dialog] });
+        
+        // Auto close after 3 seconds
+        setTimeout(done, 3000);
+      });
+    }
+  };
+
+  /* ─────────────────────────────────────────────────────────
      8. EXPOSE as window.PW
   ───────────────────────────────────────────────────────── */
-  window.PW = { store, walletStore, sync, computed, format, categories, walletIcon, modal, nav, greeting, renderer };
+   window.PW = { store, walletStore, sync, computed, format, categories, walletIcon, modal, nav, greeting, renderer, confirmDialog, successDialog };
 
 }(window));

@@ -7,6 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
   <link rel="stylesheet" href="assets/css/style.css">
+  <script src="assets/js/app.js"></script>
   <style>
     .header-card { 
       background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); 
@@ -99,9 +100,10 @@
 
     <div class="section-title">Data</div>
     <div class="menu-group">
+      <div class="menu-item" onclick="loadDummyData()"><div class="menu-icon" style="background:#dcfce7; color:#22c55e;"><i data-lucide="database"></i></div><div style="flex:1"><b>Muat Data Contoh</b><br><small style="color:#6b7280">Isi aplikasi dengan data dummy</small></div><i data-lucide="chevron-right"></i></div>
       <div class="menu-item"><div class="menu-icon"><i data-lucide="download"></i></div><div style="flex:1"><b>Export Data</b><br><small style="color:#6b7280">Unduh semua data sebagai JSON</small></div><i data-lucide="chevron-right"></i></div>
       <div class="menu-item"><div class="menu-icon"><i data-lucide="upload"></i></div><div style="flex:1"><b>Import Data</b><br><small style="color:#6b7280">Pulihkan dari berkas JSON</small></div><span class="badge-soon">Segera</span></div>
-      <div class="menu-item" style="color: #ef4444;"><div class="menu-icon" style="background:#fef2f2; color:#ef4444;"><i data-lucide="rotate-ccw"></i></div><div style="flex:1"><b>Reset Data</b><br><small style="color:#ef4444;">Kembalikan ke data contoh</small></div><i data-lucide="chevron-right"></i></div>
+      <div class="menu-item" onclick="resetData()" style="color: #ef4444;"><div class="menu-icon" style="background:#fef2f2; color:#ef4444;"><i data-lucide="trash-2"></i></div><div style="flex:1"><b>Hapus Semua Data</b><br><small style="color:#ef4444;">Kosongkan wallet & transaksi</small></div><i data-lucide="chevron-right"></i></div>
     </div>
 
     <div class="section-title">Lainnya</div>
@@ -178,8 +180,7 @@
     </div>
   </nav>
 </div>
-<script src="assets/js/app.js"></script>
-    <script>
+<script>
         document.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
             PW.modal.init();
@@ -262,6 +263,96 @@
         if (savedEmail) document.getElementById('profile-email').textContent = savedEmail;
         if (savedPhoto) document.querySelector('.profile-top img').src = savedPhoto;
         else if (savedPhotoUrl) document.querySelector('.profile-top img').src = savedPhotoUrl;
+
+        // Load Dummy Data function
+        window.loadDummyData = async () => {
+            const confirmed = await PW.confirmDialog.show({
+                title: 'Muat Data Contoh?',
+                message: 'Ini akan menambahkan data contoh (wallet & transaksi). Data yang sudah ada akan tetap ada. Lanjutkan?',
+                cancelText: 'Batal',
+                deleteText: 'Lanjut'
+            });
+            if (!confirmed) return;
+            
+            const dummyWallets = [
+                { id: Date.now() + 1, name: 'BCA', type: 'bank', balance: 5000000, note: 'Rekening utama', primary: true },
+                { id: Date.now() + 2, name: 'GoPay', type: 'e-wallet', balance: 500000, note: '', primary: false },
+                { id: Date.now() + 3, name: 'Dana', type: 'e-wallet', balance: 300000, note: '', primary: false },
+                { id: Date.now() + 4, name: 'Tunai', type: 'tunai', balance: 200000, note: 'Dompet fisik', primary: false }
+            ];
+            
+            const today = new Date();
+            const dummyTransactions = [
+                // Hari ini
+                { id: Date.now() + 1, type: 'expense', name: 'Makan Siang', amount: 45000, category: 'food', wallet: 'GoPay', date: formatDate(today) },
+                { id: Date.now() + 2, type: 'expense', name: 'Grab ke Kantor', amount: 35000, category: 'transport', wallet: 'GoPay', date: formatDate(today) },
+                { id: Date.now() + 3, type: 'income', name: 'Freelance Design', amount: 1500000, category: 'income', wallet: 'BCA', date: formatDate(today) },
+                
+                // Kemarin
+                { id: Date.now() + 4, type: 'expense', name: 'Belanja Bulanan', amount: 650000, category: 'shopping', wallet: 'BCA', date: formatDate(addDays(today, -1)) },
+                { id: Date.now() + 5, type: 'expense', name: 'Netflix Subscription', amount: 186000, category: 'game', wallet: 'BCA', date: formatDate(addDays(today, -1)) },
+                { id: Date.now() + 6, type: 'expense', name: 'Kopi Afternoon', amount: 28000, category: 'food', wallet: 'Dana', date: formatDate(addDays(today, -1)) },
+                
+                // 2 hari lalu
+                { id: Date.now() + 7, type: 'expense', name: 'Bensin', amount: 150000, category: 'transport', wallet: 'Tunai', date: formatDate(addDays(today, -2)) },
+                { id: Date.now() + 8, type: 'expense', name: 'Makan Malam', amount: 120000, category: 'food', wallet: 'Dana', date: formatDate(addDays(today, -2)) },
+                
+                // 3 hari lalu
+                { id: Date.now() + 9, type: 'income', name: 'Transfer Orang Tua', amount: 2000000, category: 'other', wallet: 'BCA', date: formatDate(addDays(today, -3)) },
+                { id: Date.now() + 10, type: 'expense', name: 'Gym Membership', amount: 350000, category: 'other', wallet: 'BCA', date: formatDate(addDays(today, -3)) },
+                
+                // 5 hari lalu
+                { id: Date.now() + 11, type: 'expense', name: 'Beli Buku', amount: 85000, category: 'edu', wallet: 'Tunai', date: formatDate(addDays(today, -5)) },
+                { id: Date.now() + 12, type: 'expense', name: 'Nonton Bioskop', amount: 75000, category: 'game', wallet: 'GoPay', date: formatDate(addDays(today, -5)) },
+                
+                // Minggu lalu
+                { id: Date.now() + 13, type: 'income', name: 'Gaji Bulanan', amount: 8000000, category: 'income', wallet: 'BCA', date: formatDate(addDays(today, -7)) },
+                { id: Date.now() + 14, type: 'expense', name: 'Tagihan Listrik', amount: 450000, category: 'health', wallet: 'BCA', date: formatDate(addDays(today, -7)) },
+                { id: Date.now() + 15, type: 'expense', name: 'Beli Baju', amount: 320000, category: 'shopping', wallet: 'Dana', date: formatDate(addDays(today, -8)) }
+            ];
+            
+            // Merge dengan data existing
+            const existingWallets = PW.walletStore.getAll();
+            const existingTxns = PW.store.getAll();
+            
+            // Tambahkan wallet yang belum ada (cek by name)
+            dummyWallets.forEach(w => {
+                if (!existingWallets.find(ew => ew.name === w.name)) {
+                    PW.walletStore.add(w);
+                }
+            });
+            
+            // Tambahkan semua transaksi dummy
+            dummyTransactions.forEach(t => PW.store.add(t));
+            
+            location.reload();
+        };
+        
+        window.resetData = async () => {
+            const confirmed = await PW.confirmDialog.show({
+                title: 'Hapus Semua Data?',
+                message: 'Semua wallet & transaksi akan dihapus secara permanen. Data tidak bisa dikembalikan!',
+                cancelText: 'Batal',
+                deleteText: 'Hapus Semua'
+            });
+            if (!confirmed) return;
+            
+            localStorage.removeItem('pw_wallets');
+            localStorage.removeItem('pw_transactions');
+            location.reload();
+        };
+        
+        function formatDate(date) {
+            return date.getFullYear() + '-' + 
+                   String(date.getMonth() + 1).padStart(2, '0') + '-' + 
+                   String(date.getDate()).padStart(2, '0');
+        }
+        
+        function addDays(date, days) {
+            const result = new Date(date);
+            result.setDate(result.getDate() + days);
+            return result;
+        }
     </script>
 </body>
 </html>

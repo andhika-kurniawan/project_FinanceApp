@@ -93,11 +93,15 @@ function renderDetail(txn) {
   lucide.createIcons();
 }
 
-window.deleteTxn = function(id) {
-  if (confirm("Yakin ingin menghapus transaksi ini?")) {
-    PW.store.remove(id);
-    window.location.href = document.referrer || 'dashboard.html';
-  }
+window.deleteTxn = async function(id) {
+  const txn = PW.store.getAll().find(t => t.id === id);
+  const confirmed = await PW.confirmDialog.show({
+    title: 'Hapus Transaksi?',
+    message: txn ? `Transaksi "${txn.name}" akan dihapus secara permanen.` : 'Transaksi ini akan dihapus secara permanen.'
+  });
+  if (!confirmed) return;
+  PW.store.remove(id);
+  window.location.href = document.referrer || 'dashboard.html';
 };
 
 window.editTxn = function(id) {
