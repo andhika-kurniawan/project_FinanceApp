@@ -233,7 +233,19 @@ body {
   min-height: 50vh;
 }
 
-/* ── Date Group ─────────────────────────────────────────────── */
+/* ── Wallet Detail Transactions (inside card) ────────────────── */
+.wd-date-group { margin-bottom: 8px; }
+.wd-date-label { 
+  font-size: 13px; font-weight: 600; color: var(--neutral-500); 
+  padding: 16px 4px 8px; 
+  display: flex; align-items: center; justify-content: space-between; 
+}
+.wd-txn-list { }
+.wd-txn-list .txn { padding: 12px 16px; border-bottom: 1px solid var(--neutral-50); }
+.wd-txn-list .txn:last-child { border-bottom: none; }
+.wd-txn-list .txn__icon { background: var(--neutral-50); }
+
+/* ── Date Group (transactions page) ─────────────────────────────────────────────── */
 .date-group  { margin-bottom:16px; display:flex; flex-direction:column; gap:0; }
 .date-label  { font-size:13px; font-weight:600; color:var(--neutral-500); padding:20px 4px 8px; display:flex; align-items:center; justify-content:space-between; }
 

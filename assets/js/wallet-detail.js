@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (txnListContainer) {
             if (txnData.count === 0) {
                 txnListContainer.innerHTML = `
-                    <div style="background: white; border-radius: 24px; padding: 40px 20px; text-align: center; box-shadow: var(--shadow-card);">
+                    <div style="padding: 32px 12px 8px; text-align: center;">
                         <div style="width: 64px; height: 64px; background: var(--primary-50); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
                             <i data-lucide="receipt" style="width: 28px; height: 28px; color: var(--primary-500);"></i>
                         </div>
@@ -128,17 +128,24 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (!grouped[d]) grouped[d] = [];
                     grouped[d].push(t);
                 });
-                
+
                 let html = '';
                 Object.keys(grouped).sort().reverse().forEach(date => {
-                    // Try to catch any invalid date errors inside groupHTML
-                    try {
-                        html += renderer.groupHTML(date, grouped[date]);
-                    } catch(e) {
-                        console.error('Error rendering date group', date, e);
-                    }
+                    const dayTxns = grouped[date];
+                    let dayTotal = 0;
+                    dayTxns.forEach(t => { dayTotal += (t.type === 'income' ? t.amount : -t.amount); });
+                    const dayTotalFormatted = (dayTotal > 0 ? '+' : '') + format.rpFull(dayTotal);
+                    const colorCls = dayTotal >= 0 ? 'color: var(--color-income);' : 'color: var(--neutral-900);';
+                    html += `<div class="wd-date-group">
+                        <div class="wd-date-label">
+                            <span>${format.dateLabel(date)}</span>
+                            <span style="${colorCls} font-weight:700;">${dayTotalFormatted}</span>
+                        </div>
+                        <div class="wd-txn-list">`;
+                    dayTxns.forEach(t => { html += renderer.txnHTML(t, true); });
+                    html += `</div></div>`;
                 });
-                
+
                 txnListContainer.innerHTML = html;
                 renderer.attachHandlers(txnListContainer, renderPage);
             }
