@@ -87,6 +87,75 @@
     </div>
   </div>
 
+  <!-- TRANSACTION MODAL -->
+  <div class="modal-overlay" id="txnModal">
+    <div class="modal-content">
+      <div class="modal-drag-handle"></div>
+      <div class="modal-header">
+        <h3 class="modal-title">Tambah Transaksi</h3>
+        <button class="modal-close" onclick="closeModal()"><i data-lucide="x" style="width:18px;height:18px"></i></button>
+      </div>
+      <form id="txnForm" onsubmit="handleFormSubmit(event)" style="display:flex;flex-direction:column;gap:20px;">
+        <div class="segment-control">
+          <button type="button" class="segment-btn active" data-val="expense" onclick="setTxnType('expense')">Pengeluaran</button>
+          <button type="button" class="segment-btn" data-val="income" onclick="setTxnType('income')">Pemasukan</button>
+        </div>
+        <input type="hidden" id="txnType" value="expense">
+        <div class="form-group">
+          <label class="form-label">Nominal</label>
+          <div class="nominal-wrapper">
+            <span class="nominal-prefix">Rp</span>
+            <input type="number" class="nominal-input" id="txnAmount" placeholder="0" min="1" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Kategori</label>
+          <div class="category-grid" id="categoryGrid"></div>
+          <input type="hidden" id="txnCategory" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Wallet</label>
+            <select class="form-select" id="txnWallet" required>
+              <option value="BCA">BCA</option>
+              <option value="GoPay">GoPay</option>
+              <option value="OVO">OVO</option>
+              <option value="Cash">Tunai</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tanggal</label>
+            <input type="date" class="form-input" id="txnDate" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Catatan</label>
+          <input type="text" class="form-input" id="txnName" placeholder="Contoh: Makan siang di kantin" required>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" onclick="closeModal()">Batal</button>
+          <button type="submit" class="btn-submit">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    window.closeModal = function() {
+      PW.modal.close();
+    };
+
+    window.setTxnType = function(type) {
+      PW.modal.setType(type);
+    };
+
+    window.handleFormSubmit = function(e) {
+      if (PW.modal._form) {
+        PW.modal._handleSubmit.call(PW.modal, e);
+      }
+    };
+  </script>
+
   <script src="assets/js/detail.js"></script>
 </body>
 </html>

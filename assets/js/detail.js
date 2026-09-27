@@ -20,7 +20,11 @@ document.addEventListener('DOMContentLoaded', () => {
   renderDetail(txn);
   
   PW.modal.init((updatedTxn) => {
-    renderDetail(updatedTxn);
+    const updatedTxns = PW.store.getAll();
+    const freshTxn = updatedTxns.find(t => t.id === id);
+    if (freshTxn) {
+      renderDetail(freshTxn);
+    }
   });
 });
 
