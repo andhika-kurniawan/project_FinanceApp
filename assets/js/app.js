@@ -517,6 +517,7 @@
     _form: null,
     _onSave: null,   // callback(newTxn)
     _editId: null,   // if editing, holds the id
+    _preselectCat: null,
 
     /** Call once after DOM is ready. Pass a callback invoked after save. */
     init(onSaveCb) {
@@ -561,16 +562,9 @@
       modal._editId = txn.id;
       document.querySelector('#txnModal .modal-title').textContent = 'Edit Transaksi';
       modal._populateWalletSelect();
+      modal._preselectCat = txn.category;
       modal.setType(txn.type);
       document.getElementById('txnAmount').value = txn.amount;
-      
-      // We need to wait a tick for categories to render before setting the category
-      setTimeout(() => {
-        const catBtn = document.querySelector(`#categoryGrid .cat-pill:has(i[data-lucide="${categories.iconName(txn.category)}"])`);
-        if(catBtn) catBtn.click();
-        else document.getElementById('txnCategory').value = txn.category;
-      }, 0);
-
       document.getElementById('txnWallet').value = txn.wallet;
       document.getElementById('txnDate').value = txn.date;
       document.getElementById('txnName').value = txn.name;
@@ -583,6 +577,7 @@
       if (!modal._overlay) return;
       modal._overlay.classList.remove('active');
       modal._form.reset();
+      modal._editId = null;
       modal.setType('expense');
       document.body.style.overflow = '';
     },
@@ -592,7 +587,8 @@
       document.querySelectorAll('.segment-btn').forEach(btn => {
         btn.classList.toggle('active', btn.getAttribute('data-val') === type);
       });
-      modal._renderCategories(type);
+      modal._renderCategories(type, modal._preselectCat);
+      modal._preselectCat = null;
     },
 
     _getAllCategories(type) {
@@ -610,14 +606,16 @@
       return [...defaultCats.filter(c => !hiddenIds.has(c.id)), ...customList];
     },
 
-    _renderCategories(type) {
+    _renderCategories(type, preselectId) {
       const grid = document.getElementById('categoryGrid');
       if (!grid) return;
       grid.innerHTML = '';
       const list = this._getAllCategories(type);
-      list.forEach((c, i) => {
+      const activeId = preselectId || (list[0] && list[0].id);
+      list.forEach((c) => {
+        const isActive = c.id === activeId;
         const pill = document.createElement('div');
-        pill.className = 'cat-pill' + (i === 0 ? ' active' : '');
+        pill.className = 'cat-pill' + (isActive ? ' active' : '');
         pill.innerHTML = `<i data-lucide="${c.icon}" style="width:16px;height:16px"></i> ${c.label}`;
         pill.onclick = () => {
           document.getElementById('txnCategory').value = c.id;
@@ -625,19 +623,30 @@
           pill.classList.add('active');
         };
         grid.appendChild(pill);
-        if (i === 0) document.getElementById('txnCategory').value = c.id;
       });
+      if (activeId) document.getElementById('txnCategory').value = activeId;
       lucide.createIcons({ root: grid });
     },
 
     _handleSubmit(e) {
       e.preventDefault();
+      const amountVal = parseFloat(document.getElementById('txnAmount').value);
+      if (!amountVal || amountVal <= 0) {
+        alert('Nominal harus lebih dari 0.');
+        return;
+      }
+      const name = document.getElementById('txnName').value.trim();
+      const category = document.getElementById('txnCategory').value;
+      if (!name || !category) {
+        alert('Lengkapi semua field yang diperlukan.');
+        return;
+      }
       const txn = {
         id:       modal._editId || Date.now(),
         type:     document.getElementById('txnType').value,
-        name:     document.getElementById('txnName').value.trim(),
-        amount:   parseFloat(document.getElementById('txnAmount').value),
-        category: document.getElementById('txnCategory').value,
+        name,
+        amount:   amountVal,
+        category,
         wallet:   document.getElementById('txnWallet').value,
         date:     document.getElementById('txnDate').value,
       };
